@@ -23,12 +23,15 @@
 typedef struct{
   const char *event_name;
   cimunit_mutex mutex; 
-  cimunit_cond condition;
   cimunit_event **dep_events;  
   size_t numDepEvents;
 } cimunit_event;
 
 int cimunit_init_event(cimunit_event* to_init, const char *name);
 int cimunit_destroy_event(cimunit_event* to_destroy);
+int cimunit_set_dependent_events(
+  cimunit_event *event,
+  cimunit_event **depEvents,
+  size_t numDepEvents);
 int cimunit_fire_event(cimunit_event *event);
 #endif // CIMUNIT_EVENT_H

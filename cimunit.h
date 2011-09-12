@@ -25,7 +25,7 @@
 
 /** \brief Type indicating an amount of threads */
 
-typedef CIMUNIT_THREAD pthread_t;
+typedef CIMUNIT_THREAD size_t;
 
 typedef struct{
   cimunit_schedule *schedule;
@@ -38,8 +38,6 @@ typedef struct{
 //@{
 
 int cimunit_run_tests(cimunit_tester *tester);
-
-int cimunit_fire_event(cimunit_schedule *schedule, const char* event);
 
 //@}
 

@@ -20,29 +20,33 @@
 
 int cimunit_init_event(
   cimunit_event* to_init, 
-  const char *name, 
-  cimunit_event **depEvents,
-  size_t numDepEvents)
+  const char *name)
 {
   to_init->event_name = name;
-  to_init->dep_events = depEvents;
-  to_init->numDepEvents = numDepEvents;
   cimunit_mutex_init(&(to_init->mutex), NULL);
-  cimunit_cond_init(&(to_init->condition), NULL);
+  cimunit_mutex_lock(&(to_init->mutex));
 }
 
 int cimunit_destroy_event(cimunit_event* to_destroy){
   cimunit_mutex_destroy(&(to_destroy->mutex));
-  cimunit_condition_destroy(&(to_destroy->condition));
+}
+
+int cimunit_set_dependent_events(
+  cimunit_event *event,
+  cimunit_event **depEvents,
+  size_t numDepEvents)
+{
+  event->dep_events = depEvents;
+  event->numDepEvents = numDepEvents;
 }
 
 int cimunit_fire_event(cimunit_event *event){
   size_t i;
+  //ASSERT DEPEVENTS NOT NULL!!!!!!
   for(i=0; i<event->numDepEvents;++i){
-    cimunit_cond_wait(
-      event->depEvents[i]->condition, 
-      event->depEvents[i]->mutex);
+    cimunit_mutex_lock(&(event->depEvents[i]->mutex));
+    cimunit_mutex_unlock(&(event->depEvents[i]->mutex));
   }
-  cimunit_cond_broadcast(event->condition);
+  cimunit_mutex_unlock(&(event->mutex));
 }
 
