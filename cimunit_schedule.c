@@ -21,6 +21,21 @@
 size_t getNumEvents(const char* string);
 int getEventNames(char** events, const char *sched_string, int numEvents);
 
+int cimunit_get_schedule_event(
+  const char *event_name,
+  cimunit_schedule *schedule,
+  cimunit_event *found_event)
+{
+  int i;
+  for(i=0; i<schedule->numEvents; ++i){
+    if(strcmp(event_name, schedule->events[i]->event_name) ==0){
+      found_event = schedule->events[i];
+      return 0;
+    }
+  }
+  return 1;
+}
+
 int cimunit_init_schedule(
   cimunit_schedule *cs, 
   const char *sched_string, 
@@ -29,25 +44,34 @@ int cimunit_init_schedule(
   size_t i;
   cs->numThreads = numThreads;
   cs->sched_string = sched_string;
+  getNumEvents(sched_string, cs->numEvents);
+  cs->events = (event**)malloc(sizeof(cimunit_event*)*(cs->numEvents));
 
-  size_t numEvents = getNumEvents(sched_string);
-  char **events = (char**)malloc(sizeof(char*)*numEvents);
-  getEventNames(events, sched_string, numEvents);
+  char **event_names = (char**)malloc(sizeof(char*)*cs->numEvents);
+  getEventNames(event_names, sched_string, cs->numEvents);
 
-  cimunit_event_map *event_map =
-    (cimunit_event_map*)malloc(sizeof(cimunit_event_map));
-  cimunit_init_event_map(event_map, events, numEvents);
-  
-  free(events);
+  for(i=0; i<size; ++i){
+    cimunit_event *toAdd = (cimunit_event*)malloc(sizeof(cimunit_event));
+    cimunit_init_event(toAdd, events[i]);
+    cs->events[i] = toAdd;
+  }
+
+  for(i=0; i<size; ++i){
+    free(event_names[i]);
+  }
+  free(event_names); 
 }
 
 int cimunit_destroy_schedule(cimunit_schedule *cs){
-  cimunit_destroy_event_map(cs->event_map);
-  free(cs->event_map);
+  int i;
+  for(i=0; i<cs->numEvents; ++i){
+    free(events[i]);
+  }
+  free(events);
 }
 
-size_t getNumEvents(const char* string){
-  size_t numEvents =0;
+int getNumEvents(const char* string, size_t &numEvents){
+  numEvents =0;
   char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
   strncpy(toTokenize, string, strlen(string));
   char *currentTok;
@@ -56,6 +80,5 @@ size_t getNumEvents(const char* string){
     ++numEvents;
     currentTok = strtok(NULL, "->,");
   } 
-  return numEvents;
 }
 

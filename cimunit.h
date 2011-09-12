@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifdef CIMUNIT_H
+#ifndef CIMUNIT_H
 #define CIMUNIT_H
 #include "cimunit_tester.h"
 
@@ -52,7 +51,10 @@ int cimunit_fire_event(cimunit_schedule *schedule, const char* event);
   void *args) 
 
 #define CIMUNIT_FIRE_EVENT(EVENT) \
-  cimunit_fire_event(((*cimunit_test_args)args)->schedule, EVENT);
+  cimunit_event EVENT; \
+  cimunit_get_schedule_event(((*cimunit_test_args)args)->schedule,##EVENT##); \
+  cimunit_fire_event(&EVENT);
+
 
 
 #define CIMUNIT_ADD_TEST_SCHEDULE(TESTER, TEST_GROUP, TEST_NAME, SCHEDULE) \

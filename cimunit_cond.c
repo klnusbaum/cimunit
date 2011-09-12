@@ -17,33 +17,30 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cimunit.h"
+#include "cimunit_cond.h"
 
-CIMUNIT_TEST(simple_test, test1){
-  if(CIMUNIT_TNUMBER == 0){
-    CIMUNIT_FIRE_EVENT(t1begin) 
-    printf("Hello from t1\n");
-    CIMUNIT_FIRE_EVENT(t1end)
-  }
-  else if(CIMUNIT_TNUMBER == 1){
-    CIMUNIT_FIRE_EVENT(t2begin)
-    printf("Hello from t2\n");
-    CIMUNIT_FIRE_EVENT(t2end)
-  }
+int cimunit_cond_init(
+  cimunit_cond *cond, 
+  const cimunit_cond_attr *restrict attr)
+{
+  return pthread_cond_init(
+    &(cond->cond_impl), 
+    attr==NULL ? NULL : &(attr->attr_impl)  
+  );
 }
 
-int main(int argv, char *argv[]){
+int cimunit_cond_destroy(cimunit_cond *cond){
+  return pthread_cond_destroy(&(cond.cond_impl));
+}
 
-  cimunit_tester tester;
+int cimunit_cond_wait(
+  cimunit_cond *restrict cond,
+  cimunit_mutex *restrict mutex)
+{
+  return pthread_cond_wait(cond->cond_impl, mutex->mutex_impl);
+}
 
-  cimunit_schedule sched1;
-  cimunit_schedule sched2;
-  cimunit_init_schedule(&sched1, "t1end->t2begin", 2);
-  cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
-  
-  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched1)
-  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched2)
-
-  return cimunit_run_tests(tester);
+int cimunit_cond_broadcast(cimunit_cond *cond){
+  return pthread_cond_broadcast(cond->cond_impl);
 }
 

@@ -17,14 +17,18 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef CIMUNIT_EVENT_H
+#ifndef CIMUNIT_EVENT_H
 #define CIMUNIT_EVENT_H
-#include "cimunit_mutex.h"
+#include "cimunit_cond.h"
 typedef struct{
   const char *event_name;
-  cimunit_mutex event_lock; 
+  cimunit_mutex mutex; 
+  cimunit_cond condition;
+  cimunit_event **dep_events;  
+  size_t numDepEvents;
 } cimunit_event;
 
 int cimunit_init_event(cimunit_event* to_init, const char *name);
 int cimunit_destroy_event(cimunit_event* to_destroy);
+int cimunit_fire_event(cimunit_event *event);
 #endif // CIMUNIT_EVENT_H

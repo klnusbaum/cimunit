@@ -17,33 +17,29 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cimunit.h"
+#ifndef CIMUNIT_COND_H
+#define CIMUNIT_COND_H
+#include "cimunit_mutex.h"
 
-CIMUNIT_TEST(simple_test, test1){
-  if(CIMUNIT_TNUMBER == 0){
-    CIMUNIT_FIRE_EVENT(t1begin) 
-    printf("Hello from t1\n");
-    CIMUNIT_FIRE_EVENT(t1end)
-  }
-  else if(CIMUNIT_TNUMBER == 1){
-    CIMUNIT_FIRE_EVENT(t2begin)
-    printf("Hello from t2\n");
-    CIMUNIT_FIRE_EVENT(t2end)
-  }
-}
+typedef struct{
+  pthread_cond_t cond_impl;
+} cimunit_cond;
 
-int main(int argv, char *argv[]){
+typedef struct{
+  pthread_condattr_t attr_impl;
+} cimunit_cond_attr;
 
-  cimunit_tester tester;
+int cimunit_cond_init(
+  cimunit_cond *cond, 
+  const cimunit_cond_attr *restrict attr);
 
-  cimunit_schedule sched1;
-  cimunit_schedule sched2;
-  cimunit_init_schedule(&sched1, "t1end->t2begin", 2);
-  cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
-  
-  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched1)
-  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched2)
+int cimunit_cond_destroy(cimunit_cond *cond);
 
-  return cimunit_run_tests(tester);
-}
+int cimunit_cond_wait(
+  cimunit_cond *restrict cond,
+  cimunit_mutex *restrict mutex);
 
+int cimunit_cond_broadcast(cimunit_cond *cond);
+//TODO implement  functions for the attributes (May not be necessary for
+//my purposed)
+#endif //CIMUNIT_COND_H
