@@ -1,6 +1,5 @@
 #ifdef CIMUNIT_H
 #define CIMUNIT_H
-#include "cimunit_mutex.h"
 #include "cimunit_tester.h"
 
 /** \name Cimunit Typedefs */
