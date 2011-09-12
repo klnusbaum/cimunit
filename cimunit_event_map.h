@@ -16,25 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifdef CIMUNIT_SCHEDULE_H
-#define CIMUNIT_SCHEDULE_H
-#include "cimunit_event_map.h"
-
-typedef CIMUNIT_THREAD_AMOUNT int;
-
-
-/** \brief Struct which represents a schedule to be used in a test.*/
+#ifdef CIMUNIT_EVENT_MAP_H
+#define CIMUNIT_EVENT_MAP_H
+#include "cimunit_event.h"
 typedef struct{
-  CIMUNIT_THREAD_AMOUNT numThreads;
-  const char *sched_string; 
-  cimunit_event_map *event_map;
-} cimunit_schedule;
+  cimunit_event* event_array;
+  size_t size;
+} cimunit_event_map;
 
-int cimunit_init_schedule(
-  cimunit_schedule *cs, 
-  const char *sched_string, 
-  CIMUNIT_THREAD_AMOUNT numThreads);
-
-int cimunit_destroy_schedule(cimunit_schedule *cs);
-
-#endif //CIMUNIT_SCHEDULE_H
+int cimunit_init_event_map(
+  cimunit_event_map *to_init, 
+  char** events, 
+  size_t size);
+int cimunit_destroy_event_map(cimunit_event_map *to_destroy);
+int cimunit_find_event(
+  cimunit_event_map* map, 
+  const char* name, 
+  cimunit_event *found_event);
+#endif //CIMUNIT_EVENT_MAP_

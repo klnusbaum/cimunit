@@ -16,39 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "cimunit_schedule.h"
 
-int getNumEvents(const char* string);
+size_t getNumEvents(const char* string);
 int getEventNames(char** events, const char *sched_string, int numEvents);
-
-int cimunit_init_event_map(
-  const char *sched_string, 
-  cimunit_event_map *event_map)
-{
-  numEvents = getNumEvents(sched_string);
-  char **events = (char**)malloc(sizeof(char*)*numEvents);
-  getEventNames(events, const char *sched_string, numEvents);
-
-}
 
 int cimunit_init_schedule(
   cimunit_schedule *cs, 
   const char *sched_string, 
   CIMUNIT_THREAD_AMOUNT numThreads)
 {
+  size_t i;
   cs->numThreads = numThreads;
   cs->sched_string = sched_string;
-  cimunit_event_map *event_map=NULL;
-  cimunit_init_event_map(sched_string, event_map);
+
+  size_t numEvents = getNumEvents(sched_string);
+  char **events = (char**)malloc(sizeof(char*)*numEvents);
+  getEventNames(events, sched_string, numEvents);
+
+  cimunit_event_map *event_map =
+    (cimunit_event_map*)malloc(sizeof(cimunit_event_map));
+  cimunit_init_event_map(event_map, events, numEvents);
+  
+  free(events);
 }
 
 int cimunit_destroy_schedule(cimunit_schedule *cs){
-
+  cimunit_destroy_event_map(cs->event_map);
+  free(cs->event_map);
 }
 
-int getNumEvents(const char* string){
-  numEvents =0;
+size_t getNumEvents(const char* string){
+  size_t numEvents =0;
   char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
   strncpy(toTokenize, string, strlen(string));
   char *currentTok;
