@@ -17,8 +17,8 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CIM_MUTEX_H
-#define CIM_MUTEX_H
+#ifndef CIMUNIT_MUTEX_H
+#define CIMUNIT_MUTEX_H
 #include <pthread.h>
 
 typedef pthread_mutex_t cimunit_mutex_t;

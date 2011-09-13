@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(cimunit C)
 set(CMAKE_C_FLAGS "-std=c99")
+ENABLE_TESTING()
 find_package(Threads)
 add_subdirectory(src)
+add_subdirectory(tests)

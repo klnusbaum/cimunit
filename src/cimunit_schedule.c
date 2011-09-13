@@ -54,7 +54,7 @@ int getEventNames(char **events, const char *sched_string, int numEvents){
 
 int cimunit_get_schedule_event(
   const char *event_name,
-  cimunit_schedule_t *schedule,
+  const cimunit_schedule_t *schedule,
   cimunit_event_t *found_event)
 {
   int i;
@@ -94,9 +94,6 @@ int cimunit_init_schedule(
   cimunit_event_t *end = NULL;
   cimunit_get_schedule_event("t2begin", cs, begin);
   cimunit_get_schedule_event("t1end", cs, end);
-  if(begin == NULL){
-    printf("BAHHH!!!!\n");
-  }
   cimunit_event_t* begin_deps[1];
   begin_deps[0] = end;
   cimunit_set_dependent_events(begin, begin_deps, 1);
