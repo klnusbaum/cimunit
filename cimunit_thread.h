@@ -16,31 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef CIMUNIT_THREAD_H
+#define CIMUNIT_THREAD_H
 
-#include "cimunit_cond.h"
+#include <pthread.h>
+typedef cimunit_thread pthread_t;
+typedef cimunit_thread_attr pthread_attr_t;
+int cimunit_thread_create(
+  cimunit_thread *restrict thread, 
+  const cimunit_thread_attr *restrict attr,
+  void *(*function)(void *),
+  void *restrict arg);
 
-int cimunit_cond_init(
-  cimunit_cond *cond, 
-  const cimunit_cond_attr *restrict attr)
-{
-  return pthread_cond_init(
-    &(cond->cond_impl), 
-    attr==NULL ? NULL : &(attr->attr_impl)  
-  );
-}
-
-int cimunit_cond_destroy(cimunit_cond *cond){
-  return pthread_cond_destroy(&(cond.cond_impl));
-}
-
-int cimunit_cond_wait(
-  cimunit_cond *restrict cond,
-  cimunit_mutex *restrict mutex)
-{
-  return pthread_cond_wait(cond->cond_impl, mutex->mutex_impl);
-}
-
-int cimunit_cond_broadcast(cimunit_cond *cond){
-  return pthread_cond_broadcast(cond->cond_impl);
-}
-
+int cimunit_join(cimunit_thread, void **value_ptr);
+#endif //CIMUNIT_THREAD_H

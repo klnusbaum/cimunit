@@ -17,29 +17,18 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CIMUNIT_COND_H
-#define CIMUNIT_COND_H
-#include "cimunit_mutex.h"
+#include "cimunit_thread.h"
+int cimunit_thread_create(
+  cimunit_thread *restrict thread, 
+  const cimunit_thread_attr *restrict attr,
+  void *(*function)(void *),
+  void *restrict arg)
+{
+  pthread_create(thread, attr, function, arg);
 
-typedef struct{
-  pthread_cond_t cond_impl;
-} cimunit_cond;
+}
 
-typedef struct{
-  pthread_condattr_t attr_impl;
-} cimunit_cond_attr;
+int cimunit_join(cimunit_thread, void **value_ptr){
+  pthread_join(cimunit_thread, value_ptr);
+}
 
-int cimunit_cond_init(
-  cimunit_cond *cond, 
-  const cimunit_cond_attr *restrict attr);
-
-int cimunit_cond_destroy(cimunit_cond *cond);
-
-int cimunit_cond_wait(
-  cimunit_cond *restrict cond,
-  cimunit_mutex *restrict mutex);
-
-int cimunit_cond_broadcast(cimunit_cond *cond);
-//TODO implement  functions for the attributes (May not be necessary for
-//my purposed)
-#endif //CIMUNIT_COND_H

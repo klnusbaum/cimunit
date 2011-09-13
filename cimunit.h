@@ -25,11 +25,11 @@
 
 /** \brief Type indicating an amount of threads */
 
-typedef CIMUNIT_THREAD size_t;
+typedef cimunit_thread_id size_t;
 
 typedef struct{
   cimunit_schedule *schedule;
-  CIMUNIT_THREAD thread;
+  cimunit_thread_id thread;
 } cimunit_test_args;
 
 //@}

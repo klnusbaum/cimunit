@@ -39,7 +39,7 @@ int main(int argv, char *argv[]){
   cimunit_schedule sched1;
   cimunit_schedule sched2;
   cimunit_init_schedule(&sched1, "t1end->t2begin", 2);
-  cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
+  //cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
   
   CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched1)
   CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched2)
