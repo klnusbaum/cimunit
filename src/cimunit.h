@@ -45,18 +45,20 @@ int cimunit_run_tests(cimunit_tester_t *tester);
 //@{
 
 #define CIMUNIT_TEST(TEST_GROUP, TEST_NAME) \
- TEST_GROUP##_##TEST_NAME##_Cimunit_Test( \
-  void *args) 
+ void* TEST_GROUP##_##TEST_NAME##_Cimunit_Test(void *args) 
 
 #define CIMUNIT_FIRE_EVENT(EVENT) \
-  cimunit_event EVENT; \
-  cimunit_get_schedule_event(((*cimunit_test_args_t)args)->schedule,##EVENT##);\
-  cimunit_fire_event(&EVENT);
+  cimunit_event_t EVENT; \
+  cimunit_get_schedule_event(  \
+    #EVENT ,  \
+    ((cimunit_test_args_t*)args)->schedule,  \
+    &EVENT );\
+  cimunit_fire_event( &EVENT );
 
 
 
 #define CIMUNIT_ADD_TEST_SCHEDULE(TESTER, TEST_GROUP, TEST_NAME, SCHEDULE) \
-  cimunit_add_test(&TESTER,##TEST_GROUP##_##TEST_NAME##_Cimunit_Test, SCHEDULE);
+  cimunit_add_test(&TESTER, TEST_GROUP##_##TEST_NAME##_Cimunit_Test, &SCHEDULE);
 
 #define CIMUNIT_TNUMBER \
   ((cimunit_test_args_t*)args)->thread

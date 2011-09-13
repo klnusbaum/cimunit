@@ -1,0 +1,3 @@
+Cimunit is a testing framework for assiting in the testing of 
+multithreaded C/C++ code. It is based on the IMUnit speicifcations as 
+outlined at http://mir.cs.illinois.edu/imunit/

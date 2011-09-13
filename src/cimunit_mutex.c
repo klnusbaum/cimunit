@@ -23,7 +23,7 @@ int cimunit_mutex_init(
   cimunit_mutex_t *mutex, 
   const cimunit_mutex_attr_t *attr)
 {
-  return pthread_mutex_init(mutex, attr)
+  return pthread_mutex_init(mutex, attr);
 }
 
 int cimunit_mutex_destroy(cimunit_mutex_t *mutex){

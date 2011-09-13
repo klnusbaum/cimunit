@@ -20,12 +20,13 @@
 #define CIMUNIT_THREAD_H
 
 #include <pthread.h>
+
 typedef pthread_t cimunit_thread_t;
 typedef pthread_attr_t cimunit_thread_attr_t;
 
 int cimunit_thread_create(
-  cimunit_thread_t * restrict thread, 
-  const cimunit_thread_attr_t * restrict attr,
+  cimunit_thread_t *restrict thread, 
+  const cimunit_thread_attr_t * restrict  attr,
   void *(*function)(void *),
   void * restrict arg);
 

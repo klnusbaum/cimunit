@@ -19,7 +19,7 @@
 
 #include "cimunit_thread.h"
 int cimunit_thread_create(
-  cimunit_thread_t *restrict thread, 
+  cimunit_thread_t * restrict thread, 
   const cimunit_thread_attr_t *restrict attr,
   void *(*function)(void *),
   void *restrict arg)

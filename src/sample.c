@@ -18,6 +18,7 @@
  */
 
 #include "cimunit.h"
+#include "stdio.h"
 
 CIMUNIT_TEST(simple_test, test1){
   if(CIMUNIT_TNUMBER == 0){
@@ -32,18 +33,18 @@ CIMUNIT_TEST(simple_test, test1){
   }
 }
 
-int main(int argv, char *argv[]){
+int main(int argc, char *argv[]){
 
   cimunit_tester_t tester;
 
   cimunit_schedule_t sched1;
-  cimunit_schedule_t sched2;
+  //cimunit_schedule_t sched2;
   cimunit_init_schedule(&sched1, "t1end->t2begin", 2);
   //cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
   
   CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched1)
-  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched2)
+  //CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched2)
 
-  return cimunit_run_tests(tester);
+  return cimunit_run_tests(&tester);
 }
 

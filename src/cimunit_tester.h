@@ -34,7 +34,7 @@ typedef struct{
 
 int cimunit_add_test(
   cimunit_tester_t *tester, 
-  int (*test_func)(void *),
+  void *(*test_func)(void *),
   cimunit_schedule_t *sc );
 
 

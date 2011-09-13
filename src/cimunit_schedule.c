@@ -16,10 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <stdlib.h>
+#include <string.h>
 #include "cimunit_schedule.h"
+#include <stdio.h>
 
-size_t getNumEvents(const char* string);
-int getEventNames(char** events, const char *sched_string, int numEvents);
+int getNumEvents(const char *string, size_t *numEvents){
+  (*numEvents) =0;
+  char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
+  strncpy(toTokenize, string, strlen(string));
+  char *currentTok;
+  currentTok = strtok(toTokenize, "->,");
+  while(currentTok != NULL){
+    ++(*numEvents);
+    currentTok = strtok(NULL, "->,");
+  } 
+}
+
+int getEventNames(char **events, const char *sched_string, int numEvents){
+  //TODO, ensure that i ends up at numEvents when currentTok is null.
+  int i;
+  i=0;
+  char *toTokenize = (char*)malloc(sizeof(char)*strlen(sched_string));
+  strncpy(toTokenize, sched_string, strlen(sched_string));
+  char *currentTok;
+  currentTok = strtok(toTokenize, "->,");
+
+  while(currentTok != NULL){
+    size_t token_length = strlen(currentTok);
+    char *copied_token = (char*)malloc(sizeof(char)*(token_length+1));
+    strcpy(copied_token, currentTok);
+    events[i++]= copied_token;
+    currentTok = strtok(NULL, "->,");
+  } 
+
+}
 
 int cimunit_get_schedule_event(
   const char *event_name,
@@ -39,19 +70,20 @@ int cimunit_get_schedule_event(
 int cimunit_init_schedule(
   cimunit_schedule_t *cs, 
   const char *sched_string, 
-  cimunit_thread_amount numThreads)
+  cimunit_thread_amount_t numThreads)
 {
   size_t i;
   cs->numThreads = numThreads;
   cs->sched_string = sched_string;
-  getNumEvents(sched_string, cs->numEvents);
-  cs->events = (event**)malloc(sizeof(cimunit_event*)*(cs->numEvents));
+  getNumEvents(sched_string, &(cs->numEvents));
+  cs->events = 
+    (cimunit_event_t**)malloc(sizeof(cimunit_event_t*)*(cs->numEvents));
 
   char **event_names = (char**)malloc(sizeof(char*)*cs->numEvents);
   getEventNames(event_names, sched_string, cs->numEvents);
 
-  for(i=0; i<size; ++i){
-    cimunit_event *toAdd = (cimunit_event*)malloc(sizeof(cimunit_event));
+  for(i=0; i<cs->numEvents; ++i){
+    cimunit_event_t *toAdd = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
     cimunit_init_event(toAdd, event_names[i]);
     cs->events[i] = toAdd;
   }
@@ -62,11 +94,14 @@ int cimunit_init_schedule(
   cimunit_event_t *end = NULL;
   cimunit_get_schedule_event("t2begin", cs, begin);
   cimunit_get_schedule_event("t1end", cs, end);
-  cimunit_even begin_deps[1];
+  if(begin == NULL){
+    printf("BAHHH!!!!\n");
+  }
+  cimunit_event_t* begin_deps[1];
   begin_deps[0] = end;
   cimunit_set_dependent_events(begin, begin_deps, 1);
 
-  for(i=0; i<size; ++i){
+  for(i=0; i<cs->numEvents; ++i){
     free(event_names[i]);
   }
   free(event_names); 
@@ -75,38 +110,8 @@ int cimunit_init_schedule(
 int cimunit_destroy_schedule(cimunit_schedule_t *cs){
   int i;
   for(i=0; i<cs->numEvents; ++i){
-    free(events[i]);
+    free(cs->events[i]);
   }
-  free(events);
+  free(cs->events);
 }
 
-int getNumEvents(const char* string, size_t &numEvents){
-  numEvents =0;
-  char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
-  strncpy(toTokenize, string, strlen(string));
-  char *currentTok;
-  currentTok = strtok(toTokenize, "->,");
-  while(currentTok != NULL){
-    ++numEvents;
-    currentTok = strtok(NULL, "->,");
-  } 
-}
-
-int getEventNames(char** events, const char *sched_string, int numEvents){
-  //TODO, ensure that i ends up at numEvents when currentTok is null.
-  int i;
-  i=0;
-  char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
-  strncpy(toTokenize, string, strlen(string));
-  char *currentTok;
-  currentTok = strtok(toTokenize, "->,");
-
-  while(currentTok != NULL){
-    size_t token_length = strlen(currentTok);
-    char *copied_token = (char*)malloc(sizeof(char)*(token_length+1));
-    strcpy(copied_token, currentTok);
-    events[i++]= copied_token;
-    currentTok = strtok(NULL, "->,");
-  } 
-
-}

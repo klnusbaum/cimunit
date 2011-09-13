@@ -25,10 +25,10 @@ int cimunit_init_event(
   to_init->event_name = name;
   cimunit_mutex_init(&(to_init->mutex), NULL);
   cimunit_mutex_lock(&(to_init->mutex));
-  to_init->depEvents = NULL;
+  to_init->dep_events = NULL;
   to_init->numDepEvents = 0;
 }
-t
+
 int cimunit_destroy_event(cimunit_event_t *to_destroy){
   cimunit_mutex_destroy(&(to_destroy->mutex));
 }
@@ -46,8 +46,8 @@ int cimunit_fire_event(cimunit_event_t *event){
   size_t i;
   //ASSERT DEPEVENTS NOT NULL!!!!!!
   for(i=0; i<event->numDepEvents;++i){
-    cimunit_mutex_lock(&(event->depEvents[i]->mutex));
-    cimunit_mutex_unlock(&(event->depEvents[i]->mutex));
+    cimunit_mutex_lock(&(event->dep_events[i]->mutex));
+    cimunit_mutex_unlock(&(event->dep_events[i]->mutex));
   }
   cimunit_mutex_unlock(&(event->mutex));
 }
