@@ -42,6 +42,6 @@ int cimunit_destroy_schedule(cimunit_schedule_t *cs);
 int cimunit_get_schedule_event(
   const char *event_name,
   const cimunit_schedule_t *schedule,
-  cimunit_event_t *found_event);
+  cimunit_event_t **found_event);
 
 #endif //CIMUNIT_SCHEDULE_H

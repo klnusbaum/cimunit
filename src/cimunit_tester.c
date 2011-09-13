@@ -17,6 +17,8 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "cimunit_tester.h"
+#include <stdio.h>
+
 /**
  * newTest should be null
  */
@@ -30,6 +32,11 @@ int cimunit_create_test_instance(
   newTest->test_func = test_func;
   newTest->sc = sc;
   newTest->next = NULL;
+}
+
+int cimunit_init_tester(cimunit_tester_t *toInit){
+  toInit->headTest = NULL;
+  toInit->tailTest = NULL;
 }
 
 int cimunit_queue_test(

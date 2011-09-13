@@ -48,12 +48,12 @@ int cimunit_run_tests(cimunit_tester_t *tester);
  void* TEST_GROUP##_##TEST_NAME##_Cimunit_Test(void *args) 
 
 #define CIMUNIT_FIRE_EVENT(EVENT) \
-  cimunit_event_t EVENT; \
+  cimunit_event_t *EVENT; \
   cimunit_get_schedule_event(  \
     #EVENT ,  \
     ((cimunit_test_args_t*)args)->schedule,  \
     &EVENT );\
-  cimunit_fire_event( &EVENT );
+  cimunit_fire_event( EVENT );
 
 
 

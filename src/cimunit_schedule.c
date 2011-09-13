@@ -55,12 +55,12 @@ int getEventNames(char **events, const char *sched_string, int numEvents){
 int cimunit_get_schedule_event(
   const char *event_name,
   const cimunit_schedule_t *schedule,
-  cimunit_event_t *found_event)
+  cimunit_event_t **found_event)
 {
   int i;
   for(i=0; i<schedule->numEvents; ++i){
     if(strcmp(event_name, schedule->events[i]->event_name) ==0){
-      found_event = schedule->events[i];
+      (*found_event) = schedule->events[i];
       return 0;
     }
   }
@@ -78,6 +78,7 @@ int cimunit_init_schedule(
   getNumEvents(sched_string, &(cs->numEvents));
   cs->events = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*)*(cs->numEvents));
+ 
 
   char **event_names = (char**)malloc(sizeof(char*)*cs->numEvents);
   getEventNames(event_names, sched_string, cs->numEvents);
@@ -92,21 +93,26 @@ int cimunit_init_schedule(
   //PROGRAM!!!!
   cimunit_event_t *begin = NULL;
   cimunit_event_t *end = NULL;
-  cimunit_get_schedule_event("t2begin", cs, begin);
-  cimunit_get_schedule_event("t1end", cs, end);
-  cimunit_event_t* begin_deps[1];
+  cimunit_get_schedule_event("t2begin", cs, &begin);
+  cimunit_get_schedule_event("t1end", cs, &end);
+
+
+
+  cimunit_event_t** begin_deps = 
+    (cimunit_event_t**)malloc(sizeof(cimunit_event_t*));
   begin_deps[0] = end;
   cimunit_set_dependent_events(begin, begin_deps, 1);
 
   for(i=0; i<cs->numEvents; ++i){
     free(event_names[i]);
   }
-  free(event_names); 
+  free(event_names);
 }
 
 int cimunit_destroy_schedule(cimunit_schedule_t *cs){
   int i;
   for(i=0; i<cs->numEvents; ++i){
+    free(cs->events[i]->dep_events);
     free(cs->events[i]);
   }
   free(cs->events);

@@ -32,6 +32,8 @@ typedef struct{
   cimunit_test_instance_t *tailTest;
 } cimunit_tester_t;
 
+int cimunit_init_tester(cimunit_tester_t *toInit);
+
 int cimunit_add_test(
   cimunit_tester_t *tester, 
   void *(*test_func)(void *),

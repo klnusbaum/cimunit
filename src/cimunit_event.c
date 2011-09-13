@@ -17,6 +17,8 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "cimunit_event.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 int cimunit_init_event(
   cimunit_event_t *to_init, 
@@ -38,6 +40,10 @@ int cimunit_set_dependent_events(
   cimunit_event_t **depEvents,
   size_t numDepEvents)
 {
+  if(event == NULL){
+    fprintf(stderr, "Cannot assign dependent events to a NULL pointer\n");
+    exit(1);
+  }
   event->dep_events = depEvents;
   event->numDepEvents = numDepEvents;
 }
