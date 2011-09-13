@@ -20,22 +20,22 @@
 #ifndef CIMUNIT_TESTER_H
 #define CIMUNIT_TESTER_H
 #include "cimunit_schedule.h"
-typedef struct{
-  int (*test_func)(void *) test_function;
-  cimunit_schedule *sc;
-  cimunit_test_instance *next;
-}cimunit_test_instance;
+typedef struct cimunit_test_instance{
+  void *(*test_func)(void *);
+  cimunit_schedule_t *sc;
+  struct cimunit_test_instance *next;
+}cimunit_test_instance_t;
 
 /** \brief Struct which represent a sieres of tests to be run. */
 typedef struct{
-  cimunit_test_instance *headTest
-  cimunit_test_instance *tailTest
-} cimunit_tester tester;
+  cimunit_test_instance_t *headTest;
+  cimunit_test_instance_t *tailTest;
+} cimunit_tester_t;
 
 int cimunit_add_test(
-  cimunit_tester *tester, 
+  cimunit_tester_t *tester, 
   int (*test_func)(void *),
-  cimunit_schedule* sc );
+  cimunit_schedule_t *sc );
 
 
 #endif

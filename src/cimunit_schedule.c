@@ -23,8 +23,8 @@ int getEventNames(char** events, const char *sched_string, int numEvents);
 
 int cimunit_get_schedule_event(
   const char *event_name,
-  cimunit_schedule *schedule,
-  cimunit_event *found_event)
+  cimunit_schedule_t *schedule,
+  cimunit_event_t *found_event)
 {
   int i;
   for(i=0; i<schedule->numEvents; ++i){
@@ -37,9 +37,9 @@ int cimunit_get_schedule_event(
 }
 
 int cimunit_init_schedule(
-  cimunit_schedule *cs, 
+  cimunit_schedule_t *cs, 
   const char *sched_string, 
-  CIMUNIT_THREAD_AMOUNT numThreads)
+  cimunit_thread_amount numThreads)
 {
   size_t i;
   cs->numThreads = numThreads;
@@ -58,8 +58,8 @@ int cimunit_init_schedule(
 
   //STATIC ASSIGNMENT OF DEPENECIES THIS IS JUST FOR TESTING OUT MY SAMPLE
   //PROGRAM!!!!
-  cimunit_event *begin = NULL;
-  cimunit_event *end = NULL;
+  cimunit_event_t *begin = NULL;
+  cimunit_event_t *end = NULL;
   cimunit_get_schedule_event("t2begin", cs, begin);
   cimunit_get_schedule_event("t1end", cs, end);
   cimunit_even begin_deps[1];
@@ -72,7 +72,7 @@ int cimunit_init_schedule(
   free(event_names); 
 }
 
-int cimunit_destroy_schedule(cimunit_schedule *cs){
+int cimunit_destroy_schedule(cimunit_schedule_t *cs){
   int i;
   for(i=0; i<cs->numEvents; ++i){
     free(events[i]);

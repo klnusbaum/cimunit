@@ -19,19 +19,20 @@
 
 #ifndef CIMUNIT_EVENT_H
 #define CIMUNIT_EVENT_H
-#include "cimunit_cond.h"
-typedef struct{
-  const char *event_name;
-  cimunit_mutex mutex; 
-  cimunit_event **dep_events;  
-  size_t numDepEvents;
-} cimunit_event;
+#include "cimunit_mutex.h"
 
-int cimunit_init_event(cimunit_event* to_init, const char *name);
-int cimunit_destroy_event(cimunit_event* to_destroy);
+typedef struct cimunit_event{
+  const char *event_name;
+  cimunit_mutex_t mutex; 
+  struct cimunit_event **dep_events;  
+  size_t numDepEvents;
+} cimunit_event_t;
+
+int cimunit_init_event(cimunit_event_t* to_init, const char *name);
+int cimunit_destroy_event(cimunit_event_t* to_destroy);
 int cimunit_set_dependent_events(
-  cimunit_event *event,
-  cimunit_event **depEvents,
+  cimunit_event_t *event,
+  cimunit_event_t **depEvents,
   size_t numDepEvents);
-int cimunit_fire_event(cimunit_event *event);
+int cimunit_fire_event(cimunit_event_t *event);
 #endif // CIMUNIT_EVENT_H

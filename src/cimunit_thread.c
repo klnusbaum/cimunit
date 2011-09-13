@@ -19,16 +19,15 @@
 
 #include "cimunit_thread.h"
 int cimunit_thread_create(
-  cimunit_thread *restrict thread, 
-  const cimunit_thread_attr *restrict attr,
+  cimunit_thread_t *restrict thread, 
+  const cimunit_thread_attr_t *restrict attr,
   void *(*function)(void *),
   void *restrict arg)
 {
-  pthread_create(thread, attr, function, arg);
-
+  return pthread_create(thread, attr, function, arg);
 }
 
-int cimunit_join(cimunit_thread, void **value_ptr){
-  pthread_join(cimunit_thread, value_ptr);
+int cimunit_join(cimunit_thread_t thread, void **value_ptr){
+  return pthread_join(thread, value_ptr);
 }
 

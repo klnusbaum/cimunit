@@ -19,7 +19,7 @@
 #include "cimunit_event.h"
 
 int cimunit_init_event(
-  cimunit_event* to_init, 
+  cimunit_event_t *to_init, 
   const char *name)
 {
   to_init->event_name = name;
@@ -28,21 +28,21 @@ int cimunit_init_event(
   to_init->depEvents = NULL;
   to_init->numDepEvents = 0;
 }
-
-int cimunit_destroy_event(cimunit_event* to_destroy){
+t
+int cimunit_destroy_event(cimunit_event_t *to_destroy){
   cimunit_mutex_destroy(&(to_destroy->mutex));
 }
 
 int cimunit_set_dependent_events(
-  cimunit_event *event,
-  cimunit_event **depEvents,
+  cimunit_event_t *event,
+  cimunit_event_t **depEvents,
   size_t numDepEvents)
 {
   event->dep_events = depEvents;
   event->numDepEvents = numDepEvents;
 }
 
-int cimunit_fire_event(cimunit_event *event){
+int cimunit_fire_event(cimunit_event_t *event){
   size_t i;
   //ASSERT DEPEVENTS NOT NULL!!!!!!
   for(i=0; i<event->numDepEvents;++i){

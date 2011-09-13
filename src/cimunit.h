@@ -25,19 +25,19 @@
 
 /** \brief Type indicating an amount of threads */
 
-typedef cimunit_thread_id size_t;
+typedef size_t cimunit_thread_id_t;
 
 typedef struct{
-  cimunit_schedule *schedule;
-  cimunit_thread_id thread;
-} cimunit_test_args;
+  cimunit_schedule_t *schedule;
+  cimunit_thread_id_t thread;
+} cimunit_test_args_t;
 
 //@}
 
 /** \name Cimunit Functions */
 //@{
 
-int cimunit_run_tests(cimunit_tester *tester);
+int cimunit_run_tests(cimunit_tester_t *tester);
 
 //@}
 
@@ -45,12 +45,12 @@ int cimunit_run_tests(cimunit_tester *tester);
 //@{
 
 #define CIMUNIT_TEST(TEST_GROUP, TEST_NAME) \
-##TEST_GROUP##_##TEST_NAME##_Cimunit_Test( \
+ TEST_GROUP##_##TEST_NAME##_Cimunit_Test( \
   void *args) 
 
 #define CIMUNIT_FIRE_EVENT(EVENT) \
   cimunit_event EVENT; \
-  cimunit_get_schedule_event(((*cimunit_test_args)args)->schedule,##EVENT##); \
+  cimunit_get_schedule_event(((*cimunit_test_args_t)args)->schedule,##EVENT##);\
   cimunit_fire_event(&EVENT);
 
 
@@ -59,7 +59,7 @@ int cimunit_run_tests(cimunit_tester *tester);
   cimunit_add_test(&TESTER,##TEST_GROUP##_##TEST_NAME##_Cimunit_Test, SCHEDULE);
 
 #define CIMUNIT_TNUMBER \
-  ((cimunit_test_args*)args)->thread
+  ((cimunit_test_args_t*)args)->thread
 //@}
 
 #endif //CIMUNIT_H

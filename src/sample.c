@@ -34,10 +34,10 @@ CIMUNIT_TEST(simple_test, test1){
 
 int main(int argv, char *argv[]){
 
-  cimunit_tester tester;
+  cimunit_tester_t tester;
 
-  cimunit_schedule sched1;
-  cimunit_schedule sched2;
+  cimunit_schedule_t sched1;
+  cimunit_schedule_t sched2;
   cimunit_init_schedule(&sched1, "t1end->t2begin", 2);
   //cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
   

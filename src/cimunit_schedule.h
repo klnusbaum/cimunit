@@ -18,28 +18,30 @@
  */
 #ifndef CIMUNIT_SCHEDULE_H
 #define CIMUNIT_SCHEDULE_H
+#include <stdlib.h>
+#include "cimunit_event.h"
 
-typedef CIMUNIT_THREAD_AMOUNT int;
+typedef size_t cimunit_thread_amount_t;
 
 
 /** \brief Struct which represents a schedule to be used in a test.*/
 typedef struct{
-  CIMUNIT_THREAD_AMOUNT numThreads;
+  cimunit_thread_amount_t numThreads;
   const char *sched_string; 
-  cimunit_event **events;
+  cimunit_event_t **events;
   size_t numEvents;
-} cimunit_schedule;
+} cimunit_schedule_t;
 
 int cimunit_init_schedule(
-  cimunit_schedule *cs, 
+  cimunit_schedule_t *cs, 
   const char *sched_string, 
-  CIMUNIT_THREAD_AMOUNT numThreads);
+  cimunit_thread_amount_t numThreads);
 
-int cimunit_destroy_schedule(cimunit_schedule *cs);
+int cimunit_destroy_schedule(cimunit_schedule_t *cs);
 
 int cimunit_get_schedule_event(
   const char *event_name,
-  cimunit_schedule *schedule,
-  cimunit_event *found_event);
+  cimunit_schedule_t *schedule,
+  cimunit_event_t *found_event);
 
 #endif //CIMUNIT_SCHEDULE_H
