@@ -52,9 +52,19 @@ int cimunit_init_schedule(
 
   for(i=0; i<size; ++i){
     cimunit_event *toAdd = (cimunit_event*)malloc(sizeof(cimunit_event));
-    cimunit_init_event(toAdd, events[i]);
+    cimunit_init_event(toAdd, event_names[i]);
     cs->events[i] = toAdd;
   }
+
+  //STATIC ASSIGNMENT OF DEPENECIES THIS IS JUST FOR TESTING OUT MY SAMPLE
+  //PROGRAM!!!!
+  cimunit_event *begin = NULL;
+  cimunit_event *end = NULL;
+  cimunit_get_schedule_event("t2begin", cs, begin);
+  cimunit_get_schedule_event("t1end", cs, end);
+  cimunit_even begin_deps[1];
+  begin_deps[0] = end;
+  cimunit_set_dependent_events(begin, begin_deps, 1);
 
   for(i=0; i<size; ++i){
     free(event_names[i]);
@@ -82,3 +92,21 @@ int getNumEvents(const char* string, size_t &numEvents){
   } 
 }
 
+int getEventNames(char** events, const char *sched_string, int numEvents){
+  //TODO, ensure that i ends up at numEvents when currentTok is null.
+  int i;
+  i=0;
+  char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
+  strncpy(toTokenize, string, strlen(string));
+  char *currentTok;
+  currentTok = strtok(toTokenize, "->,");
+
+  while(currentTok != NULL){
+    size_t token_length = strlen(currentTok);
+    char *copied_token = (char*)malloc(sizeof(char)*(token_length+1));
+    strcpy(copied_token, currentTok);
+    events[i++]= copied_token;
+    currentTok = strtok(NULL, "->,");
+  } 
+
+}

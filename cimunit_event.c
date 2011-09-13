@@ -25,6 +25,8 @@ int cimunit_init_event(
   to_init->event_name = name;
   cimunit_mutex_init(&(to_init->mutex), NULL);
   cimunit_mutex_lock(&(to_init->mutex));
+  to_init->depEvents = NULL;
+  to_init->numDepEvents = 0;
 }
 
 int cimunit_destroy_event(cimunit_event* to_destroy){
