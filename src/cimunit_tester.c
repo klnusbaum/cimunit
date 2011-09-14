@@ -22,13 +22,11 @@
 /**
  * newTest should be null
  */
-int cimunit_create_test_instance(
+int cimunit_init_test_instance(
   void *(*test_func)(void *),
   cimunit_schedule_t *sc,
   cimunit_test_instance_t *newTest )
 {
-  newTest = (cimunit_test_instance_t*)malloc(
-    sizeof(cimunit_test_instance_t));
   newTest->test_func = test_func;
   newTest->sc = sc;
   newTest->next = NULL;
@@ -58,8 +56,9 @@ int cimunit_add_test(
   void *(*test_func)(void *),
   cimunit_schedule_t* sc )
 {
-  cimunit_test_instance_t *newTest;
-  cimunit_create_test_instance(test_func, sc, newTest);
+  cimunit_test_instance_t *newTest = 
+    (cimunit_test_instance_t*)malloc(sizeof(cimunit_test_instance_t));
+  cimunit_init_test_instance(test_func, sc, newTest);
   cimunit_queue_test(newTest, tester);
 }
 

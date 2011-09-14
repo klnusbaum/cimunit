@@ -27,16 +27,15 @@ int cimunit_run_test(void *(*test_func)(void *), cimunit_schedule_t *sc){
 int cimunit_run_tests(cimunit_tester_t *tester){
   cimunit_test_instance_t *nextTest = tester->headTest;
   while(nextTest != NULL){
-    if(nextTest == NULL){
-      printf("Next test was null\n");
-    }
-    if(nextTest->test_func == NULL){
-      printf("fucn was null\n");
-    }
-    if(nextTest->sc == NULL){
-      printf("schedule was null\n");
-    }
     cimunit_run_test(nextTest->test_func, nextTest->sc);
     nextTest = nextTest->next;
   }
+  cimunit_test_instance_t *to_dealloc;
+  nextTest = tester->headTest;
+  while(nextTest != NULL){
+    to_dealloc = nextTest;
+    nextTest = nextTest->next;
+    free(to_dealloc);
+  }
+
 }
