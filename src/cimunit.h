@@ -53,7 +53,9 @@ int cimunit_run_tests(cimunit_tester_t *tester);
     #EVENT ,  \
     ((cimunit_test_args_t*)args)->schedule,  \
     &EVENT );\
-  cimunit_fire_event( EVENT );
+  if( EVENT != NULL){ \
+    cimunit_fire_event( EVENT ); \
+  }
 
 
 

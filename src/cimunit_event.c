@@ -50,14 +50,9 @@ int cimunit_set_dependent_events(
 
 int cimunit_fire_event(cimunit_event_t *event){
   size_t i;
+//  printf("Even trying to fire: %s\n", event->event_name);
   //ASSERT DEPEVENTS NOT NULL!!!!!!
   for(i=0; i<event->numDepEvents;++i){
-    if(event == NULL){
-      printf("Event is null\n");
-    }
-    if(event->dep_events[i]){
-      printf("dep event is null\n");
-    }
     cimunit_mutex_lock(&(event->dep_events[i]->mutex));
     cimunit_mutex_unlock(&(event->dep_events[i]->mutex));
   }
