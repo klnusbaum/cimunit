@@ -1,0 +1,60 @@
+Title: CIMUnit Grammer  
+Author: Dale Frampton  
+Date: 18 September 2011  
+Base Header Level: 2  
+
+# Introduction #
+
+This file describes the grammar and the analysis of implementing particular
+grammar features in C/C++.
+
+The grammar specified by IMUnit is as follows:
+
+        Schedule ::= { Ordering "," } Ordering
+        Ordering ::= Condition "->" Action
+        Condition ::= BasicEvent | BlockEvent
+        Action ::= BasicEvent
+        BasicEvent ::= EventName [ "@" ThreadName ]
+        BlockEvent ::= "[" EventName [ ":" EventName ] "]" [ "@" ThreadName ]
+        EventName ::= { Id "." } Id
+        ThreadName ::= Id
+
+To support the above grammar, four separate concepts must be supported:
+
+1. Thread Independent Events *e1*
+2. Thread Dependent Events *e1@t1*
+3. Blocking Events *[e1]* or *[e1@t1]*
+4. Ordering of Events *e1 -> e2* or *e1@t1 -> e2* or *[e1] -> e2*, etc...
+
+## Thread Independent Events ##
+
+Thread independent events are the simplest events to work with.  They can
+most likely be modeled with a semaphore or a mutex to act as a lock.  When
+the event is triggered and it is used as a condition, it will walk through
+all events defined as an Action and *release* the associated lock.
+
+When the triggered event is an action it will *acquire* the associated lock.
+If the lock has not been previously *released* it will block the thread
+until it is released.
+
+## Thread Dependent Events ##
+
+The runtime environments in which C/C++ operate have different threading
+models and it may not be possible to determine which thread triggered
+the event, assuming that threads are even named.  The goal of the project
+is to be as portable as possible.
+
+**At this time, thread dependent events are not being considered**
+
+## Blocking Events ##
+
+The runtime environments in which C/C++ operate have different threading
+models and it may not be possible to determine if a specific named thread
+is currently blocking.  The goal of the project
+is to be as portable as possible.
+
+**At this time, thread dependent events are not being considered**
+
+## Ordering of Events ##
+
+
