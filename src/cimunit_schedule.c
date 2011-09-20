@@ -21,7 +21,7 @@
 #include "cimunit_schedule.h"
 #include <stdio.h>
 
-int getNumEvents(const char *string, size_t *numEvents){
+int cimunit_get_num_events(const char *string, size_t *numEvents){
   (*numEvents) =0;
   char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
   strncpy(toTokenize, string, strlen(string));
@@ -31,25 +31,6 @@ int getNumEvents(const char *string, size_t *numEvents){
     ++(*numEvents);
     currentTok = strtok(NULL, "->,");
   } 
-}
-
-int getEventNames(char **events, const char *sched_string, int numEvents){
-  //TODO, ensure that i ends up at numEvents when currentTok is null.
-  int i;
-  i=0;
-  char *toTokenize = (char*)malloc(sizeof(char)*strlen(sched_string));
-  strncpy(toTokenize, sched_string, strlen(sched_string));
-  char *currentTok;
-  currentTok = strtok(toTokenize, "->,");
-
-  while(currentTok != NULL){
-    size_t token_length = strlen(currentTok);
-    char *copied_token = (char*)malloc(sizeof(char)*(token_length+1));
-    strcpy(copied_token, currentTok);
-    events[i++]= copied_token;
-    currentTok = strtok(NULL, "->,");
-  } 
-
 }
 
 int cimunit_get_schedule_event(
@@ -64,27 +45,9 @@ int cimunit_get_schedule_event(
       return 0;
     }
   }
+  (*found_event) = NULL;
   return 1;
 }
-
-/*
-int cimunit_create_schedule_events(cimunit_schedule_t *cs)
-{
-  char *toTokenize = (char*)malloc(sizeof(char)*strlen(cs->sched_string));
-  strncpy(toTokenize, sched_string, strlen(cs->sched_string));
-  char *currentTok;
-  currentTok = strtok(toTokenize, "->,");
-
-  cs->events = 
-    (cimunit_event_t**)malloc(sizeof(cimunit_event_t*)*(cs->numEvents));
-
-  for(int i=0; i<cs->numEvents; ++i){
-    cimunit_event_t *toAdd = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
-    cimunit_init_event(toAdd, currentTok);
-    cs->events[i] = toAdd;
-    currentTok = strtok(NULL, "->,");
-  } 
-}*/
 
 int cimunit_init_schedule(
   cimunit_schedule_t *cs, 
@@ -95,39 +58,39 @@ int cimunit_init_schedule(
   cs->numThreads = numThreads;
   cs->sched_string = sched_string;
 
-  getNumEvents(sched_string, &(cs->numEvents));
+  cimunit_get_num_events(sched_string, &(cs->numEvents));
 
   //Replace this hardcode with actual parsing of the schedule.
   cs->events = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*)*(cs->numEvents));
-  cs->events[0] = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
-  cs->events[1] = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
-  cimunit_init_event(cs->events[0], "t1begin");
-  cimunit_init_event(cs->events[1], "t2end");
-  
+  for(i = 0; i < cs->numEvents ;++i){
+    cs->events[i] = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
+    //Should probably do per-event initialization in here. including
+    //assigning any dependent events.
+  }
 
   //STATIC ASSIGNMENT OF DEPENECIES THIS IS JUST FOR TESTING OUT MY SAMPLE
   //PROGRAM!!!!
-/*  cimunit_event_t *begin = NULL;
-  cimunit_event_t *end = NULL;
-  cimunit_get_schedule_event("t2begin", cs, &begin);
-  cimunit_get_schedule_event("t1end", cs, &end);*/
-
-
-
+  char *name1 = (char*)malloc(sizeof(char)*8);
+  strcpy(name1, "t2begin");
+  char *name2 = (char*)malloc(sizeof(char)*6);
+  strcpy(name2, "t1end");
+  cimunit_init_event(cs->events[0], name1);
+  cimunit_init_event(cs->events[1], name2);
   cimunit_event_t** begin_deps = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*));
   begin_deps[0] = cs->events[1];
   cimunit_set_dependent_events(cs->events[0], begin_deps, 1);
+  //END static assigment
 }
 
 int cimunit_destroy_schedule(cimunit_schedule_t *cs){
   int i;
   for(i=0; i<cs->numEvents; ++i){
-    free(cs->events[i]->dep_events);
+    cimunit_destroy_event(cs->events[i]);
+    free(cs->events[i]->event_name);
     free(cs->events[i]);
   }
   free(cs->events);
-  free(cs->event_names);
 }
 

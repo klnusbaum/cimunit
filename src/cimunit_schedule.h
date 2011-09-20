@@ -30,8 +30,10 @@ typedef struct{
   const char *sched_string; 
   cimunit_event_t **events;
   size_t numEvents;
-  char **event_names;
 } cimunit_schedule_t;
+
+
+int cimunit_get_event_names(const char *sched_string, char **event_names);
 
 int cimunit_init_schedule(
   cimunit_schedule_t *cs, 
