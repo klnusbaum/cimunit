@@ -22,13 +22,13 @@
 #include "cimunit_mutex.h"
 
 typedef struct cimunit_event{
-  const char *event_name;
+  char *event_name;
   cimunit_mutex_t mutex; 
   struct cimunit_event **dep_events;  
   size_t numDepEvents;
 } cimunit_event_t;
 
-int cimunit_init_event(cimunit_event_t* to_init, const char *name);
+int cimunit_init_event(cimunit_event_t* to_init, char *name);
 int cimunit_destroy_event(cimunit_event_t* to_destroy);
 int cimunit_set_dependent_events(
   cimunit_event_t *event,

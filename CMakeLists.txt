@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
-project(cimunit C Java)
-message(STATUS ${CMAKE_SYSTEM_NAME})
+project(cimunit C)
 
-# Define PLATFORM_Darwin, PLATFORM_Linux, etc... to support platform specific
-# customizations of CIMunit
-set(CMAKE_C_FLAGS "-std=c99 -D PLATFORM_${CMAKE_SYSTEM_NAME}")
+if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -std=c99")
+endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+
+# Add definitions for platform specific code
+add_definitions("-DPLATFORM_${CMAKE_SYSTEM_NAME}")
 
 ENABLE_TESTING()
-find_package(Threads)
+FIND_PACKAGE(Threads)
 add_subdirectory(src)
 add_subdirectory(tests)

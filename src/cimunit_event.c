@@ -22,7 +22,7 @@
 
 int cimunit_init_event(
   cimunit_event_t *to_init, 
-  const char *name)
+  char *name)
 {
   to_init->event_name = name;
   cimunit_mutex_init(&(to_init->mutex), NULL);
@@ -50,7 +50,7 @@ int cimunit_set_dependent_events(
 
 int cimunit_fire_event(cimunit_event_t *event){
   size_t i;
-//  printf("Even trying to fire: %s\n", event->event_name);
+  //printf(" trying to fire: %s \n", event->event_name);
   //ASSERT DEPEVENTS NOT NULL!!!!!!
   for(i=0; i<event->numDepEvents;++i){
     cimunit_mutex_lock(&(event->dep_events[i]->mutex));
