@@ -63,11 +63,13 @@ int cimunit_init_schedule(
   //Replace this hardcode with actual parsing of the schedule.
   cs->events = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*)*(cs->numEvents));
+  /*
   for(i = 0; i < cs->numEvents ;++i){
     cs->events[i] = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
     //Should probably do per-event initialization in here. including
     //assigning any dependent events.
   }
+  */
 
   //STATIC ASSIGNMENT OF DEPENECIES THIS IS JUST FOR TESTING OUT MY SAMPLE
   //PROGRAM!!!!
@@ -75,8 +77,8 @@ int cimunit_init_schedule(
   strcpy(name1, "t2begin");
   char *name2 = (char*)malloc(sizeof(char)*6);
   strcpy(name2, "t1end");
-  cimunit_init_event(cs->events[0], name1);
-  cimunit_init_event(cs->events[1], name2);
+  cs->events[0] = cimunit_event_init(name1);
+  cs->events[1] = cimunit_event_init(name2);
   cimunit_event_t** begin_deps = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*));
   begin_deps[0] = cs->events[1];
@@ -87,7 +89,7 @@ int cimunit_init_schedule(
 int cimunit_destroy_schedule(cimunit_schedule_t *cs){
   int i;
   for(i=0; i<cs->numEvents; ++i){
-    cimunit_destroy_event(cs->events[i]);
+    cimunit_event_destroy(cs->events[i]);
     free(cs->events[i]->event_name);
     free(cs->events[i]);
   }

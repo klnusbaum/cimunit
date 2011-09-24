@@ -21,4 +21,3 @@ target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(sample sample.c)
 target_link_libraries(sample cimunit)
-
