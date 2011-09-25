@@ -8,17 +8,7 @@ set(CIMUNIT_SRC
   cimunit_thread.c
 )
    
-set(CIMUNIT_HDRS
-  cimunit.h
-  cimunit_barrier.h
-  cimunit_event.h
-  cimunit_mutex.h
-  cimunit_schedule.h
-  cimunit_tester.h
-  cimunit_thread.h
-)
-
-add_library(cimunit ${CIMUNIT_SRC} ${CIMUNIT_HDRS})
+add_library(cimunit ${CIMUNIT_SRC})
 target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(sample sample.c)

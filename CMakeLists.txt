@@ -8,6 +8,10 @@ endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 # Add definitions for platform specific code
 add_definitions("-DPLATFORM_${CMAKE_SYSTEM_NAME}")
 
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(.)
+
 enable_testing()
 FIND_PACKAGE(Threads)
 add_subdirectory(src)
