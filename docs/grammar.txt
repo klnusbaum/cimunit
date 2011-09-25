@@ -19,12 +19,14 @@ The grammar specified by IMUnit is as follows:
         EventName ::= { Id "." } Id
         ThreadName ::= Id
 
-To support the above grammar, four separate concepts must be supported:
+To support the above grammar, four primitive structures must be supported:
 
 1. Thread Independent Events *e1*
 2. Thread Dependent Events *e1@t1*
 3. Blocking Events *[e1]* or *[e1@t1]*
 4. Ordering of Events *e1 -> e2* or *e1@t1 -> e2* or *[e1] -> e2*, etc...
+
+# Primitive Structures #
 
 ## Thread Independent Events ##
 
@@ -57,4 +59,34 @@ is to be as portable as possible.
 
 ## Ordering of Events ##
 
+Events are ordered by systematically acquiring and releasing the locks
+associated with the events.  Each event may be a Condition event and/or an
+Action event.  The actions taken when each type of event is fired is as follows:
 
+### Ordering Algorithm ###
+
+    Array linkedConditions = Set of all action events where thisEvent is is a
+                             condition
+    for all events in linkedConditions {
+        Release the lock associated with condition event
+    }
+
+    if thisEvent is in the set of Action Events {
+        Acquire the lock associated with the event
+    }
+
+# Proposed API #
+
+The API is designed to be similar to that of IMUnit, however, since C doesn't
+support Java's annotations, deviations must be made.  Additionally, the lack
+of namespace support in C necessitates prepending *cimunit_* to all methods
+associated with this library.
+
+cimunit_schedule(schedule) :
+  Define the schedule to be used until the test run has ended
+  
+cimunit_schedule_end() :
+  Denote the end of the test run
+
+cimunit_fireEvent(eventName) :
+  Fire an event per the ordering algorithm
