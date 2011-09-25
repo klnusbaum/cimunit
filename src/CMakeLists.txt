@@ -1,5 +1,6 @@
 set(CIMUNIT_SRC
   cimunit.c
+  cimunit_barrier_unix.c
   cimunit_event.c
   cimunit_mutex.c
   cimunit_schedule.c
@@ -9,6 +10,7 @@ set(CIMUNIT_SRC
    
 set(CIMUNIT_HDRS
   cimunit.h
+  cimunit_barrier.h
   cimunit_event.h
   cimunit_mutex.h
   cimunit_schedule.h
