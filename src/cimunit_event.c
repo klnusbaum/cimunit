@@ -30,32 +30,36 @@ cimunit_event_t *cimunit_event_init(char *name)
     cimunit_event_t *event = malloc(sizeof(cimunit_event_t));
   
     event->event_name = name;
+    event->action_barriers = NULL;
+    event->condition_barrier = cimunit_barrier_init();
+
+    event->is_action = false;
+
     cimunit_mutex_init(&(event->mutex), NULL);
     cimunit_mutex_lock(&(event->mutex));
     event->dep_events = NULL;
     event->numDepEvents = 0;
-    event->action_events = NULL;
-    event->is_action = false;
   
     return event;
 }
 
 
 void cimunit_event_destroy(cimunit_event_t *event) {
-    cimunit_event_list_t *list = event->action_events;
-    event->action_events = NULL;
-    
-    cimunit_event_list_t *delete_list;
+    cimunit_event_barrier_list_t *list = event->action_barriers;
+    event->action_barriers = NULL;    
+    cimunit_event_barrier_list_t *delete_entry;   
     
     while(list != NULL)
     {
-      delete_list = list;
-      list = list->next_event;
+      delete_entry = list;
+      list = list->next_barrier;
       
       // Clean-up
-      cimunit_mutex_destroy(&(delete_list->event->mutex));
-      free(delete_list);
+      cimunit_mutex_destroy(&(delete_entry->event->mutex));
+      free(delete_entry);
     }
+    
+    cimunit_barrier_destroy(event->condition_barrier);
     
     free(event);
 }
@@ -64,33 +68,37 @@ void cimunit_event_destroy(cimunit_event_t *event) {
 void cimunit_event_add_action(cimunit_event_t *condition,
                               cimunit_event_t *action)
 {
-    cimunit_event_list_t *new_action =
-      malloc(sizeof(cimunit_event_list_t));
-     
-    // Add action to head of the action list
+    cimunit_event_barrier_list_t *new_action =
+      malloc(sizeof(cimunit_event_barrier_list_t));
+          
+    // Add barrier to head of the barrier list
     new_action->event = action;
-    new_action->next_event = condition->action_events;
-    condition->action_events = new_action;
+    new_action->next_barrier = condition->action_barriers;
+    condition->action_barriers = new_action;
     
-    // action event now need to be marked as such
+    // action event now needs to be marked as such
     action->is_action = true;
 }
 
 
 void cimunit_event_fire(cimunit_event_t *event)
 {
-    cimunit_event_list_t *next_action = event->action_events;
+    cimunit_event_barrier_list_t *next_barrier = event->action_barriers;
   
-    while (next_action != NULL)
+    while (next_barrier != NULL)
     {
-        cimunit_mutex_unlock(&(next_action->event->mutex));
+        cimunit_barrier_unlock(next_barrier->event->condition_barrier);
+        //cimunit_mutex_unlock(&(next_barrier->event->mutex));
+        next_barrier = next_barrier->next_barrier;
     }
   
     if (event->is_action) {
-        cimunit_mutex_lock(&(event->mutex));
+        cimunit_barrier_wait(event->condition_barrier);
+        //cimunit_mutex_lock(&(event->mutex));
     }
 }
 
+/*
 int cimunit_set_dependent_events(
   cimunit_event_t *event,
   cimunit_event_t **depEvents,
@@ -115,4 +123,5 @@ int cimunit_fire_event(cimunit_event_t *event){
   }
   cimunit_mutex_unlock(&(event->mutex));
 }
+*/
 

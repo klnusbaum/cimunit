@@ -1,4 +1,6 @@
 /**
+ * \file cimunit_mutex.h
+ *
  * Copyright 2011 Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.

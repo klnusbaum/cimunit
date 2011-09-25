@@ -81,9 +81,8 @@ int cimunit_init_schedule(
   cs->events[1] = cimunit_event_init(name2);
   cimunit_event_t** begin_deps = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*));
-  begin_deps[0] = cs->events[1];
-  cimunit_set_dependent_events(cs->events[0], begin_deps, 1);
-  //END static assigment
+  
+  cimunit_event_add_action(cs->events[0], cs->events[1]);
 }
 
 int cimunit_destroy_schedule(cimunit_schedule_t *cs){
