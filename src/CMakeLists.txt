@@ -7,6 +7,16 @@ set(CIMUNIT_SRC
   cimunit_tester.c
   cimunit_thread.c
 )
+
+find_package(FLEX)
+FLEX_TARGET(scanner lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/lex_lexer.c)
+
+find_package(BISON)
+BISON_TARGET(grammar grammar.y ${CMAKE_CURRENT_BINARY_DIR}/bison_grammar.c
+             COMPILER_FLAGS "-d")
+ADD_FLEX_BISON_DEPENDENCY(scanner grammar)
+
+add_executable(scantest ${FLEX_scanner_OUTPUTS} ${BISON_grammar_OUTPUTS})
    
 add_library(cimunit ${CIMUNIT_SRC})
 target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})
