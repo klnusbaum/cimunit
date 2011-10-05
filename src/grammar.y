@@ -21,7 +21,8 @@ char *heater="default";
 
 %}
 
-%token TOKHEATER TOKHEAT TOKTARGET TOKTEMPERATURE COMMA IMPLIES
+%token SYMBOL_COMMA SYMBOL_IMPLIES SYMBOL_EOL SYMBOL_LPAREN SYMBOL_RPAREN SYMBOL_AND
+       SYMBOL_OR SYMBOL_LBRACKET SYMBOL_RBRACKET
 
 %union 
 {
@@ -29,51 +30,27 @@ char *heater="default";
 	char *string;
 }
 
+/* %define api.pure */
+
 %token <number> STATE
 %token <number> NUMBER
 %token <string> EVENT_NAME
 
-%type <string> basicEvent condition action
+%type <string> basicEvent blockEvent basicCondition
 
+%start schedules
 
 %%
 
-commands:
-	| schedules
-	;
-
-
-command:
-	heat_switch | target_set | heater_select
-
-heat_switch:
-	TOKHEAT STATE 
-	{
-		if($2)
-			printf("\tHeater '%s' turned on\n", heater);
-		else
-			printf("\tHeat '%s' turned off\n", heater);
-	}
-	;
-
-target_set:
-	TOKTARGET TOKTEMPERATURE NUMBER
-	{
-		printf("\tHeater '%s' temperature set to %d\n",heater, $3);
-	}
-	;
-
-heater_select:
-	TOKHEATER EVENT_NAME
-	{
-		printf("\tSelected heater '%s'\n",$2);
-		heater=$2;
-	}
-	;
-	
-
 schedules:
-    | schedules ordering COMMA
+    | schedules schedule SYMBOL_EOL
+    | schedules schedule SYMBOL_COMMA
+
+schedule:
+    ordering
+
+ordering:
+    condition SYMBOL_IMPLIES basicEvent
     ;
 
 basicEvent:
@@ -82,26 +59,27 @@ basicEvent:
         $$ = $1;
     }
     ;
-    
-    
-condition:
-    basicEvent
+
+blockEvent:
+    SYMBOL_LBRACKET basicEvent SYMBOL_RBRACKET
     {
-        $$ = $1;
-    }
-    ;
-    
-action:
-    basicEvent
-    {
-        $$ = $1;
-    }
-    ;
-    
-ordering:
-    condition IMPLIES action
-    {
-        printf("Ordering: %s -> %s\n", $1, $3);
+        $$ = $2;
     }
     ;
 
+basicCondition:
+    basicEvent
+    {
+        $$ = $1;
+    }
+    | blockEvent
+    {
+        $$ = $1;
+    }
+
+condition:
+    | basicCondition
+    | condition SYMBOL_OR basicCondition
+    | condition SYMBOL_AND basicCondition
+    | SYMBOL_LPAREN condition SYMBOL_RPAREN
+    ;

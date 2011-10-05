@@ -4,18 +4,20 @@
 #include "bison_grammar.h"
 %}
 
+/* %option reentrant */
+
 %%
-[0-9]+                  yylval.number=atoi(yytext); return NUMBER;
-heater			return TOKHEATER;
-heat                    return TOKHEAT;
-on|off                  yylval.number=!strcmp(yytext,"on"); return STATE;
-target                  return TOKTARGET;
-temperature             return TOKTEMPERATURE;
-\n                      /* ignore end of line */;
 [ \t]+                  /* ignore whitespace */;
 
-,               printf("Comma\n");return COMMA;
-->              printf("Implies\n");return IMPLIES;
+\n              return SYMBOL_EOL;
+,               return SYMBOL_COMMA;
+->              return SYMBOL_IMPLIES;
+\(              return SYMBOL_LPAREN;
+\)              return SYMBOL_RPAREN;
+&&              return SYMBOL_AND;
+\|\|            return SYMBOL_OR;
+\[              return SYMBOL_LBRACKET;
+\]              return SYMBOL_RBRACKET;
 
 [a-z0-9]+		yylval.string=strdup(yytext);return EVENT_NAME;
 
