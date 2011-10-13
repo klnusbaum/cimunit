@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
   CU_BasicRunMode mode = CU_BRM_NORMAL;
   CU_ErrorAction error_action = CUEA_ABORT;
   int i;
+  int failures = -1;
 
   setvbuf(stdout, NULL, _IONBF, 0);
 
@@ -95,9 +96,10 @@ int main(int argc, char* argv[])
     AddEventTests();
     CU_basic_set_mode(mode);
     CU_set_error_action(error_action);
-    printf("\nTests completed with return value %d.\n", CU_basic_run_tests());
+    printf("\nTest run completed with return value %d.\n", CU_basic_run_tests());
+    failures = CU_get_number_of_tests_failed();
     CU_cleanup_registry();
   }
 
-  return 0;
+  return failures;
 }
