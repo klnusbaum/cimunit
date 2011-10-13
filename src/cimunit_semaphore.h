@@ -1,7 +1,7 @@
 /**
- * \file cimunit_mutex.h
+ * \file cimunit_semaphore.h
  *
- * Copyright 2011 Kurtis L. Nusbaum
+ * Copyright 2011 Dale Frampton
  * 
  * This file is part of cimunit.
  * 
@@ -19,20 +19,20 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CIMUNIT_MUTEX_H
-#define CIMUNIT_MUTEX_H
+#ifndef CIMUNIT_SEMAPHORE_H
+#define CIMUNIT_SEMAPHORE_H
+
 #include <pthread.h>
 
-typedef pthread_mutex_t cimunit_mutex_t;
-typedef pthread_mutexattr_t cimunit_mutex_attr_t;
+typedef sem_t cimunit_semaphore_t;
 
-int cimunit_mutex_init(
-  cimunit_mutex_t *mutex, 
-  const cimunit_mutex_attr_t *attr);
 
-int cimunit_mutex_destroy(cimunit_mutex_t *mutex);
-int cimunit_mutex_lock(cimunit_mutex_t *mutex);
-int cimunit_mutex_unlock(cimunit_mutex_t *mutex);
+void cimunit_semaphore_destroy(cimunit_semaphore_t *semaphore);
 
-#endif
+void cimunit_semaphore_signal(cimunit_semaphore_t *semaphore);
+
+void cimunit_semaphore_wait(cimunit_semaphore_t *semaphore);
+
+
+#endif // CIMUNIT_SEMAPHORE_H
 
