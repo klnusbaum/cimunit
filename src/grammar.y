@@ -51,12 +51,20 @@ schedule:
 
 ordering:
     condition SYMBOL_IMPLIES basicEvent
+    {
+        printf("Get action event '%s'\n", $3);
+        printf("For each item in condition event list\n");
+        printf("\tRegister action event's barrier with condition event\n");
+        printf("Clear condition event list\n");
+    }
     ;
 
 basicEvent:
     EVENT_NAME
     {
         $$ = $1;
+        printf("Does event '%s' already exit?\n", $1);
+        printf("If not, create event '%s'\n", $1);
     }
     ;
 
@@ -75,11 +83,22 @@ basicCondition:
     | blockEvent
     {
         $$ = $1;
+        yyerror("Blocking events are not supported");
+        YYERROR;
     }
 
 condition:
-    | basicCondition
+    basicCondition
+    {
+        printf("Add event '%s' to condition event list\n", $1);
+    }
     | condition SYMBOL_OR basicCondition
+    {
+        printf("Add event '%s' to condition event list\n", $3);
+    }
     | condition SYMBOL_AND basicCondition
+    {
+        printf("Add event '%s' to condition event list\n", $3);
+    }
     | SYMBOL_LPAREN condition SYMBOL_RPAREN
     ;

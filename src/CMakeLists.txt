@@ -2,6 +2,7 @@ set(CIMUNIT_SRC
   cimunit.c
   cimunit_barrier_unix.c
   cimunit_event.c
+  cimunit_event_list.c
   cimunit_mutex.c
   cimunit_schedule.c
   cimunit_tester.c

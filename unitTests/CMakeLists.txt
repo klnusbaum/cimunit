@@ -1,6 +1,7 @@
 set(CIMUNIT_UNIT_TESTS
   testMain.c
   test_cimunit_event.c
+  test_cimunit_event_list.c
 )
    
 set(CIMUNIT_HDRS_UNIT_TESTS

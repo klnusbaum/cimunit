@@ -85,43 +85,16 @@ void cimunit_event_fire(cimunit_event_t *event)
 {
     cimunit_event_barrier_list_t *next_barrier = event->action_barriers;
   
+    // When the event is fired, open the barriers associated with this event.
+    // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
+    // be unlocked.
     while (next_barrier != NULL)
     {
         cimunit_barrier_unlock(next_barrier->event->condition_barrier);
-        //cimunit_mutex_unlock(&(next_barrier->event->mutex));
         next_barrier = next_barrier->next_barrier;
     }
   
     if (event->is_action) {
         cimunit_barrier_wait(event->condition_barrier);
-        //cimunit_mutex_lock(&(event->mutex));
     }
 }
-
-/*
-int cimunit_set_dependent_events(
-  cimunit_event_t *event,
-  cimunit_event_t **depEvents,
-  size_t numDepEvents)
-{
-  if(event == NULL){
-    fprintf(stderr, "Cannot assign dependent events to a NULL pointer\n");
-    exit(1);
-  }
-  event->dep_events = depEvents;
-  event->numDepEvents = numDepEvents;
-}
-
-
-int cimunit_fire_event(cimunit_event_t *event){
-  size_t i;
-  //printf(" trying to fire: %s \n", event->event_name);
-  //ASSERT DEPEVENTS NOT NULL!!!!!!
-  for(i=0; i<event->numDepEvents;++i){
-    cimunit_mutex_lock(&(event->dep_events[i]->mutex));
-    cimunit_mutex_unlock(&(event->dep_events[i]->mutex));
-  }
-  cimunit_mutex_unlock(&(event->mutex));
-}
-*/
-

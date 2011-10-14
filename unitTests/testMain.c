@@ -24,6 +24,7 @@
 #include "testMain.h"
 
 void AddEventTests(void);
+void AddEventListTests(void);
 
 void print_example_results(void)
 {
@@ -94,6 +95,7 @@ int main(int argc, char* argv[])
   }
   else {
     AddEventTests();
+    AddEventListTests();
     CU_basic_set_mode(mode);
     CU_set_error_action(error_action);
     printf("\nTest run completed with return value %d.\n", CU_basic_run_tests());
