@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "cimunit_event_list.h"
+
 void yyerror(const char *str)
 {
 	fprintf(stderr,"error: %s\n",str);
@@ -12,8 +14,13 @@ int yywrap()
 	return 1;
 }
 
+cimunit_event_list_t *g_grammar_event_list = NULL;
+cimunit_event_list_t *g_grammar_condition_list = NULL;
+
 main()
 {
+    cimunit_event_list_init(&g_grammar_event_list);
+    cimunit_event_list_init(&g_grammar_condition_list);
 	yyparse();
 }
 
@@ -52,6 +59,9 @@ schedule:
 ordering:
     condition SYMBOL_IMPLIES basicEvent
     {
+        cimunit_event_t *action_event =
+          cimunit_event_list_find(g_grammar_condition_list, $3);
+        
         printf("Get action event '%s'\n", $3);
         printf("For each item in condition event list\n");
         printf("\tRegister action event's barrier with condition event\n");
@@ -63,8 +73,14 @@ basicEvent:
     EVENT_NAME
     {
         $$ = $1;
-        printf("Does event '%s' already exit?\n", $1);
-        printf("If not, create event '%s'\n", $1);
+        
+        if (!cimunit_event_list_find(g_grammar_event_list, $1)) {
+            printf("Create event %s\n", $1);
+            cimunit_event_t *new_event = cimunit_event_init($1);
+            cimunit_event_list_add(&g_grammar_event_list, new_event);
+        } else {
+            printf("Found event %s\n", $1);
+        }
     }
     ;
 
@@ -90,7 +106,15 @@ basicCondition:
 condition:
     basicCondition
     {
-        printf("Add event '%s' to condition event list\n", $1);
+        if (!cimunit_event_list_find(g_grammar_event_list, $1)) {
+            cimunit_event_t *condition_event =
+              cimunit_event_list_find(g_grammar_event_list, $1);
+            if (condition_event) {
+                printf("Add event %s to condition list\n", $1);
+                cimunit_event_t *found_event = cimunit_event_init($1);
+                cimunit_event_list_add(&g_grammar_event_list, found_event);
+            }
+        }
     }
     | condition SYMBOL_OR basicCondition
     {

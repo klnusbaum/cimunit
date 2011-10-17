@@ -18,6 +18,7 @@ BISON_TARGET(grammar grammar.y ${CMAKE_CURRENT_BINARY_DIR}/bison_grammar.c
 ADD_FLEX_BISON_DEPENDENCY(scanner grammar)
 
 add_executable(scantest ${FLEX_scanner_OUTPUTS} ${BISON_grammar_OUTPUTS})
+target_link_libraries(scantest cimunit)
    
 add_library(cimunit ${CIMUNIT_SRC})
 target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})

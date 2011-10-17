@@ -50,9 +50,54 @@ static void test_cimunit_add_event_list(void)
 }
 
 
+static void test_cimunit_event_list_find_empty(void) {
+    CU_ASSERT_PTR_NULL(cimunit_event_list_find(NULL, "a"));
+}
+
+
+static void test_cimunit_event_list_find_missing(void) {
+    cimunit_event_list_t *list = NULL;
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_t *event2 = cimunit_event_init("b");
+    cimunit_event_list_add(&list, event2);
+    cimunit_event_list_add(&list, event1);
+    
+    CU_ASSERT_PTR_NULL(cimunit_event_list_find(list, "c"));
+    cimunit_event_list_destroy(&list);
+}
+
+
+static void test_cimunit_event_list_find_first(void) {
+    cimunit_event_list_t *list = NULL;
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_t *event2 = cimunit_event_init("b");
+    cimunit_event_list_add(&list, event2);
+    cimunit_event_list_add(&list, event1);
+    
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "a"));
+    cimunit_event_list_destroy(&list);
+}
+
+
+static void test_cimunit_event_list_find_second(void) {
+    cimunit_event_list_t *list = NULL;
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_t *event2 = cimunit_event_init("b");
+    cimunit_event_list_add(&list, event2);
+    cimunit_event_list_add(&list, event1);
+    
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "b"));
+    cimunit_event_list_destroy(&list);
+}
+
+
 static CU_TestInfo tests_cimunit_event[] = {
   {"init", test_cimunit_init_event_list},
   {"add event", test_cimunit_add_event_list},
+  {"find empty event list", test_cimunit_event_list_find_empty},
+  {"find missing event", test_cimunit_event_list_find_missing},
+  {"find first event", test_cimunit_event_list_find_first},
+  {"find second event", test_cimunit_event_list_find_second},
   CU_TEST_INFO_NULL,
 };
 

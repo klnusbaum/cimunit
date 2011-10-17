@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "cimunit_event_list.h"
 
@@ -55,5 +56,14 @@ void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event)
 
 
 cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list, char *name) {
+    cimunit_event_list_t *entry = list;
+    
+    while (entry != NULL) {
+        if (strcmp(name, entry->event->event_name) == 0) {
+            return entry->event;
+        }
+        entry = entry->next;
+    }
+    
     return NULL;
 }
