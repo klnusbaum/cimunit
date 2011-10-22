@@ -2,12 +2,6 @@
 #include <string.h>
 #include "cimunit_event_table.h"
 
-int cimunit_init_event_table(cimunit_event_table_t *event_table){
-  event_table->head = NULL;
-  event_table->tail = NULL;
-  cimunit_mutex_init(&(event_table->lock), NULL);
-}
-
 int cimunit_init_event_table_entry(
   cimunit_event_table_entry_t *entry,
   cimunit_event_t *event)
@@ -20,6 +14,13 @@ int cimunit_init_event_table_entry(
 int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry){
   //this is a no-op at the moment
 }
+
+int cimunit_init_event_table(cimunit_event_table_t *event_table){
+  event_table->head = NULL;
+  event_table->tail = NULL;
+  cimunit_mutex_init(&(event_table->lock), NULL);
+}
+
 
 int cimunit_add_event_to_table(
   cimunit_event_table_t *event_table,
@@ -92,6 +93,7 @@ int cimunit_destroy_event_table(cimunit_event_table_t *event_table){
     free(current_entry);
     current_entry = event_table->head;
   }
+  cimunit_mutex_destroy(&(event_table->lock));
 }
 
 

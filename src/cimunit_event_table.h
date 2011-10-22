@@ -21,15 +21,32 @@
 #include "cimunit_event.h"
 #include "cimunit_thread.h"
 
+/// Structure defining a CIMUnit event table entry.
 typedef struct event_table_entry{
+  /// The a pointer to the event that is being represented by this entry.
   cimunit_event_t *event;
+
+  /// The thread id of the thread that fired the event
   cimunit_thread_t thread;
+
+  /// The next event in the cimunit_event_table. This is here since
+  /// each entry in the event table is the member of a linked list.
+  /// By default, next is NLLL.
   struct event_table_entry *next;
 } cimunit_event_table_entry_t;
 
+/// A table representing all the events that have been fired in a particular
+/// CIMUnit test.
 typedef struct{
+
+  /// The head table entry. Is initially NULL.
   cimunit_event_table_entry_t *head;
+
+  /// The tail table entry. Is initially NULL.
   cimunit_event_table_entry_t *tail;
+
+  /// The lock that needs to be aquired before making any modifications to the
+  /// table.
   cimunit_mutex_t lock;
 } cimunit_event_table_t;
 
