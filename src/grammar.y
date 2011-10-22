@@ -36,10 +36,26 @@ main()
 {
     cimunit_event_list_init(&g_grammar_event_list);
     cimunit_event_list_init(&g_grammar_condition_list);
+    
+    yy_scan_string("a->b,b->c");
+	yyparse();
+
+	printf("Print the first schedule\n");
+	cimunit_event_list_t *condition_list = g_grammar_event_list;
+	while(condition_list != NULL) {
+	    printConditionsForActionEvent(condition_list->event);
+	    condition_list = condition_list->next;
+	}
+	
+		
+	cimunit_event_list_destroy(&g_grammar_event_list);
+	cimunit_event_list_destroy(&g_grammar_condition_list);
+	
+	yy_scan_string("d->e");
 	yyparse();
 	
-	printf("Print the schedule\n");
-	cimunit_event_list_t *condition_list = g_grammar_event_list;
+	printf("Print the second schedule\n");
+	condition_list = g_grammar_event_list;
 	while(condition_list != NULL) {
 	    printConditionsForActionEvent(condition_list->event);
 	    condition_list = condition_list->next;
@@ -67,17 +83,17 @@ char *heater="default";
 %token <number> NUMBER
 %token <string> EVENT_NAME
 
-%type <string> basicEvent blockEvent
+%type <string> blockEvent
 %type <conditionList> condition basicCondition
-// %type <event> basicEvent
+%type <event> basicEvent
 
 %start schedules
 
 %%
 
 schedules:
-    | schedules schedule SYMBOL_EOL
-    | schedules schedule SYMBOL_COMMA
+    | schedule
+    | schedules SYMBOL_COMMA schedule
 
 schedule:
     ordering
@@ -86,13 +102,7 @@ ordering:
     condition SYMBOL_IMPLIES basicEvent
     {
         cimunit_event_list_t *condition = $1;
-        cimunit_event_t *action_event =
-          cimunit_event_list_find(g_grammar_event_list, $3);
-        if (!action_event) {
-            yyerror("Unable to find action event");
-            YYERROR;
-        }
-        
+        cimunit_event_t *action_event = $3;
         
         while(condition != NULL) {
             cimunit_event_add_action(condition->event, action_event);
@@ -106,27 +116,28 @@ ordering:
 basicEvent:
     EVENT_NAME
     {
-        $$ = $1;
+        cimunit_event_t *event = cimunit_event_list_find(g_grammar_event_list, $1);
         
-        if (!cimunit_event_list_find(g_grammar_event_list, $1)) {
-            cimunit_event_t *new_event = cimunit_event_init($1);
-            cimunit_event_list_add(&g_grammar_event_list, new_event);
+        if (!event) {
+            event = cimunit_event_init($1);
+            cimunit_event_list_add(&g_grammar_event_list, event);
         }
+        
+        $$ = event;
     }
     ;
 
 blockEvent:
     SYMBOL_LBRACKET basicEvent SYMBOL_RBRACKET
     {
-        $$ = $2;
+        $$ = $2->event_name;
     }
     ;
 
 basicCondition:
     basicEvent
     {
-        cimunit_event_t *condition_event =
-          cimunit_event_list_find(g_grammar_event_list, $1);
+        cimunit_event_t *condition_event = $1;
 
         if (condition_event) {
             cimunit_event_list_t *new_condition = cimunit_event_list_init();
