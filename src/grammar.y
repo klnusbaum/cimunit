@@ -17,11 +17,29 @@ int yywrap()
 cimunit_event_list_t *g_grammar_event_list = NULL;
 cimunit_event_list_t *g_grammar_condition_list = NULL;
 
+void printConditionsForActionEvent(cimunit_event_t *actionEvent) {
+    if (actionEvent->is_action) {
+        printf("%s is an action event\n", actionEvent->event_name);
+        //cimunit_event_list_t *condition_list = actionEvent->condition_list;
+
+    } else {
+        printf("%s is not an action event\n", actionEvent->event_name);
+    }
+}
+
+
 main()
 {
     cimunit_event_list_init(&g_grammar_event_list);
     cimunit_event_list_init(&g_grammar_condition_list);
 	yyparse();
+	
+	printf("Print the schedule\n");
+	cimunit_event_list_t *condition_list = g_grammar_event_list;
+	while(condition_list != NULL) {
+	    printConditionsForActionEvent(condition_list->event);
+	    condition_list = condition_list->next;
+	}
 }
 
 char *heater="default";
@@ -36,6 +54,7 @@ char *heater="default";
 	int number;
 	char *string;
 	struct cimunit_event_list *conditionList;
+	struct cimunit_event *event;
 }
 
 /* %define api.pure */
@@ -46,6 +65,7 @@ char *heater="default";
 
 %type <string> basicEvent blockEvent
 %type <conditionList> condition basicCondition
+//%type <event> basicEvent
 
 %start schedules
 
@@ -63,13 +83,15 @@ ordering:
     {
         cimunit_event_list_t *condition = $1;
         cimunit_event_t *action_event =
-          cimunit_event_list_find(g_grammar_condition_list, $3);
+          cimunit_event_list_find(g_grammar_event_list, $3);
+        if (!action_event) {
+            yyerror("Unable to find action event");
+            YYERROR;
+        }
         
         
         while(condition != NULL) {
-            //cimunit_event_add_action(condition->event, action_event);
-            printf("Register %s's barrier with %s\n", $3, condition->event->event_name);
-            
+            cimunit_event_add_action(condition->event, action_event);
             condition = condition->next;
         }
         
@@ -83,7 +105,6 @@ basicEvent:
         $$ = $1;
         
         if (!cimunit_event_list_find(g_grammar_event_list, $1)) {
-            printf("Create event %s\n", $1);
             cimunit_event_t *new_event = cimunit_event_init($1);
             cimunit_event_list_add(&g_grammar_event_list, new_event);
         }
