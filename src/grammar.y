@@ -17,13 +17,17 @@ int yywrap()
 cimunit_event_list_t *g_grammar_event_list = NULL;
 cimunit_event_list_t *g_grammar_condition_list = NULL;
 
-void printConditionsForActionEvent(cimunit_event_t *actionEvent) {
-    if (actionEvent->is_action) {
-        printf("%s is an action event\n", actionEvent->event_name);
-        //cimunit_event_list_t *condition_list = actionEvent->condition_list;
-
+void printConditionsForActionEvent(cimunit_event_t *event) {
+    printf("%s has the following actions that wait on it\n", event->event_name);
+    
+    cimunit_event_list_t *action_list = event->action_events;
+    if (!action_list) {
+        printf("\tnone\n");
     } else {
-        printf("%s is not an action event\n", actionEvent->event_name);
+        while(action_list) {
+            printf("\t%s\n", action_list->event->event_name);
+            action_list = action_list->next;
+        }
     }
 }
 
@@ -65,7 +69,7 @@ char *heater="default";
 
 %type <string> basicEvent blockEvent
 %type <conditionList> condition basicCondition
-//%type <event> basicEvent
+// %type <event> basicEvent
 
 %start schedules
 
