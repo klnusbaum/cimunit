@@ -19,12 +19,10 @@
 #ifndef CIMUNIT_EVENT_TABLE
 #define CIMUNIT_EVENT_TABLE
 
-
 typedef struct event_table_entry{
   cimunit_event_t *event;
-  cimunit_thread_t *thread;
-  short int hasFired;
-  event_table_entry* next;
+  cimunit_thread_t thread;
+  event_table_entry *next;
 } cimunit_event_table_entry_t;
 
 typedef struct{
@@ -33,22 +31,30 @@ typedef struct{
   cimunit_mutex_t lock;
 } cimunit_event_table_t;
 
-int cimunit_init_event_table(cimunit_event_table_t *event_table){
-  event_table->head = NULL;
-  event_table->tail = NULL;
-  cimunit_mutex_init(&(event_table->lock), NULL);
-}
+int cimunit_init_event_table(cimunit_event_table_t *event_table);
+
+int cimunit_create_event_table_entry(
+  cimunit_event_table_entry_t *entry,
+  cimunit_event *event);
 
 int cimunit_add_event_to_table(
   cimunit_event_t *event;
-  cimunit_event_table_entry_t *entry)
-{
-  cimunit_event_table_entry_t *newEntry = 
-    (cimunit_event_table_entry_t*)malloc(sizeof(cimunit_event_table_entry_t)); 
-  cimunit_mutex_lock(&(event_table->lock));
-  if(event_table->head == NULL){
-    
+  cimunit_event_table_entry_t *entry);
 
-}
+//lord forgive this O(n) search
+//Returns the first event in the table with a matching name. Note that there
+//might also be other events in this table that match the name but were fired
+//on a different thread
+//found_event will be null if not event matching the name is found
+int cimunit_find_event_in_table(
+  const cimunit_event_table_t *event_table,
+  const char *event_name,
+  const cimunit_event_table_entry_t *found_event);
+
+int cimunit_find_event_in_table_on_thread(
+  const cimunit_event_table_t *event_table,
+  const char *event_name,
+  const char *thread_name,
+  const cimunit_event_table_entry_t *found_event);
 
 #endif

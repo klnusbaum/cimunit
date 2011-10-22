@@ -17,7 +17,7 @@ int cimunit_run_test(void *(*test_func)(void *), cimunit_schedule_t *sc){
 
   for(i=0;i<sc->numThreads; ++i){
     //TODO, instead of null we'll actually wanna look at the return value.
-    cimunit_join(threads[i], NULL);
+    cimunit_thread_join(threads[i], NULL);
   }
   free(threads);
   free(args);
