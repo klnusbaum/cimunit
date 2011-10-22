@@ -35,6 +35,7 @@ char *heater="default";
 {
 	int number;
 	char *string;
+	struct cimunit_event_list *conditionList;
 }
 
 /* %define api.pure */
@@ -43,7 +44,8 @@ char *heater="default";
 %token <number> NUMBER
 %token <string> EVENT_NAME
 
-%type <string> basicEvent blockEvent basicCondition
+%type <string> basicEvent blockEvent
+%type <conditionList> condition basicCondition
 
 %start schedules
 
@@ -59,13 +61,19 @@ schedule:
 ordering:
     condition SYMBOL_IMPLIES basicEvent
     {
+        cimunit_event_list_t *condition = $1;
         cimunit_event_t *action_event =
           cimunit_event_list_find(g_grammar_condition_list, $3);
         
-        printf("Get action event '%s'\n", $3);
-        printf("For each item in condition event list\n");
-        printf("\tRegister action event's barrier with condition event\n");
-        printf("Clear condition event list\n");
+        
+        while(condition != NULL) {
+            //cimunit_event_add_action(condition->event, action_event);
+            printf("Register %s's barrier with %s\n", $3, condition->event->event_name);
+            
+            condition = condition->next;
+        }
+        
+        cimunit_event_list_destroy(&$1);
     }
     ;
 
@@ -78,8 +86,6 @@ basicEvent:
             printf("Create event %s\n", $1);
             cimunit_event_t *new_event = cimunit_event_init($1);
             cimunit_event_list_add(&g_grammar_event_list, new_event);
-        } else {
-            printf("Found event %s\n", $1);
         }
     }
     ;
@@ -94,11 +100,18 @@ blockEvent:
 basicCondition:
     basicEvent
     {
-        $$ = $1;
+        cimunit_event_t *condition_event =
+          cimunit_event_list_find(g_grammar_event_list, $1);
+
+        if (condition_event) {
+            cimunit_event_list_t *new_condition = cimunit_event_list_init();
+            cimunit_event_list_add(&new_condition, condition_event);
+            $$ = new_condition;
+        }
     }
     | blockEvent
     {
-        $$ = $1;
+        $$ = NULL;
         yyerror("Blocking events are not supported");
         YYERROR;
     }
@@ -106,23 +119,26 @@ basicCondition:
 condition:
     basicCondition
     {
-        if (!cimunit_event_list_find(g_grammar_event_list, $1)) {
-            cimunit_event_t *condition_event =
-              cimunit_event_list_find(g_grammar_event_list, $1);
-            if (condition_event) {
-                printf("Add event %s to condition list\n", $1);
-                cimunit_event_t *found_event = cimunit_event_init($1);
-                cimunit_event_list_add(&g_grammar_event_list, found_event);
-            }
-        }
+        $$ = $1;
     }
     | condition SYMBOL_OR basicCondition
     {
-        printf("Add event '%s' to condition event list\n", $3);
+        cimunit_event_list_t *lhs = $1;
+        cimunit_event_list_t *rhs = $3;
+        cimunit_event_list_union(&lhs, rhs);
+        cimunit_event_list_destroy(&rhs);
+        $$ = lhs;
     }
     | condition SYMBOL_AND basicCondition
     {
-        printf("Add event '%s' to condition event list\n", $3);
+        cimunit_event_list_t *lhs = $1;
+        cimunit_event_list_t *rhs = $3;
+        cimunit_event_list_union(&lhs, rhs);
+        cimunit_event_list_destroy(&rhs);
+        $$ = lhs;
     }
     | SYMBOL_LPAREN condition SYMBOL_RPAREN
+    {
+        $$ = $2;
+    }
     ;

@@ -52,6 +52,13 @@ void cimunit_event_list_destroy(cimunit_event_list_t **list);
 /// \param event - event to be added into the list
 void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event);
 
+/// Merge an event list into the list
+///
+/// The list will be the union of both lists.
+///
+/// \param list - event list to be merged into
+/// \param list2 - event list from which data will be pulled
+void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t *list2);
 
 /// Gets an event from the list by namespace
 ///

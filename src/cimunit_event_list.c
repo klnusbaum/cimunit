@@ -32,13 +32,13 @@ cimunit_event_list_t *cimunit_event_list_init() {
 
 
 void cimunit_event_list_destroy(cimunit_event_list_t **list) {
-    cimunit_event_list_t *event_to_delete;
-    cimunit_event_list_t *next_event = *list;
+    cimunit_event_list_t *event_entry_to_delete;
+    cimunit_event_list_t *next_event_entry = *list;
     
-    while (NULL != next_event) {
-        event_to_delete = next_event;
-        next_event = next_event->next;
-        free(event_to_delete);
+    while (NULL != next_event_entry) {
+        event_entry_to_delete = next_event_entry;
+        next_event_entry = next_event_entry->next;
+        free(event_entry_to_delete);
     }
     
     *list = NULL;
@@ -52,6 +52,17 @@ void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event)
     new_entry->event = event;
     new_entry->next = *list;
     *list = new_entry;
+}
+
+
+void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t *list2) {
+    cimunit_event_list_t *data = list2;
+    while (data != NULL) {
+        if (NULL == cimunit_event_list_find(*list, data->event->event_name)) {
+            cimunit_event_list_add(list, data->event);
+        }
+        data = data->next;
+    }
 }
 
 

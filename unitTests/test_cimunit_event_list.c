@@ -38,7 +38,7 @@ static void test_cimunit_init_event_list(void)
 
 static void test_cimunit_add_event_list(void)
 {
-    cimunit_event_list_t *list = NULL;
+    cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t *event = cimunit_event_init("a");
     
     cimunit_event_list_add(&list, event);
@@ -56,7 +56,7 @@ static void test_cimunit_event_list_find_empty(void) {
 
 
 static void test_cimunit_event_list_find_missing(void) {
-    cimunit_event_list_t *list = NULL;
+    cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t *event1 = cimunit_event_init("a");
     cimunit_event_t *event2 = cimunit_event_init("b");
     cimunit_event_list_add(&list, event2);
@@ -68,7 +68,7 @@ static void test_cimunit_event_list_find_missing(void) {
 
 
 static void test_cimunit_event_list_find_first(void) {
-    cimunit_event_list_t *list = NULL;
+    cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t *event1 = cimunit_event_init("a");
     cimunit_event_t *event2 = cimunit_event_init("b");
     cimunit_event_list_add(&list, event2);
@@ -80,7 +80,7 @@ static void test_cimunit_event_list_find_first(void) {
 
 
 static void test_cimunit_event_list_find_second(void) {
-    cimunit_event_list_t *list = NULL;
+    cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t *event1 = cimunit_event_init("a");
     cimunit_event_t *event2 = cimunit_event_init("b");
     cimunit_event_list_add(&list, event2);
@@ -91,6 +91,68 @@ static void test_cimunit_event_list_find_second(void) {
 }
 
 
+static void test_cimunit_event_list_merge_empty_first(void) {
+    cimunit_event_list_t *list = cimunit_event_list_init();
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_t *event2 = cimunit_event_init("b");
+    cimunit_event_list_add(&list, event2);
+    cimunit_event_list_add(&list, event1);
+
+    cimunit_event_list_t *new_list = cimunit_event_list_init();
+
+    cimunit_event_list_union(&new_list, list);
+    CU_ASSERT_PTR_NOT_NULL(new_list);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(new_list, "a"));
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(new_list, "b"));
+}
+
+
+static void test_cimunit_event_list_merge_empty_second(void) {
+    cimunit_event_list_t *list = cimunit_event_list_init();
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_t *event2 = cimunit_event_init("b");
+    cimunit_event_list_add(&list, event2);
+    cimunit_event_list_add(&list, event1);
+
+    cimunit_event_list_t *new_list = cimunit_event_list_init();
+
+    cimunit_event_list_union(&list, new_list);
+    CU_ASSERT_PTR_NOT_NULL(list);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "a"));
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "b"));
+}
+
+
+static void test_cimunit_event_list_merge_duplicate(void) {
+    cimunit_event_list_t *list = cimunit_event_list_init();
+    cimunit_event_list_t *list2 = cimunit_event_list_init();
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_list_add(&list, event1);
+    cimunit_event_list_add(&list2, event1);
+
+    cimunit_event_list_union(&list, list2);
+    CU_ASSERT_PTR_NOT_NULL(list);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "a"));
+    CU_ASSERT_PTR_NULL(list->next);
+}
+
+
+static void test_cimunit_event_list_merge(void) {
+    cimunit_event_list_t *list = cimunit_event_list_init();
+    cimunit_event_t *event1 = cimunit_event_init("a");
+    cimunit_event_list_add(&list, event1);
+
+    cimunit_event_list_t *list2 = cimunit_event_list_init();
+    cimunit_event_t *event2 = cimunit_event_init("b");
+    cimunit_event_list_add(&list2, event2);
+
+    cimunit_event_list_union(&list, list2);
+    CU_ASSERT_PTR_NOT_NULL(list);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "a"));
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(list, "b"));
+}
+
+
 static CU_TestInfo tests_cimunit_event[] = {
   {"init", test_cimunit_init_event_list},
   {"add event", test_cimunit_add_event_list},
@@ -98,6 +160,10 @@ static CU_TestInfo tests_cimunit_event[] = {
   {"find missing event", test_cimunit_event_list_find_missing},
   {"find first event", test_cimunit_event_list_find_first},
   {"find second event", test_cimunit_event_list_find_second},
+  {"merge empty first list", test_cimunit_event_list_merge_empty_first},
+  {"merge empty second list", test_cimunit_event_list_merge_empty_second},
+  {"merge duplicate list", test_cimunit_event_list_merge_duplicate},
+  {"merge", test_cimunit_event_list_merge},
   CU_TEST_INFO_NULL,
 };
 
