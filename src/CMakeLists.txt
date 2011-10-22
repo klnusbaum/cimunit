@@ -6,6 +6,7 @@ set(CIMUNIT_SRC
   cimunit_schedule.c
   cimunit_tester.c
   cimunit_thread.c
+  cimunit_event_table.c
 )
 
 find_package(FLEX)

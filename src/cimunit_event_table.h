@@ -18,11 +18,13 @@
  */
 #ifndef CIMUNIT_EVENT_TABLE
 #define CIMUNIT_EVENT_TABLE
+#include "cimunit_event.h"
+#include "cimunit_thread.h"
 
 typedef struct event_table_entry{
   cimunit_event_t *event;
   cimunit_thread_t thread;
-  event_table_entry *next;
+  struct event_table_entry *next;
 } cimunit_event_table_entry_t;
 
 typedef struct{
@@ -31,14 +33,19 @@ typedef struct{
   cimunit_mutex_t lock;
 } cimunit_event_table_t;
 
+
+int cimunit_init_event_table_entry(
+  cimunit_event_table_entry_t *entry,
+  cimunit_event_t *event);
+
+int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry);
+
+
 int cimunit_init_event_table(cimunit_event_table_t *event_table);
 
-int cimunit_create_event_table_entry(
-  cimunit_event_table_entry_t *entry,
-  cimunit_event *event);
-
 int cimunit_add_event_to_table(
-  cimunit_event_t *event;
+  cimunit_event_table_t *event_table,
+  cimunit_event_t *event,
   cimunit_event_table_entry_t *entry);
 
 //lord forgive this O(n) search
@@ -56,5 +63,8 @@ int cimunit_find_event_in_table_on_thread(
   const char *event_name,
   const char *thread_name,
   const cimunit_event_table_entry_t *found_event);
+
+
+int cimunit_destroy_event_table(cimunit_event_table_t *event_table);
 
 #endif

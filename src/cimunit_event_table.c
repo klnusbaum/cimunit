@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "cimunit_event_table.h"
 
 int cimunit_init_event_table(cimunit_event_table_t *event_table){
@@ -6,23 +8,27 @@ int cimunit_init_event_table(cimunit_event_table_t *event_table){
   cimunit_mutex_init(&(event_table->lock), NULL);
 }
 
-int cimunit_create_event_table_entry(
+int cimunit_init_event_table_entry(
   cimunit_event_table_entry_t *entry,
-  cimunit_event *event)
+  cimunit_event_t *event)
 {
-  entry = 
-    (cimunit_event_table_entry_t*)malloc(sizeof(cimunit_event_table_entry_t));
   entry->event = event;
-  entry->thread = cimunit_self();
+  entry->thread = cimunit_thread_self();
   entry->next = NULL; 
 }
 
+int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry){
+  //this is a no-op at the moment
+}
+
 int cimunit_add_event_to_table(
-  cimunit_event_t *event;
+  cimunit_event_table_t *event_table,
+  cimunit_event_t *event,
   cimunit_event_table_entry_t *entry)
 {
-  cimunit_event_table_entry_t *newEntry = NULL;
-  cimunit_create_event_table_entry(newEntry);
+  cimunit_event_table_entry_t *newEntry = 
+    (cimunit_event_table_entry_t*)malloc(sizeof(cimunit_event_table_entry_t));
+  cimunit_init_event_table_entry(newEntry, event);
   cimunit_mutex_lock(&(event_table->lock));
   if(event_table->head == NULL){
     event_table->head = newEntry;
@@ -36,12 +42,12 @@ int cimunit_add_event_to_table(
 }
 
 inline int cimunit_event_matches_table_entry(
-  const cimunit_event_table_entry_t* table_entry
+  const cimunit_event_table_entry_t* table_entry,
   const char *event_name,
   const char *thread_name)
 {
   char thread_name_buffer[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_thread_getname(found_event->thread, threadNameBuffer);
+  cimunit_thread_getname(table_entry->thread, thread_name_buffer);
   return
     strcmp(table_entry->event->event_name, event_name) &&
       (strcmp(CIMUNIT_DEFAULT_THREAD_NAME, thread_name)
@@ -77,6 +83,16 @@ int cimunit_find_event_in_table_on_thread(
   }
 }
 
+
+int cimunit_destroy_event_table(cimunit_event_table_t *event_table){
+  cimunit_event_table_entry_t *current_entry = event_table->head;
+  while(current_entry != NULL){
+    event_table->head = current_entry->next;
+    cimunit_destroy_event_table_entry(current_entry);
+    free(current_entry);
+    current_entry = event_table->head;
+  }
+}
 
 
 
