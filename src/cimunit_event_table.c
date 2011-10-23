@@ -9,6 +9,8 @@ int cimunit_init_event_table_entry(
   entry->event = event;
   entry->thread = cimunit_thread_self();
   entry->next = NULL; 
+  //TODO actually return the correct error code if an error happend.
+  return 0;
 }
 
 int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry){
@@ -19,27 +21,35 @@ int cimunit_init_event_table(cimunit_event_table_t *event_table){
   event_table->head = NULL;
   event_table->tail = NULL;
   cimunit_mutex_init(&(event_table->lock), NULL);
+  //TODO actually return the correct error code if an error happend.
+  return 0;
 }
 
 
 int cimunit_add_event_to_table(
   cimunit_event_table_t *event_table,
   cimunit_event_t *event,
-  cimunit_event_table_entry_t *entry)
+  cimunit_event_table_entry_t **entry_added)
 {
-  cimunit_event_table_entry_t *newEntry = 
+  cimunit_event_table_entry_t *new_entry = 
     (cimunit_event_table_entry_t*)malloc(sizeof(cimunit_event_table_entry_t));
   cimunit_init_event_table_entry(newEntry, event);
   cimunit_mutex_lock(&(event_table->lock));
   if(event_table->head == NULL){
-    event_table->head = newEntry;
-    event_table->tail = newEntry;
+    event_table->head = new_entry;
+    event_table->tail = new_entry;
   }  
   else{
-    event_table->tail->next = newEntry;
-    event_table->tail = newEntry;
+    event_table->tail->next = new_entry;
+    event_table->tail = new_entry;
   }
   cimunit_mutex_unlock(&(event_table->lock));
+
+  if(entry_added != NULL){
+    (*entry_added) = new_entry;
+  }
+  //TODO actually return the correct error code if an error happend.
+  return 0;
 }
 
 inline int cimunit_event_matches_table_entry(
@@ -59,7 +69,7 @@ inline int cimunit_event_matches_table_entry(
 int cimunit_find_event_in_table(
   const cimunit_event_table_t *event_table,
   const char *event_name,
-  const cimunit_event_table_entry_t *found_event)
+  const cimunit_event_table_entry_t **found_event)
 {
   return cimunit_find_event_in_table_on_thread(
     event_table,
@@ -73,15 +83,18 @@ int cimunit_find_event_in_table_on_thread(
   const cimunit_event_table_t *event_table,
   const char *event_name,
   const char *thread_name,
-  const cimunit_event_table_entry_t *found_event)
+  const cimunit_event_table_entry_t **found_event)
 {
-  found_event = event_table->head;
+  (*found_event) = event_table->head;
   while(found_event != NULL){
-    if(cimunit_event_matches_table_entry(found_event, event_name, thread_name)){
+    if(cimunit_event_matches_table_entry(*found_event, event_name, thread_name))
+    {
       break;
     }    
-    found_event = found_event->next;
+    (*found_event) = (*found_event)->next;
   }
+  //TODO actually return the correct error code if an error happend.
+  return 0;
 }
 
 
@@ -94,6 +107,8 @@ int cimunit_destroy_event_table(cimunit_event_table_t *event_table){
     current_entry = event_table->head;
   }
   cimunit_mutex_destroy(&(event_table->lock));
+  //TODO actually return the correct error code if an error happend.
+  return 0;
 }
 
 

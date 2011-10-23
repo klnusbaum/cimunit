@@ -51,37 +51,78 @@ typedef struct{
 } cimunit_event_table_t;
 
 
+/// Initializes and event table entry
+///
+/// \param entry - entry to initialize
+/// \param event - event this entry is representing
+/// \returns = 0 if the call was succesful, otherwise an error code.
 int cimunit_init_event_table_entry(
   cimunit_event_table_entry_t *entry,
   cimunit_event_t *event);
 
+/// Frees all alocated resources for the event table entry
+///
+/// \param entry - Entry to destroy.
+/// \return - 0 if the destruction was succesfull, false otherwise.
 int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry);
 
-
+/// Initializes an event table
+///
+/// \param event_table - Table to initialize.
+/// \returns - 0 if the initialization was succesfull, error code otherwise.
 int cimunit_init_event_table(cimunit_event_table_t *event_table);
 
+/// Adds and event entry to the table
+///
+/// \param event_table - Table to which the event should be added.
+/// \param event - The event to be added.
+/// \param entry_added - Once the event is added, this will point to the
+///  new event table entry that was added. This parameter may be NULL.
+/// \return - 0 if succesfull, error code otherwise.
 int cimunit_add_event_to_table(
   cimunit_event_table_t *event_table,
   cimunit_event_t *event,
-  cimunit_event_table_entry_t *entry);
+  cimunit_event_table_entry_t **entry_added);
 
-//lord forgive this O(n) search
-//Returns the first event in the table with a matching name. Note that there
-//might also be other events in this table that match the name but were fired
-//on a different thread
-//found_event will be null if not event matching the name is found
+/// Finds a given event in the table, regardless of what thread fired it.
+///
+/// \param event_table - Table to search.
+/// \param event_name - Name of event to search for.
+/// \param found_event - If the event is found, the pointer this parameter
+/// points to will be populated with first event_entry that matches the search
+/// criteria. If no event is found, the pointer will be set to pointing at NULL.
+///
+/// \return - 0 if the function executed sucessfully, error code otherwise
+///
 int cimunit_find_event_in_table(
   const cimunit_event_table_t *event_table,
   const char *event_name,
-  const cimunit_event_table_entry_t *found_event);
+  const cimunit_event_table_entry_t **found_event);
 
+/// Finds a given event in the table, regardless of what thread fired it.
+/// Lord forgive this O(n) search.
+///
+/// \param event_table - Table to search.
+/// \param event_name - Name of event to search for.
+/// \param thread_name - Name of the thread for which the event is desired to 
+///  have fired on.
+/// \param found_event - If the event is found, the pointer this parameter
+/// points to will be populated with first event_entry that matches the search
+/// criteria. If no event is found, the pointer will be set to pointing at NULL.
+///
+/// \return - 0 if the function executed sucessfully, error code otherwise
+///
 int cimunit_find_event_in_table_on_thread(
   const cimunit_event_table_t *event_table,
   const char *event_name,
   const char *thread_name,
-  const cimunit_event_table_entry_t *found_event);
+  const cimunit_event_table_entry_t **found_event);
 
 
+/// Frees all allocated resources for the CIMUnit Event Table.
+///
+/// \param event_table - Event table to destroy
+/// \return - 0 if succesful error code otherwise.
 int cimunit_destroy_event_table(cimunit_event_table_t *event_table);
 
 #endif
