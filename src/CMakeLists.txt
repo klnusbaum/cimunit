@@ -10,10 +10,10 @@ set(CIMUNIT_SRC
 )
 
 find_package(FLEX)
-FLEX_TARGET(scanner lexer.l  ${CMAKE_CURRENT_BINARY_DIR}/lex_lexer.c)
+FLEX_TARGET(scanner create_events.l  ${CMAKE_CURRENT_BINARY_DIR}/create_events_lexer.c)
 
 find_package(BISON)
-BISON_TARGET(grammar grammar.y ${CMAKE_CURRENT_BINARY_DIR}/bison_grammar.c
+BISON_TARGET(grammar create_events.y ${CMAKE_CURRENT_BINARY_DIR}/create_events_grammar.c
              COMPILER_FLAGS "-d")
 ADD_FLEX_BISON_DEPENDENCY(scanner grammar)
 

@@ -1,22 +1,59 @@
+/**
+ * \file create_events.y
+ *
+ * Copyright 2011 Dale Frampton
+ * 
+ * This file is part of cimunit.
+ * 
+ * cimunit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * cimunit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
 %{
 #include <stdio.h>
 #include <string.h>
 
 #include "cimunit_event_list.h"
+#include "cimunit_schedule.h"
 
-void yyerror(const char *str)
+
+// Defines
+
+extern int create_events_parse(cimunit_event_list_t **event_list); // From create_events.y
+extern void create_events__scan_string(char *string); // From create_events.l
+extern int create_events_lex (void); // From create_events.l
+
+
+/// Display errors to the terminal
+///
+/// \param event_list - event list passed to the parser
+/// \param str - error string
+void create_events_error(struct cimunit_event_list **event_list, const char *str)
 {
 	fprintf(stderr,"error: %s\n",str);
 }
 
-int yywrap()
+
+/// Indicate there is no more input after the EOF.
+int create_events_wrap()
 {
 	return 1;
 }
 
-cimunit_event_list_t *g_grammar_event_list = NULL;
-cimunit_event_list_t *g_grammar_condition_list = NULL;
 
+/// Display all conditions that are associated with the passed action
+///
+/// \param event - action event
 void printConditionsForActionEvent(cimunit_event_t *event) {
     printf("%s has the following actions that wait on it\n", event->event_name);
     
@@ -32,34 +69,40 @@ void printConditionsForActionEvent(cimunit_event_t *event) {
 }
 
 
-main()
-{
-    cimunit_event_list_init(&g_grammar_event_list);
-    cimunit_event_list_init(&g_grammar_condition_list);
+/// Build a schedule
+///
+/// \return the completed schedule
+cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
+    cimunit_schedule_t *schedule = cimunit_schedule_init();
     
-    yy_scan_string("a->b,b->c");
-	yyparse();
+    // Parse the schedule string into the schedule object.
+    create_events__scan_string(schedule_string);
+    create_events_parse(&schedule->event_list);
+    
+    return schedule;
+}
 
+
+int main()
+{
+
+    cimunit_schedule_t *schedule = cimunit_schedule_parse("a->b,b->c");
 	printf("Print the first schedule\n");
-	cimunit_event_list_t *condition_list = g_grammar_event_list;
+	cimunit_event_list_t *condition_list = schedule->event_list;
 	while(condition_list != NULL) {
 	    printConditionsForActionEvent(condition_list->event);
 	    condition_list = condition_list->next;
-	}
+	}	
+	cimunit_schedule_destroy(schedule);
 	
-		
-	cimunit_event_list_destroy(&g_grammar_event_list);
-	cimunit_event_list_destroy(&g_grammar_condition_list);
-	
-	yy_scan_string("d->e");
-	yyparse();
-	
+	schedule = cimunit_schedule_parse("d->e");
 	printf("Print the second schedule\n");
-	condition_list = g_grammar_event_list;
+	condition_list = schedule->event_list;
 	while(condition_list != NULL) {
 	    printConditionsForActionEvent(condition_list->event);
 	    condition_list = condition_list->next;
 	}
+	cimunit_schedule_destroy(schedule);
 }
 
 char *heater="default";
@@ -77,7 +120,9 @@ char *heater="default";
 	struct cimunit_event *event;
 }
 
-/* %define api.pure */
+%name-prefix "create_events_"
+
+%parse-param {struct cimunit_event_list **event_list}
 
 %token <number> STATE
 %token <number> NUMBER
@@ -116,11 +161,11 @@ ordering:
 basicEvent:
     EVENT_NAME
     {
-        cimunit_event_t *event = cimunit_event_list_find(g_grammar_event_list, $1);
+        cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
         
         if (!event) {
             event = cimunit_event_init($1);
-            cimunit_event_list_add(&g_grammar_event_list, event);
+            cimunit_event_list_add(event_list, event);
         }
         
         $$ = event;
@@ -148,7 +193,7 @@ basicCondition:
     | blockEvent
     {
         $$ = NULL;
-        yyerror("Blocking events are not supported");
+        yyerror(event_list, "Blocking events are not supported");
         YYERROR;
     }
 
