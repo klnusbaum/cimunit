@@ -31,14 +31,26 @@
 
 static void test_cimunit_schedule_init(void)
 {
-    cimunit_schedule_t *schedule = cimunit_schedule_init();
-    
+    cimunit_schedule_t *schedule = cimunit_schedule_init(); 
     CU_ASSERT_PTR_NULL(schedule->event_list);
+}
+
+
+static void test_cimunit_schedule_parse_single(void)
+{
+    cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x");
+    CU_ASSERT_PTR_NOT_NULL(schedule->event_list);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(schedule->event_list, "x"));
+    
+    cimunit_event_t *action = cimunit_event_list_find(schedule->event_list, "a");
+    CU_ASSERT_PTR_NOT_NULL(action);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "x"));
 }
 
 
 static CU_TestInfo tests_cimunit_schedule[] = {
   {"init", test_cimunit_schedule_init},
+  {"parse_single", test_cimunit_schedule_parse_single},
   CU_TEST_INFO_NULL,
 };
 

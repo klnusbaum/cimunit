@@ -82,7 +82,7 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
     return schedule;
 }
 
-
+/*
 int main()
 {
 
@@ -104,8 +104,8 @@ int main()
 	}
 	cimunit_schedule_destroy(schedule);
 }
+*/
 
-char *heater="default";
 
 %}
 
