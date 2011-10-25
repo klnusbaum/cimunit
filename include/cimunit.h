@@ -18,6 +18,42 @@
  */
 #ifndef CIMUNIT_H
 #define CIMUNIT_H
+
+#include "cimunit_schedule.h"
+
+
+/// Fire a CIMUnit event
+///
+/// \param schedule - schedule used to control event ordering
+/// \param event - name of the event to be fired
+/// \return true if the event was found, else false
+bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName);
+
+
+/// Global CIMUnit variable used by the CIMUnit test macros.
+extern struct cimunit_schedule *g_cimunit_default_schedule;
+
+
+/// Create a CIMUnit schedule
+///
+/// This differs from cimunit_schedule_parse by using a global variable that works
+/// with the other CIMUnit macros to simplify test development in an environment where
+/// only one test will be run at a time.
+#define CIMUNIT_SCHEDULE(schedule) \
+    if (g_cimunit_default_schedule) { \
+        cimunit_schedule_destroy(g_cimunit_default_schedule); \
+    } \
+    g_cimunit_default_schedule = cimunit_schedule_parse(schedule)
+
+
+/// Fire a CIMUnit event
+///
+/// This differs from cimunit_event_fire as it uses a global variable to simplify test
+/// development.
+#define CIMUNIT_FIRE(eventName) \
+    cimunit_fire(g_cimunit_default_schedule, eventName)
+
+
 #include "cimunit_tester.h"
 
 /** \name Cimunit Typedefs */
@@ -67,12 +103,5 @@ int cimunit_run_tests(cimunit_tester_t *tester);
 #define CIMUNIT_TNUMBER \
   ((cimunit_test_args_t*)args)->thread
 //@}
-
-/// Fire a CIMUnit event
-///
-/// \param schedule - schedule used to control event ordering
-/// \param event - name of the event to be fired
-/// \return true if the event was found, else false
-bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName);
 
 #endif //CIMUNIT_H

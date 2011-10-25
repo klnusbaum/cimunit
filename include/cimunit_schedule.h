@@ -27,7 +27,7 @@ typedef size_t cimunit_thread_amount_t;
 
 
 /// Structure use to define a CIMUnit schedule
-typedef struct{
+typedef struct cimunit_schedule {
     /// List of events involved in the schedule
     cimunit_event_list_t *event_list;
 

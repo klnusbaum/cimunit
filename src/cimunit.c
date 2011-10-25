@@ -1,9 +1,28 @@
 #include "cimunit.h"
-#include "cimunit_thread.h"
-#include <stdio.h>
+
+#include <stddef.h>
 
 #include "cimunit_event_list.h"
 #include "cimunit_schedule.h"
+
+struct cimunit_schedule *g_cimunit_default_schedule = NULL;
+
+
+bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName)
+{
+    // Locate the event in the schedule and fire it.
+    cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
+    if (event) {
+        cimunit_event_fire(event);
+    } else {
+        return false;
+    }
+    
+    return true;
+}
+
+
+#include "cimunit_thread.h"
 
 
 int cimunit_run_test(void *(*test_func)(void *), cimunit_schedule_t *sc){
@@ -44,16 +63,3 @@ int cimunit_run_tests(cimunit_tester_t *tester){
 
 }
 
-
-bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName)
-{
-    // Locate the event in the schedule and fire it.
-    cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
-    if (event) {
-        cimunit_event_fire(event);
-    } else {
-        return false;
-    }
-    
-    return true;
-}
