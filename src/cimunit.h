@@ -32,6 +32,8 @@ typedef struct{
   cimunit_thread_id_t thread;
 } cimunit_test_args_t;
 
+struct cimunit_schedule;
+
 //@}
 
 /** \name Cimunit Functions */
@@ -65,5 +67,12 @@ int cimunit_run_tests(cimunit_tester_t *tester);
 #define CIMUNIT_TNUMBER \
   ((cimunit_test_args_t*)args)->thread
 //@}
+
+/// Fire a CIMUnit event
+///
+/// \param schedule - schedule used to control event ordering
+/// \param event - name of the event to be fired
+/// \return true if the event was found, else false
+bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName);
 
 #endif //CIMUNIT_H

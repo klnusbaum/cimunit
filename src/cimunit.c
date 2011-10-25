@@ -2,6 +2,10 @@
 #include "cimunit_thread.h"
 #include <stdio.h>
 
+#include "cimunit_event_list.h"
+#include "cimunit_schedule.h"
+
+
 int cimunit_run_test(void *(*test_func)(void *), cimunit_schedule_t *sc){
   cimunit_thread_id_t i;
   cimunit_thread_t *threads = 
@@ -38,4 +42,18 @@ int cimunit_run_tests(cimunit_tester_t *tester){
     free(to_dealloc);
   }
 
+}
+
+
+bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName)
+{
+    // Locate the event in the schedule and fire it.
+    cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
+    if (event) {
+        cimunit_event_fire(event);
+    } else {
+        return false;
+    }
+    
+    return true;
 }
