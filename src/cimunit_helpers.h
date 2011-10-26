@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 Dale Frampton
+ * \file cimunit_event.c
+ *
+ * Copyright 2011 Kurtis L. Nusbaum & Dale Frampton
  * 
  * This file is part of cimunit.
  * 
@@ -16,13 +18,5 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-#include <pthread.h>
+#ifndef CIMUNIT_HELPERS_H
 
-#define CIMUNIT_DEFAULT_THREAD_NAME ""
-#define CIMUNIT_MAX_THREAD_NAME_LENGTH 16
- 
-typedef pthread_t cimunit_thread_t;
-typedef pthread_attr_t cimunit_thread_attr_t;
-
- 
