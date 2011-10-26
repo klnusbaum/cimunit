@@ -29,7 +29,7 @@ int count = 0;
 
 void *bwait(void *value) {
     cimunit_barrier_wait(my_barrier);
-    printf("Wait thread\n", ((long int)value));
+    //printf("Wait thread\n", ((long int)value));
     pthread_exit(NULL);
 }
 
@@ -49,15 +49,15 @@ int main() {
     pthread_create(&thread2, &attr, bwait, (void *)2);
     pthread_create(&thread3, &attr, bwait, (void *)3);
 
-    printf("Ready to signal\n");
+    //printf("Ready to signal\n");
     cimunit_barrier_unlock(my_barrier);
-    printf("Signaled\n");
+    //printf("Signaled\n");
     
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
     pthread_join(thread3, NULL);
     
-    printf("Done\n");
+    //printf("Done\n");
 
     pthread_attr_destroy(&attr);
     

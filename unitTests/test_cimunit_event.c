@@ -116,7 +116,6 @@ static void *op_multiply(void *value)
     int *my_value = (int *)value;
 
     cimunit_event_fire(event_multiply_before);
-    printf("mult\n");
     *my_value *= 2;
     cimunit_event_fire(event_multiply_after);
     
@@ -130,7 +129,6 @@ static void *op_add(void *value)
     int *my_value = (int *)value;
     
     cimunit_event_fire(event_add_before);
-    printf("add\n");
     *my_value += 1;
     cimunit_event_fire(event_add_after);
     
