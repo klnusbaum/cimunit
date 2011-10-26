@@ -22,6 +22,25 @@
 #include <stdio.h>
 #include "cimunit_schedule.h"
 
+
+/// Display all conditions that are associated with the passed action
+///
+/// \param event - action event
+void printConditionsForActionEvent(cimunit_event_t *event) {
+    printf("%s has the following actions that wait on it\n", event->event_name);
+    
+    cimunit_event_list_t *action_list = event->action_events;
+    if (!action_list) {
+        printf("\tnone\n");
+    } else {
+        while(action_list) {
+            printf("\t%s\n", action_list->event->event_name);
+            action_list = action_list->next;
+        }
+    }
+}
+
+
 int main()
 {
 

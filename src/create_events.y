@@ -51,24 +51,6 @@ int create_events_wrap()
 }
 
 
-/// Display all conditions that are associated with the passed action
-///
-/// \param event - action event
-void printConditionsForActionEvent(cimunit_event_t *event) {
-    printf("%s has the following actions that wait on it\n", event->event_name);
-    
-    cimunit_event_list_t *action_list = event->action_events;
-    if (!action_list) {
-        printf("\tnone\n");
-    } else {
-        while(action_list) {
-            printf("\t%s\n", action_list->event->event_name);
-            action_list = action_list->next;
-        }
-    }
-}
-
-
 /// Build a schedule
 ///
 /// \return the completed schedule
@@ -81,31 +63,6 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
     
     return schedule;
 }
-
-/*
-int main()
-{
-
-    cimunit_schedule_t *schedule = cimunit_schedule_parse("a->b,b->c");
-	printf("Print the first schedule\n");
-	cimunit_event_list_t *condition_list = schedule->event_list;
-	while(condition_list != NULL) {
-	    printConditionsForActionEvent(condition_list->event);
-	    condition_list = condition_list->next;
-	}	
-	cimunit_schedule_destroy(schedule);
-	
-	schedule = cimunit_schedule_parse("d->e");
-	printf("Print the second schedule\n");
-	condition_list = schedule->event_list;
-	while(condition_list != NULL) {
-	    printConditionsForActionEvent(condition_list->event);
-	    condition_list = condition_list->next;
-	}
-	cimunit_schedule_destroy(schedule);
-}
-*/
-
 
 %}
 
