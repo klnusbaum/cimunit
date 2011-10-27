@@ -71,7 +71,6 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
 
 %union 
 {
-	int number;
 	char *string;
 	struct cimunit_event_list *conditionList;
 	struct cimunit_event *event;
@@ -81,8 +80,6 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
 
 %parse-param {struct cimunit_event_list **event_list}
 
-%token <number> STATE
-%token <number> NUMBER
 %token <string> EVENT_NAME
 
 %type <string> blockEvent
