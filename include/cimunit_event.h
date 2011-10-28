@@ -27,14 +27,16 @@
 #include "cimunit_mutex.h"
 #include "cimunit_barrier.h"
 
+struct cimunit_event_list;
+
 
 /// Structure defining a CIMUnit event.
 typedef struct cimunit_event {
     /// Textual name of the event, used by scheduling rules
     char *event_name;
 
-    /// List of event barriers that wait on this event to be triggered
-    struct cimunit_event_barrier_list *action_barriers;
+    /// List of action events that wait on this condition event
+    struct cimunit_event_list *action_events;
     
     /// Barrier associated with the event in case it is used as a
     /// condition event.
@@ -49,16 +51,6 @@ typedef struct cimunit_event {
   size_t numDepEvents;
   
 } cimunit_event_t;
-
-
-/// Linked list of all known events by name
-typedef struct cimunit_event_barrier_list {
-    /// Pointer to event record
-    cimunit_event_t *event;
-    
-    /// Pointer to next record in the list.  Null if this is the last record.
-    struct cimunit_event_barrier_list *next_barrier;
-} cimunit_event_barrier_list_t;
 
 
 /// Create a new instance of a CIMUnit event

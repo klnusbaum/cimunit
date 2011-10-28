@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Kurtis L. Nusbaum
+ * Copyright 2011 Kurtis L. Nusbaum & Dale Frampton
  * 
  * This file is part of cimunit.
  * 
@@ -20,6 +20,26 @@
 #include <string.h>
 #include "cimunit_schedule.h"
 #include <stdio.h>
+
+
+cimunit_schedule_t *cimunit_schedule_init() {
+    cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));
+    
+    schedule->event_list = cimunit_event_list_init();
+}
+
+
+void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
+    cimunit_event_list_t *event_list = schedule->event_list;
+    
+    while(event_list) {
+        cimunit_event_destroy(event_list->event);
+        event_list = event_list->next;
+    }
+    cimunit_event_list_destroy(&schedule->event_list);
+}
+
+
 
 int cimunit_get_num_events(const char *string, size_t *numEvents){
   (*numEvents) =0;

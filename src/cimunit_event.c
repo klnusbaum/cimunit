@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include "cimunit_event.h"
+#include "cimunit_event_list.h"
 
 
 cimunit_event_t *cimunit_event_init(char *name)
@@ -30,7 +31,7 @@ cimunit_event_t *cimunit_event_init(char *name)
     cimunit_event_t *event = malloc(sizeof(cimunit_event_t));
   
     event->event_name = name;
-    event->action_barriers = NULL;
+    event->action_events = cimunit_event_list_init();
     event->condition_barrier = cimunit_barrier_init();
 
     event->is_action = false;
@@ -45,20 +46,7 @@ cimunit_event_t *cimunit_event_init(char *name)
 
 
 void cimunit_event_destroy(cimunit_event_t *event) {
-    cimunit_event_barrier_list_t *list = event->action_barriers;
-    event->action_barriers = NULL;    
-    cimunit_event_barrier_list_t *delete_entry;   
-    
-    while(list != NULL)
-    {
-      delete_entry = list;
-      list = list->next_barrier;
-      
-      // Clean-up
-      cimunit_mutex_destroy(&(delete_entry->event->mutex));
-      free(delete_entry);
-    }
-    
+    cimunit_event_list_destroy(&event->action_events); 
     cimunit_barrier_destroy(event->condition_barrier);
     
     free(event);
@@ -68,13 +56,8 @@ void cimunit_event_destroy(cimunit_event_t *event) {
 void cimunit_event_add_action(cimunit_event_t *condition,
                               cimunit_event_t *action)
 {
-    cimunit_event_barrier_list_t *new_action =
-      malloc(sizeof(cimunit_event_barrier_list_t));
-          
-    // Add barrier to head of the barrier list
-    new_action->event = action;
-    new_action->next_barrier = condition->action_barriers;
-    condition->action_barriers = new_action;
+    // Add event to head of the action event list
+    cimunit_event_list_add(&condition->action_events, action);
     
     // action event now needs to be marked as such
     action->is_action = true;
@@ -83,45 +66,17 @@ void cimunit_event_add_action(cimunit_event_t *condition,
 
 void cimunit_event_fire(cimunit_event_t *event)
 {
-    cimunit_event_barrier_list_t *next_barrier = event->action_barriers;
+    cimunit_event_list_t *next_action = event->action_events;
   
-    while (next_barrier != NULL)
-    {
-        cimunit_barrier_unlock(next_barrier->event->condition_barrier);
-        //cimunit_mutex_unlock(&(next_barrier->event->mutex));
-        next_barrier = next_barrier->next_barrier;
+    // When the event is fired, open the barriers associated with this event.
+    // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
+    // be unlocked.
+    while(next_action) {
+        cimunit_barrier_unlock(next_action->event->condition_barrier);
+        next_action = next_action->next;
     }
   
     if (event->is_action) {
         cimunit_barrier_wait(event->condition_barrier);
-        //cimunit_mutex_lock(&(event->mutex));
     }
 }
-
-/*
-int cimunit_set_dependent_events(
-  cimunit_event_t *event,
-  cimunit_event_t **depEvents,
-  size_t numDepEvents)
-{
-  if(event == NULL){
-    fprintf(stderr, "Cannot assign dependent events to a NULL pointer\n");
-    exit(1);
-  }
-  event->dep_events = depEvents;
-  event->numDepEvents = numDepEvents;
-}
-
-
-int cimunit_fire_event(cimunit_event_t *event){
-  size_t i;
-  //printf(" trying to fire: %s \n", event->event_name);
-  //ASSERT DEPEVENTS NOT NULL!!!!!!
-  for(i=0; i<event->numDepEvents;++i){
-    cimunit_mutex_lock(&(event->dep_events[i]->mutex));
-    cimunit_mutex_unlock(&(event->dep_events[i]->mutex));
-  }
-  cimunit_mutex_unlock(&(event->mutex));
-}
-*/
-

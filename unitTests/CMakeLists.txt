@@ -1,6 +1,9 @@
 set(CIMUNIT_UNIT_TESTS
   testMain.c
   test_cimunit_event.c
+  test_cimunit_event_list.c
+  test_cimunit_schedule.c
+  test_cimunit.c
 )
    
 set(CIMUNIT_HDRS_UNIT_TESTS
@@ -16,3 +19,6 @@ target_link_libraries(barrierTest cimunit)
 
 add_test(barrierTest, ${CMAKE_CURRENT_BINARY_DIR}/barrierTest)
 add_test(unitTests, ${CMAKE_CURRENT_BINARY_DIR}/unitTests)
+
+add_executable(scantest scantest.c)
+target_link_libraries(scantest cimunit)

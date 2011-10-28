@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Kurtis L. Nusbaum
+ * Copyright 2011 Kurtis L. Nusbaum & Dale Frampton
  * 
  * This file is part of cimunit.
  * 
@@ -19,18 +19,42 @@
 #ifndef CIMUNIT_SCHEDULE_H
 #define CIMUNIT_SCHEDULE_H
 #include <stdlib.h>
+
 #include "cimunit_event.h"
+#include "cimunit_event_list.h"
 
 typedef size_t cimunit_thread_amount_t;
 
 
-/** \brief Struct which represents a schedule to be used in a test.*/
-typedef struct{
+/// Structure use to define a CIMUnit schedule
+typedef struct cimunit_schedule {
+    /// List of events involved in the schedule
+    cimunit_event_list_t *event_list;
+
+
   cimunit_thread_amount_t numThreads;
   const char *sched_string; 
   cimunit_event_t **events;
   size_t numEvents;
 } cimunit_schedule_t;
+
+
+/// Create a new schedule from the passed string
+///
+/// \param schedule_string - schedule to be met
+/// \return newly created and configured schedule object
+cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string);
+
+
+/// Create a new schedule object
+///
+/// \return new schedule object
+cimunit_schedule_t *cimunit_schedule_init();
+
+/// Destroy the schedule object and free memory
+void cimunit_schedule_destroy(cimunit_schedule_t *schedule);
+
+
 
 
 int cimunit_get_event_names(const char *sched_string, char **event_names);

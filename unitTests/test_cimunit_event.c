@@ -28,7 +28,7 @@
 #include "CUnit.h"
 
 #include "cimunit_event.h"
-
+#include "cimunit_event_list.h"
 
 static void test_cimunit_init_event(void)
 {
@@ -46,7 +46,7 @@ static void test_cimunit_init_event(void)
     /// - No cross platform tests for mutex configuration
   
     /// - Verify the dependent events list is empty
-    CU_ASSERT_PTR_NULL(event->action_barriers);
+    CU_ASSERT_PTR_NULL(event->action_events);
   
     cimunit_event_destroy(event);
 }
@@ -60,11 +60,10 @@ static void test_cimunit_event_add_action(void)
     /// - Run SUT
     cimunit_event_add_action(condition, action);
   
-    /// - Verify the linked list is created properly;
-    CU_ASSERT_PTR_NOT_NULL(condition->action_barriers);
-    CU_ASSERT_PTR_NULL(condition->action_barriers->next_barrier);
-    CU_ASSERT_PTR_EQUAL(condition->action_barriers->event,
-                        action);
+    /// - Verify the action is in the list
+    CU_ASSERT_PTR_NOT_NULL(condition->action_events);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition->action_events,
+                                                   action->event_name));
                         
     /// - Verify the action event is listed as an action event
     CU_ASSERT_TRUE(action->is_action);
@@ -84,20 +83,12 @@ static void test_cimunit_event_add_multiple_actions(void)
   
     /// - Run SUT
     cimunit_event_add_action(condition, action2);
-  
-    /// - Verify the linked list is created properly;
-    cimunit_event_barrier_list_t *second_barrier =
-      condition->action_barriers->next_barrier;
 
-    /// - The first item should be action 2      
-    CU_ASSERT_PTR_EQUAL(condition->action_barriers->event,
-                        action2);
-
-    /// - The second item should be action 1
-    CU_ASSERT_PTR_NOT_NULL(second_barrier);
-    CU_ASSERT_PTR_NULL(second_barrier->next_barrier);
-    CU_ASSERT_PTR_EQUAL(condition->action_barriers->event,
-                        action2);
+    /// - Verify both items are in the list
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition->action_events,
+                                                   action1->event_name));
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition->action_events,
+                                                   action2->event_name));
 
     /// - Clean up
     cimunit_event_destroy(condition);
@@ -125,7 +116,6 @@ static void *op_multiply(void *value)
     int *my_value = (int *)value;
 
     cimunit_event_fire(event_multiply_before);
-    printf("mult\n");
     *my_value *= 2;
     cimunit_event_fire(event_multiply_after);
     
@@ -139,7 +129,6 @@ static void *op_add(void *value)
     int *my_value = (int *)value;
     
     cimunit_event_fire(event_add_before);
-    printf("add\n");
     *my_value += 1;
     cimunit_event_fire(event_add_after);
     
