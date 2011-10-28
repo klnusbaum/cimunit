@@ -33,7 +33,7 @@ int cimunit_add_event_to_table(
 {
   cimunit_event_table_entry_t *new_entry = 
     (cimunit_event_table_entry_t*)malloc(sizeof(cimunit_event_table_entry_t));
-  cimunit_init_event_table_entry(newEntry, event);
+  cimunit_init_event_table_entry(new_entry, event);
   cimunit_mutex_lock(&(event_table->lock));
   if(event_table->head == NULL){
     event_table->head = new_entry;

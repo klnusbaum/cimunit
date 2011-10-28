@@ -1,7 +1,7 @@
-find_package(FLEX)
+find_package(FLEX REQUIRED flex)
 FLEX_TARGET(scanner create_events.l  ${CMAKE_CURRENT_BINARY_DIR}/create_events_lexer.c)
 
-find_package(BISON)
+find_package(BISON REQUIRED bison)
 BISON_TARGET(grammar create_events.y ${CMAKE_CURRENT_BINARY_DIR}/create_events_grammar.c
              COMPILER_FLAGS "-d")
 ADD_FLEX_BISON_DEPENDENCY(scanner grammar)
