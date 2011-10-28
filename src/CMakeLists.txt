@@ -17,6 +17,7 @@ set(CIMUNIT_SRC
   cimunit_thread.c
   ${FLEX_scanner_OUTPUTS}
   ${BISON_grammar_OUTPUTS}
+  cimunit_event_table.c
 )
 
 add_library(cimunit ${CIMUNIT_SRC})
