@@ -20,3 +20,4 @@
 #include "cimunit_platform_unix_pthreads.h"
 
 #define RESTRICT restrict
+#define INLINE inline

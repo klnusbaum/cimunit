@@ -52,7 +52,7 @@ int cimunit_add_event_to_table(
   return 0;
 }
 
-inline int cimunit_event_matches_table_entry(
+INLINE int cimunit_event_matches_table_entry(
   const cimunit_event_table_entry_t* table_entry,
   const char *event_name,
   const char *thread_name)

@@ -21,3 +21,4 @@
 
 /// As of Apple's gcc 4.2.1, restrict isn't supported, but __restrict is.
 #define RESTRICT __restrict
+#define INLINE

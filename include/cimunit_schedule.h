@@ -22,6 +22,7 @@
 
 #include "cimunit_event.h"
 #include "cimunit_event_list.h"
+#include "cimunit_event_table.h"
 
 typedef size_t cimunit_thread_amount_t;
 
@@ -30,6 +31,12 @@ typedef size_t cimunit_thread_amount_t;
 typedef struct cimunit_schedule {
     /// List of events involved in the schedule
     cimunit_event_list_t *event_list;
+    
+    /// Structure containing the status of fired events
+    cimunit_event_table_t fired_event_list;
+    
+    /// Text version of the schedule
+    char *schedule_string;
 
 
   cimunit_thread_amount_t numThreads;
@@ -45,6 +52,14 @@ typedef struct cimunit_schedule {
 /// \return newly created and configured schedule object
 cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string);
 
+
+/// Checks if the action event is blocked
+///
+/// \param schedule - schedule associated with the test
+/// \param action_event - action event being queried
+/// \return true if event is blocked, else false
+bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
+                                    char *action_event);
 
 /// Create a new schedule object
 ///

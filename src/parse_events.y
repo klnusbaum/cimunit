@@ -29,7 +29,8 @@
 
 // Defines
 
-extern int parse_events_parse(cimunit_event_list_t **event_list); // From parse_events.y
+extern int parse_events_parse(cimunit_event_list_t **event_list,
+                              char *action_event); // From parse_events.y
 extern void parse_events__scan_string(char *string); // From parse_events.l
 extern int parse_events_lex (void); // From parse_events.l
 
@@ -38,7 +39,8 @@ extern int parse_events_lex (void); // From parse_events.l
 ///
 /// \param event_list - event list passed to the parser
 /// \param str - error string
-void parse_events_error(struct cimunit_event_list **event_list, const char *str)
+void parse_events_error(struct cimunit_event_list **event_list,
+                        const char *action_event, const char *str)
 {
 	fprintf(stderr,"error: %s\n",str);
 }
@@ -54,8 +56,13 @@ int parse_events_wrap()
 /// Build a schedule
 ///
 /// \return the completed schedule
-void cimunit_event_fire_parse(char *schedule_string) {
-    /* Do Something */
+bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
+                                    char *action_event) {
+    // Parse the schedule string to determine if the action event is unblocked
+    parse_events__scan_string(schedule->schedule_string);
+    parse_events_parse(&schedule->event_list, action_event);
+    
+    return false;
 }
 
 %}
@@ -71,6 +78,7 @@ void cimunit_event_fire_parse(char *schedule_string) {
 %name-prefix "parse_events_"
 
 %parse-param {struct cimunit_event_list **event_list}
+%parse-param {char *action_event}
 
 %token <number> STATE
 %token <number> NUMBER
@@ -113,7 +121,7 @@ basicCondition:
     }
     | blockEvent
     {
-        yyerror(event_list, "Blocking events are not supported");
+        yyerror(event_list, action_event, "Blocking events are not supported");
         YYERROR;
     }
 

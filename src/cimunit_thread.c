@@ -39,15 +39,6 @@ int cimunit_thread_setname(const char *name){
   #endif
 }
 
-#if PLATFORM_Darwin
-
-#else
-//THIS FUNCTION MAY NOT BE SUPPORTED ON ALL PLATFORMS, NAMELY MAC
-int cimunit_thread_setname(cimunit_thread_t thread, const char *name){
-//TODO throw error if name is longer than CIMUNIT_MAX_THREAD_NAME_LENGTH
-  return pthread_setname_np(thread, name);
-}
-#endif
 
 int cimunit_thread_getname(cimunit_thread_t thread, char *name){
   #if PLATFORM_Darwin

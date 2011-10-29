@@ -39,26 +39,26 @@ static void test_cimunit_schedule_init(void)
 static void test_cimunit_schedule_parse_single(void)
 {
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x");
-    CU_ASSERT_PTR_NOT_NULL(schedule->event_list);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(schedule->event_list);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(schedule->event_list, "x"));
     
     cimunit_event_t *action = cimunit_event_list_find(schedule->event_list, "a");
-    CU_ASSERT_PTR_NOT_NULL(action);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(action);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "x"));
 }
 
 static void test_cimunit_schedule_parse_double(void)
 {
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x,b->a");
-    CU_ASSERT_PTR_NOT_NULL(schedule->event_list);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(schedule->event_list);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(schedule->event_list, "x"));
     
     cimunit_event_t *action = cimunit_event_list_find(schedule->event_list, "a");
-    CU_ASSERT_PTR_NOT_NULL(action);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(action);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "x"));
 
     action = cimunit_event_list_find(schedule->event_list, "b");
-    CU_ASSERT_PTR_NOT_NULL(action);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(action);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "a"));
 }
 

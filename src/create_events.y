@@ -57,6 +57,8 @@ int create_events_wrap()
 cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
     cimunit_schedule_t *schedule = cimunit_schedule_init();
     
+    schedule->schedule_string = strdup(schedule_string);
+    
     // Parse the schedule string into the schedule object.
     create_events__scan_string(schedule_string);
     create_events_parse(&schedule->event_list);
