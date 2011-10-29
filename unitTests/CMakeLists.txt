@@ -19,7 +19,7 @@ include_directories(${CUNIT_INCLUDE_DIRS})
 
 add_executable(unitTests ${CIMUNIT_UNIT_TESTS})
 add_executable(barrierTest barrier_test.c)
-target_link_libraries(unitTests cimunit cunit ncurses)
+target_link_libraries(unitTests cimunit ${CUNIT_LIBRARIES} ${CURSES_LIBRARIES})
 target_link_libraries(barrierTest cimunit)
 
 add_test(barrierTest, ${CMAKE_CURRENT_BINARY_DIR}/barrierTest)
