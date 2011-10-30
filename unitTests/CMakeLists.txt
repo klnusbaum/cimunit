@@ -13,8 +13,6 @@ set(CIMUNIT_UNIT_TESTS
 set(CIMUNIT_HDRS_UNIT_TESTS
 )
 
-#This is machine dependent. We should let user specify where there CUnit install is.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -L/opt/local/lib")
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${CUNIT_INCLUDE_DIRS})
 
