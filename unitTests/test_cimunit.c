@@ -286,7 +286,6 @@ static void test_cimunit_macro_two_actions2(void)
 }
 
 
-
 static void test_cimunit_macro_two_actions2a(void)
 {
     // Create schedule
@@ -317,6 +316,120 @@ static void test_cimunit_macro_two_actions2a(void)
 }
 
 
+static void test_cimunit_macro_or_conditional1(void)
+{
+    // Create schedule
+    CIMUNIT_SCHEDULE("b2||a2->c1");
+    int value = 1;
+
+    // Create and execute threads
+    pthread_t threadB;
+    pthread_t threadC;
+    pthread_attr_t attr;
+    
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
+    pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
+
+    pthread_join(threadB, NULL);
+    pthread_join(threadC, NULL);
+
+    // Clean up threading
+    pthread_attr_destroy(&attr);
+    
+    // Verify SUT
+    CU_ASSERT_EQUAL(value, 16);
+}
+
+
+static void test_cimunit_macro_or_conditional2(void)
+{
+    // Create schedule
+    CIMUNIT_SCHEDULE("a2||c2->b1");
+    int value = 1;
+
+    // Create and execute threads
+    pthread_t threadA;
+    pthread_t threadB;
+    pthread_attr_t attr;
+    
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
+    pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
+
+    pthread_join(threadA, NULL);
+    pthread_join(threadB, NULL);
+
+    // Clean up threading
+    pthread_attr_destroy(&attr);
+    
+    // Verify SUT
+    CU_ASSERT_EQUAL(value, 5);
+}
+
+
+static void test_cimunit_macro_and_conditional1(void)
+{
+    // Create schedule
+    CIMUNIT_SCHEDULE("b2&&a2->c1,a2->b1");
+    int value = 1;
+
+    // Create and execute threads
+    pthread_t threadA;
+    pthread_t threadB;
+    pthread_t threadC;
+    pthread_attr_t attr;
+    
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
+    pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
+    pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
+
+    pthread_join(threadA, NULL);
+    pthread_join(threadB, NULL);
+    pthread_join(threadC, NULL);
+
+    // Clean up threading
+    pthread_attr_destroy(&attr);
+    
+    // Verify SUT
+    CU_ASSERT_EQUAL(value, 20);
+}
+
+
+static void test_cimunit_macro_and_conditional2(void)
+{
+    // Create schedule
+    CIMUNIT_SCHEDULE("b2&&a2->c1,b2->a1");
+    int value = 1;
+
+    // Create and execute threads
+    pthread_t threadA;
+    pthread_t threadB;
+    pthread_t threadC;
+    pthread_attr_t attr;
+    
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
+    pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
+    pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
+
+    pthread_join(threadA, NULL);
+    pthread_join(threadB, NULL);
+    pthread_join(threadC, NULL);
+
+    // Clean up threading
+    pthread_attr_destroy(&attr);
+    
+    // Verify SUT
+    CU_ASSERT_EQUAL(value, 32);
+}
+
+
 static CU_TestInfo tests_cimunit[] = {
   {"basic1", test_cimunit_basic1},
   {"basic2", test_cimunit_basic2},
@@ -326,6 +439,10 @@ static CU_TestInfo tests_cimunit[] = {
   {"macro two actions 1a", test_cimunit_macro_two_actions1a},
   {"macro two actions 2", test_cimunit_macro_two_actions2},
   {"macro two actions 2a", test_cimunit_macro_two_actions2a},
+  {"macro or conditional 1", test_cimunit_macro_or_conditional1},
+  {"macro or conditional 2", test_cimunit_macro_or_conditional2},
+  {"macro and conditional 1", test_cimunit_macro_and_conditional1},
+  {"macro and conditional 2", test_cimunit_macro_and_conditional2},
   CU_TEST_INFO_NULL,
 };
 

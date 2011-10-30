@@ -85,6 +85,12 @@ void cimunit_event_add_action(cimunit_event_t *condition,
 void cimunit_event_fire(cimunit_event_t *event);
 
 
+/// Cause thread to wait on this event
+///
+/// \note This method will not trigger the fire event actions.  It just
+///       pends on the event's barrier.
+void cimunit_event_lock_and_wait(cimunit_event_t *event);
+
 
 
 

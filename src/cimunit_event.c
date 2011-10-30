@@ -80,3 +80,9 @@ void cimunit_event_fire(cimunit_event_t *event)
         cimunit_barrier_wait(event->condition_barrier);
     }
 }
+
+void cimunit_event_lock_and_wait(cimunit_event_t *event)
+{
+    cimunit_barrier_lock(event->condition_barrier);
+    cimunit_barrier_wait(event->condition_barrier);
+}
