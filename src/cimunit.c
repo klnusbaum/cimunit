@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "cimunit_event_list.h"
+#include "cimunit_event_table.h"
 #include "cimunit_schedule.h"
 
 struct cimunit_schedule *g_cimunit_default_schedule = NULL;
@@ -13,6 +14,7 @@ bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName)
     // Locate the event in the schedule and fire it.
     cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
     if (event) {
+        cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
         cimunit_event_fire(event);
     } else {
         return false;

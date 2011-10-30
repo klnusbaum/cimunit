@@ -24,13 +24,15 @@
 #include <string.h>
 
 #include "cimunit_event_list.h"
+#include "cimunit_event_table.h"
 #include "cimunit_schedule.h"
 
 
 // Defines
 
-extern int parse_events_parse(cimunit_event_list_t **event_list,
-                              char *action_event); // From parse_events.y
+extern int parse_events_parse(struct cimunit_event_table *fired_event_list,
+                              char *action_event,
+                              bool *parse_result); // From parse_events.y
 extern void parse_events__scan_string(char *string); // From parse_events.l
 extern int parse_events_lex (void); // From parse_events.l
 
@@ -39,8 +41,9 @@ extern int parse_events_lex (void); // From parse_events.l
 ///
 /// \param event_list - event list passed to the parser
 /// \param str - error string
-void parse_events_error(struct cimunit_event_list **event_list,
-                        const char *action_event, const char *str)
+void parse_events_error(struct cimunit_event_table *fired_event_list,
+                        const char *action_event, bool *parse_result,
+                        const char *str)
 {
 	fprintf(stderr,"error: %s\n",str);
 }
@@ -58,11 +61,13 @@ int parse_events_wrap()
 /// \return the completed schedule
 bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
                                     char *action_event) {
+    bool result = false;
+    
     // Parse the schedule string to determine if the action event is unblocked
     parse_events__scan_string(schedule->schedule_string);
-    parse_events_parse(&schedule->event_list, action_event);
+    parse_events_parse(&schedule->fired_event_list, action_event, &result);
     
-    return false;
+    return result;
 }
 
 %}
@@ -72,19 +77,24 @@ bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
 
 %union 
 {
+	int bool_value;
 	char *string;
 }
 
 %name-prefix "parse_events_"
 
-%parse-param {struct cimunit_event_list **event_list}
+%parse-param {struct cimunit_event_table *fired_event_list}
 %parse-param {char *action_event}
+%parse-param {bool *parse_result}
 
 %token <number> STATE
 %token <number> NUMBER
 %token <string> EVENT_NAME
 
-%type <event> basicEvent
+%type <bool_value> basicEvent
+%type <bool_value> basicCondition
+%type <bool_value> condition
+
 
 %start schedules
 
@@ -98,14 +108,22 @@ schedule:
     ordering
 
 ordering:
-    condition SYMBOL_IMPLIES basicEvent
+    condition SYMBOL_IMPLIES EVENT_NAME
     {
+        if (!strcmp($3, action_event)) {
+            *parse_result = $1;
+        }
     }
     ;
 
 basicEvent:
     EVENT_NAME
     {
+        // Lookup event name in the fired event list
+        const cimunit_event_table_entry_t *event = NULL;
+        cimunit_find_event_in_table(fired_event_list, $1, &event);
+
+        $$ = (NULL != event);
     }
     ;
 
@@ -118,25 +136,30 @@ blockEvent:
 basicCondition:
     basicEvent
     {
+        $$ = $1;
     }
     | blockEvent
     {
-        yyerror(event_list, action_event, "Blocking events are not supported");
+        yyerror(fired_event_list, action_event, parse_result,
+                "Blocking events are not supported");
         YYERROR;
     }
 
 condition:
     basicCondition
     {
+        $$ = $1;
     }
     | condition SYMBOL_OR basicCondition
     {
-
+        $$ = $1 || $3;
     }
     | condition SYMBOL_AND basicCondition
     {
+        $$ = $1 && $3;
     }
     | SYMBOL_LPAREN condition SYMBOL_RPAREN
     {
+        $$ = $2;
     }
     ;

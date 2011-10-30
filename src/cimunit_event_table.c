@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cimunit_event_table.h"
+#include "stdio.h"
 
 int cimunit_init_event_table_entry(
   cimunit_event_table_entry_t *entry,
@@ -60,10 +61,9 @@ INLINE int cimunit_event_matches_table_entry(
   char thread_name_buffer[CIMUNIT_MAX_THREAD_NAME_LENGTH];
   cimunit_thread_getname(table_entry->thread, thread_name_buffer);
   return
-    strcmp(table_entry->event->event_name, event_name) &&
-      (strcmp(CIMUNIT_DEFAULT_THREAD_NAME, thread_name)
-      ||
-      strcmp(thread_name_buffer, thread_name));
+    !strcmp(table_entry->event->event_name, event_name) &&
+      (!strcmp(CIMUNIT_DEFAULT_THREAD_NAME, thread_name) ||
+       !strcmp(thread_name_buffer, thread_name));
 }
 
 int cimunit_find_event_in_table(
@@ -86,7 +86,7 @@ int cimunit_find_event_in_table_on_thread(
   const cimunit_event_table_entry_t **found_event)
 {
   (*found_event) = event_table->head;
-  while(found_event != NULL){
+  while((*found_event) != NULL){
     if(cimunit_event_matches_table_entry(*found_event, event_name, thread_name))
     {
       break;

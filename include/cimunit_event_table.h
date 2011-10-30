@@ -37,7 +37,7 @@ typedef struct event_table_entry{
 
 /// A table representing all the events that have been fired in a particular
 /// CIMUnit test.
-typedef struct{
+typedef struct cimunit_event_table {
 
   /// The head table entry. Is initially NULL.
   cimunit_event_table_entry_t *head;
