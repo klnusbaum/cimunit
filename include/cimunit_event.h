@@ -55,10 +55,10 @@ typedef struct cimunit_event {
 
 /// Create a new instance of a CIMUnit event
 ///
-/// \param - name of the event
-/// \returns - a pointer to the event.  The pointer must be deallocated
-///            by calling \sa cimunit_event_destroy
-cimunit_event_t *cimunit_event_init(char *name);
+/// \param event - Event to initialize.
+/// \param name - name of the event
+/// \returns - 0 if the initilization was successful, error code otherwise.
+int cimunit_event_init(cimunit_event_t *event, char *name);
 
 
 /// Destroy a CIMUnit event and free its allocated memory.

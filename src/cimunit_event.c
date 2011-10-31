@@ -26,10 +26,8 @@
 #include "cimunit_event_list.h"
 
 
-cimunit_event_t *cimunit_event_init(char *name)
+int cimunit_event_init(cimunit_event_t *event, char *name)
 {
-    cimunit_event_t *event = malloc(sizeof(cimunit_event_t));
-  
     event->event_name = name;
     event->action_events = cimunit_event_list_init();
     event->condition_barrier = cimunit_barrier_init();
@@ -41,15 +39,14 @@ cimunit_event_t *cimunit_event_init(char *name)
     event->dep_events = NULL;
     event->numDepEvents = 0;
   
-    return event;
+    //TODO actually return an error code if something bad happened.
+    return 0;
 }
 
 
 void cimunit_event_destroy(cimunit_event_t *event) {
     cimunit_event_list_destroy(&event->action_events); 
     cimunit_barrier_destroy(event->condition_barrier);
-    
-    free(event);
 }
 
 

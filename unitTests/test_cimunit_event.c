@@ -34,103 +34,114 @@ static void test_cimunit_init_event(void)
 {
     char event_name[] = "test";
 
-    cimunit_event_t *event = cimunit_event_init(event_name);
+    cimunit_event_t event;
+    cimunit_event_init(&event, event_name);
   
     /// - Verify the event name is initialized
-    CU_ASSERT_PTR_NOT_NULL(event->event_name);
-    CU_ASSERT_STRING_EQUAL(event->event_name, event_name);
+    CU_ASSERT_PTR_NOT_NULL(event.event_name);
+    CU_ASSERT_STRING_EQUAL(event.event_name, event_name);
     
-    CU_ASSERT_FALSE(event->is_action);
-    CU_ASSERT_PTR_NOT_NULL(event->condition_barrier);
+    CU_ASSERT_FALSE(event.is_action);
+    CU_ASSERT_PTR_NOT_NULL(event.condition_barrier);
   
     /// - No cross platform tests for mutex configuration
   
     /// - Verify the dependent events list is empty
-    CU_ASSERT_PTR_NULL(event->action_events);
+    CU_ASSERT_PTR_NULL(event.action_events);
   
-    cimunit_event_destroy(event);
+    cimunit_event_destroy(&event);
 }
 
 
 static void test_cimunit_event_add_action(void)
 {
-    cimunit_event_t *condition = cimunit_event_init("condition");
-    cimunit_event_t *action = cimunit_event_init("action");
+    cimunit_event_t condition;
+    cimunit_event_init(&condition, "condition");
+    cimunit_event_t action;
+    cimunit_event_init(&action, "action");
   
     /// - Run SUT
-    cimunit_event_add_action(condition, action);
+    cimunit_event_add_action(&condition, &action);
   
     /// - Verify the action is in the list
-    CU_ASSERT_PTR_NOT_NULL(condition->action_events);
-    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition->action_events,
-                                                   action->event_name));
+    CU_ASSERT_PTR_NOT_NULL(condition.action_events);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition.action_events,
+                                                   action.event_name));
                         
     /// - Verify the action event is listed as an action event
-    CU_ASSERT_TRUE(action->is_action);
+    CU_ASSERT_TRUE(action.is_action);
 
     /// - Clean up
-    cimunit_event_destroy(condition);
-    cimunit_event_destroy(action);
+    cimunit_event_destroy(&condition);
+    cimunit_event_destroy(&action);
 }
 
 
 static void test_cimunit_event_add_multiple_actions(void)
 {
-    cimunit_event_t *condition = cimunit_event_init("condition");
-    cimunit_event_t *action1 = cimunit_event_init("action1");
-    cimunit_event_t *action2 = cimunit_event_init("action2");
-    cimunit_event_add_action(condition, action1);
+    cimunit_event_t condition;
+    cimunit_event_init(&condition, "condition");
+    cimunit_event_t action1;
+    cimunit_event_init(&action1, "action1");
+    cimunit_event_t action2;
+    cimunit_event_init(&action2, "action2");
+    cimunit_event_add_action(&condition, &action1);
   
     /// - Run SUT
-    cimunit_event_add_action(condition, action2);
+    cimunit_event_add_action(&condition, &action2);
 
     /// - Verify both items are in the list
-    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition->action_events,
-                                                   action1->event_name));
-    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition->action_events,
-                                                   action2->event_name));
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition.action_events,
+                                                   action1.event_name));
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(condition.action_events,
+                                                   action2.event_name));
 
     /// - Clean up
-    cimunit_event_destroy(condition);
-    cimunit_event_destroy(action1);
-    cimunit_event_destroy(action2);
+    cimunit_event_destroy(&condition);
+    cimunit_event_destroy(&action1);
+    cimunit_event_destroy(&action2);
 }
 
 
 static void test_cimunit_event_fire(void)
 {
-    cimunit_event_t *condition = cimunit_event_init("condition");
-    cimunit_event_t *action = cimunit_event_init("action");
+    cimunit_event_t condition;
+    cimunit_event_init(&condition, "condition");
+    cimunit_event_t action;
+    cimunit_event_init(&action, "action");
   
     /// - Run SUT
-    cimunit_event_add_action(condition, action);
+    cimunit_event_add_action(&condition, &action);
 
-    cimunit_event_fire(condition);
-    cimunit_event_fire(action);
+    cimunit_event_fire(&condition);
+    cimunit_event_fire(&action);
+
+    cimunit_event_destroy(&condition); 
+    cimunit_event_destroy(&action); 
 }
 
-static cimunit_event_t *event_multiply_before;
-static cimunit_event_t *event_multiply_after;
+static cimunit_event_t event_multiply_before;
+static cimunit_event_t event_multiply_after;
 static void *op_multiply(void *value)
 {
     int *my_value = (int *)value;
 
-    cimunit_event_fire(event_multiply_before);
+    cimunit_event_fire(&event_multiply_before);
     *my_value *= 2;
-    cimunit_event_fire(event_multiply_after);
+    cimunit_event_fire(&event_multiply_after);
     
     pthread_exit(NULL);
 }
 
-static cimunit_event_t *event_add_before;
-static cimunit_event_t *event_add_after;
+static cimunit_event_t event_add_before;
+static cimunit_event_t event_add_after;
 static void *op_add(void *value)
 {
     int *my_value = (int *)value;
     
-    cimunit_event_fire(event_add_before);
+    cimunit_event_fire(&event_add_before);
     *my_value += 1;
-    cimunit_event_fire(event_add_after);
+    cimunit_event_fire(&event_add_after);
     
     pthread_exit(NULL);
 }
@@ -141,10 +152,10 @@ static void test_cimunit_event_fire_add_before_mult(void)
     int value = 0;
     int *value_ptr = &value;
     
-    event_add_before = cimunit_event_init("add_before");
-    event_add_after = cimunit_event_init("add_after");
-    event_multiply_before = cimunit_event_init("multiply_before");
-    event_multiply_after = cimunit_event_init("multiply_after");  
+    cimunit_event_init(&event_add_before, "add_before");
+    cimunit_event_init(&event_add_after, "add_after");
+    cimunit_event_init(&event_multiply_before, "multiply_before");
+    cimunit_event_init(&event_multiply_after, "multiply_after");  
 
     pthread_t add_thread;
     pthread_t mult_thread;
@@ -153,7 +164,7 @@ static void test_cimunit_event_fire_add_before_mult(void)
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);    
 
     /// - Run SUT
-    cimunit_event_add_action(event_add_after, event_multiply_before);
+    cimunit_event_add_action(&event_add_after, &event_multiply_before);
     pthread_create(&mult_thread, &attr, op_multiply, value_ptr);
     pthread_create(&add_thread, &attr, op_add, value_ptr);
     pthread_join(mult_thread, NULL);
@@ -161,10 +172,10 @@ static void test_cimunit_event_fire_add_before_mult(void)
 
     CU_ASSERT_EQUAL(value, 2);
 
-    cimunit_event_destroy(event_add_before);
-    cimunit_event_destroy(event_add_after);
-    cimunit_event_destroy(event_multiply_before);
-    cimunit_event_destroy(event_multiply_after);
+    cimunit_event_destroy(&event_add_before);
+    cimunit_event_destroy(&event_add_after);
+    cimunit_event_destroy(&event_multiply_before);
+    cimunit_event_destroy(&event_multiply_after);
 }
 
 
@@ -173,11 +184,11 @@ static void test_cimunit_event_fire_mult_before_add(void)
     int value = 0;
     int *value_ptr = &value;
     
-    event_add_before = cimunit_event_init("add_before");
-    event_add_after = cimunit_event_init("add_after");
-    event_multiply_before = cimunit_event_init("multiply_before");
-    event_multiply_after = cimunit_event_init("multiply_after");
-  
+    cimunit_event_init(&event_add_before, "add_before");
+    cimunit_event_init(&event_add_after, "add_after");
+    cimunit_event_init(&event_multiply_before, "multiply_before");
+    cimunit_event_init(&event_multiply_after, "multiply_after");  
+
     pthread_t add_thread;
     pthread_t mult_thread;
     pthread_attr_t attr;
@@ -185,7 +196,7 @@ static void test_cimunit_event_fire_mult_before_add(void)
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);    
 
     /// - Run SUT
-    cimunit_event_add_action(event_multiply_after, event_add_before);
+    cimunit_event_add_action(&event_multiply_after, &event_add_before);
     pthread_create(&mult_thread, &attr, op_multiply, value_ptr);
     pthread_create(&add_thread, &attr, op_add, value_ptr);
     pthread_join(mult_thread, NULL);
@@ -193,10 +204,10 @@ static void test_cimunit_event_fire_mult_before_add(void)
 
     CU_ASSERT_EQUAL(value, 1);
 
-    cimunit_event_destroy(event_add_before);
-    cimunit_event_destroy(event_add_after);
-    cimunit_event_destroy(event_multiply_before);
-    cimunit_event_destroy(event_multiply_after);
+    cimunit_event_destroy(&event_add_before);
+    cimunit_event_destroy(&event_add_after);
+    cimunit_event_destroy(&event_multiply_before);
+    cimunit_event_destroy(&event_multiply_after);
 
 }
 

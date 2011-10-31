@@ -120,7 +120,8 @@ basicEvent:
         cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
         
         if (!event) {
-            event = cimunit_event_init($1);
+            event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
+            cimunit_event_init(event, $1);
             cimunit_event_list_add(event_list, event);
         }
         

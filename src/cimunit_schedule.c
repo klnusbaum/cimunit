@@ -101,8 +101,8 @@ int cimunit_init_schedule(
   strcpy(name1, "t2begin");
   char *name2 = (char*)malloc(sizeof(char)*6);
   strcpy(name2, "t1end");
-  cs->events[0] = cimunit_event_init(name1);
-  cs->events[1] = cimunit_event_init(name2);
+  cimunit_event_init(cs->events[0], name1);
+  cimunit_event_init(cs->events[1], name2);
   cimunit_event_t** begin_deps = 
     (cimunit_event_t**)malloc(sizeof(cimunit_event_t*));
   
