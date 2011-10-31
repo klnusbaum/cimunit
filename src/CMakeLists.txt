@@ -1,5 +1,5 @@
 find_package(FLEX REQUIRED flex)
-find_package(BISON 2.5 REQUIRED bison)
+find_package(BISON 2.4.1 REQUIRED bison)
 
 FLEX_TARGET(create_events_lexer create_events.l
             ${CMAKE_CURRENT_BINARY_DIR}/create_events_lexer.c)
