@@ -25,10 +25,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "CUnit.h"
-
+#include "testMain.h"
 #include "cimunit.h"
-#include "cimunit_schedule.h"
 
 static void test_parse_event_single(void)
 {
@@ -203,3 +201,4 @@ void AddParseEventTests(void)
 	}
 }
 
+RUN_TEST_SUITE(AddParseEventTests())

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "CUnit.h"
+#include "testMain.h"
 #include "cimunit.h"
 #include <assert.h>
 
@@ -58,3 +58,4 @@ void AddEventTableEntryTests(void){
 	}
 }
 
+RUN_TEST_SUITE(AddEventTableEntryTests())

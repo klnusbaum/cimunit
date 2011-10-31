@@ -23,7 +23,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "CUnit.h"
+#include "testMain.h"
 //#include "ExampleTests.h"
 
 /* WARNING - MAINTENANCE NIGHTMARE AHEAD
@@ -88,3 +88,4 @@ void AddTests(void)
 	}
 }
 
+RUN_TEST_SUITE(AddTests())

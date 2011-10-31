@@ -25,11 +25,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "CUnit.h"
-
-#include "cimunit_event.h"
-#include "cimunit_event_list.h"
-
+#include "cimunit.h"
+#include "testMain.h"
 static void test_cimunit_init_event(void)
 {
     char event_name[] = "test";
@@ -239,4 +236,6 @@ void AddEventTests(void)
 		exit(EXIT_FAILURE);
 	}
 }
+
+RUN_TEST_SUITE( AddEventTests() )
 

@@ -19,17 +19,15 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
-#include "CUnit.h"
-
+#include "testMain.h"
 #include "cimunit.h"
-#include "cimunit_schedule.h"
+
 
 struct test_event_args {
     cimunit_schedule_t *schedule;
@@ -465,3 +463,4 @@ void AddCimunitTests(void)
 	}
 }
 
+RUN_TEST_SUITE(AddCimunitTests())

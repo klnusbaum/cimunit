@@ -25,8 +25,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "CUnit.h"
-
+#include "testMain.h"
 #include "cimunit_event_list.h"
 
 
@@ -221,3 +220,4 @@ void AddEventListTests(void)
 	}
 }
 
+RUN_TEST_SUITE(AddEventListTests())

@@ -25,8 +25,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "CUnit.h"
-
+#include "testMain.h"
 #include "cimunit_schedule.h"
 
 static void test_cimunit_schedule_init(void)
@@ -88,3 +87,4 @@ void AddScheduleTests(void)
 	}
 }
 
+RUN_TEST_SUITE(AddScheduleTests())
