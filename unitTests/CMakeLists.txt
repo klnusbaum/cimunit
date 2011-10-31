@@ -8,6 +8,7 @@ set(CIMUNIT_UNIT_TESTS
   test_cimunit_schedule.c
   test_cimunit.c
   test_parse_events.c
+  test_cimunit_event_table_entry.c
 )
    
 set(CIMUNIT_HDRS_UNIT_TESTS
