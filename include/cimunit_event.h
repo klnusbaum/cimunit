@@ -40,7 +40,7 @@ typedef struct cimunit_event {
     
     /// Barrier associated with the event in case it is used as a
     /// condition event.
-    cimunit_barrier_t *condition_barrier;
+    cimunit_barrier_t condition_barrier;
 
     /// Is this event an action event?  If so, it may block when it is
     /// fired.  If not, it will not block.

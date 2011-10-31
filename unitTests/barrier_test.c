@@ -23,12 +23,12 @@
 
 #include "cimunit_barrier.h"
 
-cimunit_barrier_t *my_barrier;
+cimunit_barrier_t my_barrier;
 int count = 0;
 
 
 void *bwait(void *value) {
-    cimunit_barrier_wait(my_barrier);
+    cimunit_barrier_wait(&my_barrier);
     //printf("Wait thread\n", ((long int)value));
     pthread_exit(NULL);
 }
@@ -41,7 +41,7 @@ int main() {
     pthread_t thread3;
     pthread_attr_t attr;
     
-    my_barrier = cimunit_barrier_init();
+    cimunit_barrier_init(&my_barrier);
         
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
@@ -50,7 +50,7 @@ int main() {
     pthread_create(&thread3, &attr, bwait, (void *)3);
 
     //printf("Ready to signal\n");
-    cimunit_barrier_unlock(my_barrier);
+    cimunit_barrier_unlock(&my_barrier);
     //printf("Signaled\n");
     
     pthread_join(thread1, NULL);
@@ -61,7 +61,7 @@ int main() {
 
     pthread_attr_destroy(&attr);
     
-    cimunit_barrier_destroy(my_barrier);
+    cimunit_barrier_destroy(&my_barrier);
     pthread_exit(NULL);
     
     return 0;

@@ -42,7 +42,6 @@ static void test_cimunit_init_event(void)
     CU_ASSERT_STRING_EQUAL(event.event_name, event_name);
     
     CU_ASSERT_FALSE(event.is_action);
-    CU_ASSERT_PTR_NOT_NULL(event.condition_barrier);
   
     /// - No cross platform tests for mutex configuration
   

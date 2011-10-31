@@ -22,7 +22,6 @@
 #ifndef CIMUNIT_BARRIER_H
 #define CIMUNIT_BARRIER_H
  
-#include <pthread.h>
 #include <stdbool.h>
 #include <unistd.h>
 
@@ -41,9 +40,9 @@
 ///
 /// Create a new barrier and initialize it in the locked state.
 ///
-/// \return the created barrier.  This barrier must be freed by
-///         calling \ca cimunit_barrier_destroy.
-cimunit_barrier_t *cimunit_barrier_init();
+/// \param barrier - Barrier to initialize.
+/// \return 0 if the initialization was succesful, error code otherwise.
+int cimunit_barrier_init(cimunit_barrier_t *barrier);
 
 /// Destroy a barrier
 ///
@@ -51,7 +50,8 @@ cimunit_barrier_t *cimunit_barrier_init();
 /// if the barrier was never initialized.
 ///
 /// \param barrier - the barrier to be destroyed
-void cimunit_barrier_destroy(cimunit_barrier_t *barrier);
+/// \return 0 if successful, error code other wise
+int cimunit_barrier_destroy(cimunit_barrier_t *barrier);
 
 /// Wait at the barrier until it is unlocked
 ///

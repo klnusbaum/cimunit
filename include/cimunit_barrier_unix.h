@@ -22,6 +22,7 @@
 #ifndef CIMUNIT_BARRIER_UNIX_H
 #define CIMUNIT_BARRIER_UNIX_H
 
+#include <pthread.h>
 
 /// Structure containing the data needed to support the barrier.
 typedef struct cimunit_barrier {

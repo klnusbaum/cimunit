@@ -24,20 +24,22 @@
 #include "cimunit_barrier.h"
 
 
-cimunit_barrier_t *cimunit_barrier_init()
+int cimunit_barrier_init(cimunit_barrier_t *barrier)
 {
-    cimunit_barrier_t *barrier = malloc(sizeof(cimunit_barrier_t));
     pthread_mutex_init(&barrier->mutex, NULL);
     pthread_cond_init(&barrier->cond, NULL);
     barrier->is_locked = true;
+    //TODO actually return an error code is somethign goes wrong
+    return 0;
 }
 
 
-void cimunit_barrier_destroy(cimunit_barrier_t *barrier)
+int cimunit_barrier_destroy(cimunit_barrier_t *barrier)
 {
     pthread_cond_destroy(&barrier->cond);
     pthread_mutex_destroy(&barrier->mutex);
-    free(barrier);
+    //TODO actually return an error code is somethign goes wrong
+   return 0;
 }
 
 

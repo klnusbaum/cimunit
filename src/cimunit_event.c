@@ -30,7 +30,7 @@ int cimunit_event_init(cimunit_event_t *event, char *name)
 {
     event->event_name = name;
     event->action_events = cimunit_event_list_init();
-    event->condition_barrier = cimunit_barrier_init();
+    cimunit_barrier_init(&(event->condition_barrier));
 
     event->is_action = false;
 
@@ -46,7 +46,7 @@ int cimunit_event_init(cimunit_event_t *event, char *name)
 
 void cimunit_event_destroy(cimunit_event_t *event) {
     cimunit_event_list_destroy(&event->action_events); 
-    cimunit_barrier_destroy(event->condition_barrier);
+    cimunit_barrier_destroy(&(event->condition_barrier));
 }
 
 
@@ -69,17 +69,17 @@ void cimunit_event_fire(cimunit_event_t *event)
     // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
     // be unlocked.
     while(next_action) {
-        cimunit_barrier_unlock(next_action->event->condition_barrier);
+        cimunit_barrier_unlock(&(next_action->event->condition_barrier));
         next_action = next_action->next;
     }
   
     if (event->is_action) {
-        cimunit_barrier_wait(event->condition_barrier);
+        cimunit_barrier_wait(&(event->condition_barrier));
     }
 }
 
 void cimunit_event_lock_and_wait(cimunit_event_t *event)
 {
-    cimunit_barrier_lock(event->condition_barrier);
-    cimunit_barrier_wait(event->condition_barrier);
+    cimunit_barrier_lock(&(event->condition_barrier));
+    cimunit_barrier_wait(&(event->condition_barrier));
 }
