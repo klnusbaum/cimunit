@@ -16,8 +16,11 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include "testMain.h"
 
-#include <stdio.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 void print_example_results(void)
 {
   fprintf(stdout, "\n\nExpected Test Results:"
@@ -36,3 +39,51 @@ void print_example_results(void)
                   12, 9, 3);
 }
 
+void processArgs(
+  int argc, 
+  char* argv[], 
+  CU_BasicRunMode *mode,
+  CU_ErrorAction *error_action)
+{
+  int i;
+  for (i=1 ; i<argc ; i++) { 
+    if (!strcmp("-i", argv[i])) { 
+      *error_action = CUEA_IGNORE; 
+    } 
+    else if (!strcmp("-f", argv[i])) { 
+      *error_action = CUEA_FAIL; 
+    } 
+    else if (!strcmp("-A", argv[i])) { 
+      *error_action = CUEA_ABORT; 
+    } 
+    else if (!strcmp("-s", argv[i])) { 
+      *mode = CU_BRM_SILENT; 
+    } 
+    else if (!strcmp("-n", argv[i])) { 
+      *mode = CU_BRM_NORMAL; 
+    } 
+    else if (!strcmp("-v", argv[i])) { 
+      *mode = CU_BRM_VERBOSE; 
+    } 
+    else if (!strcmp("-e", argv[i])) { 
+      print_example_results(); 
+      exit(0); 
+    } 
+    else { 
+      printf("\nUsage:  BasicTest [options]\n\n" 
+               "Options:   -i   ignore framework errors [default].\n" 
+               "           -f   fail on framework error.\n" 
+               "           -A   abort on framework error.\n\n" 
+               "           -s   silent mode - no output to screen.\n" 
+               "           -n   normal mode - standard output to screen.\n" 
+               "           -v   verbose mode - max output to screen [default].\n\n" 
+               "           -e   print expected test results and exit.\n" 
+               "           -h   print this message and exit.\n\n"); 
+      exit(0);
+    } 
+  } 
+}
+
+#ifdef __cplusplus
+}
+#endif
