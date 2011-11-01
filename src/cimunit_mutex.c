@@ -37,6 +37,10 @@ int cimunit_mutex_lock(cimunit_mutex_t *mutex){
 int cimunit_mutex_unlock(cimunit_mutex_t *mutex){
   return pthread_mutex_unlock(mutex);
 }
+
+int cimunit_mutex_trylock(cimunit_mutex_t *mutex){
+  return pthread_mutex_trylock(mutex);
+}
 //TODO implement init functions for the attributes (May not be necessary for
 //my purposed)
 

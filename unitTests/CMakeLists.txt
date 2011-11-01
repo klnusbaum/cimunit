@@ -21,10 +21,15 @@ CREATE_UNIT_TEST(scheudleTests test_cimunit_schedule.c)
 CREATE_UNIT_TEST(cimunitTests test_cimunit.c)
 CREATE_UNIT_TEST(testParseEvents test_parse_events.c)
 CREATE_UNIT_TEST(eventTableEntryTests test_cimunit_event_table_entry.c)
+CREATE_UNIT_TEST(eventTableTests test_cimunit_event_table.c)
+
+
+
+#This isn't right, it needs to be fixed
 CREATE_UNIT_TEST(barrierTest barrier_test.c)
 target_link_libraries(barrierTest cimunit)
-
 add_test(barrierTest ${CMAKE_CURRENT_BINARY_DIR}/barrierTest)
 
+#This isn't right, it needs to be fixed
 add_executable(scantest scantest.c)
 target_link_libraries(scantest cimunit)

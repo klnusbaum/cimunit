@@ -33,6 +33,7 @@ int cimunit_mutex_init(
 int cimunit_mutex_destroy(cimunit_mutex_t *mutex);
 int cimunit_mutex_lock(cimunit_mutex_t *mutex);
 int cimunit_mutex_unlock(cimunit_mutex_t *mutex);
+int cimunit_mutex_trylock(cimunit_mutex_t *mutex);
 
 #endif
 
