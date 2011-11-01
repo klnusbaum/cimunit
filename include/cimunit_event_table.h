@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CIMUNIT_EVENT_TABLE
-#define CIMUNIT_EVENT_TABLE
+#ifndef CIMUNIT_EVENT_TABLE_H
+#define CIMUNIT_EVENT_TABLE_H
 #include "cimunit_event.h"
 #include "cimunit_thread.h"
 

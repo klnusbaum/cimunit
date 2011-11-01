@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cimunit_event_table.h"
-#include "stdio.h"
 
 int cimunit_init_event_table_entry(
   cimunit_event_table_entry_t *entry,
@@ -53,7 +52,7 @@ int cimunit_add_event_to_table(
   return 0;
 }
 
-INLINE int cimunit_event_matches_table_entry(
+int cimunit_event_matches_table_entry(
   const cimunit_event_table_entry_t* table_entry,
   const char *event_name,
   const char *thread_name)
