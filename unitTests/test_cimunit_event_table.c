@@ -27,9 +27,9 @@ static void test_cimunit_event_table_init(void){
   cimunit_init_event_table(&event_table);
   CU_ASSERT_PTR_NULL(event_table.head); 
   CU_ASSERT_PTR_NULL(event_table.tail); 
-  CU_ASSERT(cimunit_mutex_trylock(&(event_table.lock)));
+  CU_ASSERT_EQUAL(0,cimunit_mutex_trylock(&(event_table.lock)));
   cimunit_mutex_unlock(&(event_table.lock));
-  cimunit_destory_event_table(&event_table);
+  cimunit_destroy_event_table(&event_table);
 }
 
 static CU_TestInfo tests_cimunit_event_table[] = {
