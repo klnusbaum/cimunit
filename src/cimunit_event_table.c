@@ -80,7 +80,7 @@ int cimunit_event_matches_table_entry(
 int cimunit_find_event_in_table(
   const cimunit_event_table_t *event_table,
   const char *event_name,
-  const cimunit_event_table_entry_t **found_event)
+  cimunit_event_table_entry_t **found_event)
 {
   return cimunit_find_event_in_table_on_thread(
     event_table,
@@ -94,7 +94,7 @@ int cimunit_find_event_in_table_on_thread(
   const cimunit_event_table_t *event_table,
   const char *event_name,
   const char *thread_name,
-  const cimunit_event_table_entry_t **found_event)
+  cimunit_event_table_entry_t **found_event)
 {
   (*found_event) = event_table->head;
   while((*found_event) != NULL){

@@ -103,7 +103,7 @@ int cimunit_add_event_to_table(
 int cimunit_find_event_in_table(
   const cimunit_event_table_t *event_table,
   const char *event_name,
-  const cimunit_event_table_entry_t **found_event);
+  cimunit_event_table_entry_t **found_event);
 
 /// Finds a given event in the table, regardless of what thread fired it.
 /// Lord forgive this O(n) search.
@@ -122,7 +122,7 @@ int cimunit_find_event_in_table_on_thread(
   const cimunit_event_table_t *event_table,
   const char *event_name,
   const char *thread_name,
-  const cimunit_event_table_entry_t **found_event);
+  cimunit_event_table_entry_t **found_event);
 
 
 #endif

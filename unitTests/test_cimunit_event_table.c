@@ -22,14 +22,41 @@
 #include "cimunit.h"
 #include <assert.h>
 
-static void test_cimunit_event_table_destroy(void){
-  cimunit_event_table_t event_table;
+#define BASIC_EVENT_TABLE_INIT \
+  cimunit_event_table_t event_table; \
   cimunit_event_table_init(&event_table);
+
+#define BASIC_EVENT_TABLE_DESTROY \
+  cimunit_event_table_destroy(&event_table);
+
+
+static void test_cimunit_event_table_destroy(void){
+  BASIC_EVENT_TABLE_INIT
+
   CU_ASSERT_PTR_NULL(event_table.head); 
   CU_ASSERT_PTR_NULL(event_table.tail); 
   CU_ASSERT_EQUAL(0,cimunit_mutex_trylock(&(event_table.lock)));
   cimunit_mutex_unlock(&(event_table.lock));
-  cimunit_event_table_destroy(&event_table);
+
+  BASIC_EVENT_TABLE_DESTROY
+}
+
+static void test_cimunit_event_table_add(void){
+  BASIC_EVENT_TABLE_INIT
+
+  cimunit_event_t event;
+  char event_name[] = "eventa";
+  cimunit_event_init(&event, event_name);
+
+  cimunit_event_table_entry_t *added_entry;
+
+  cimunit_add_event_to_table(&event_table, &event, &added_entry);
+  cimunit_event_table_entry_t *found_entry;
+  cimunit_find_event_in_table(&event_table, event_name, &found_entry);
+  CU_ASSERT_PTR_NOT_NULL(found_entry);
+  CU_ASSERT_PTR_EQUAL(found_entry, added_entry);
+
+  BASIC_EVENT_TABLE_DESTROY
 }
 
 static CU_TestInfo tests_cimunit_event_table[] = {
