@@ -2,7 +2,7 @@
 #include <string.h>
 #include "cimunit_event_table.h"
 
-int cimunit_init_event_table_entry(
+int cimunit_event_table_entry_init(
   cimunit_event_table_entry_t *entry,
   cimunit_event_t *event)
 {
@@ -13,11 +13,11 @@ int cimunit_init_event_table_entry(
   return 0;
 }
 
-int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry){
+int cimunit_event_table_entry_destroy(cimunit_event_table_entry_t *entry){
   //this is a no-op at the moment
 }
 
-int cimunit_init_event_table(cimunit_event_table_t *event_table){
+int cimunit_event_table_init(cimunit_event_table_t *event_table){
   event_table->head = NULL;
   event_table->tail = NULL;
   cimunit_mutex_init(&(event_table->lock), NULL);
@@ -25,6 +25,18 @@ int cimunit_init_event_table(cimunit_event_table_t *event_table){
   return 0;
 }
 
+int cimunit_event_table_destroy(cimunit_event_table_t *event_table){
+  cimunit_event_table_entry_t *current_entry = event_table->head;
+  while(current_entry != NULL){
+    event_table->head = current_entry->next;
+    cimunit_event_table_entry_destroy(current_entry);
+    free(current_entry);
+    current_entry = event_table->head;
+  }
+  cimunit_mutex_destroy(&(event_table->lock));
+  //TODO actually return the correct error code if an error happend.
+  return 0;
+}
 
 int cimunit_add_event_to_table(
   cimunit_event_table_t *event_table,
@@ -33,7 +45,7 @@ int cimunit_add_event_to_table(
 {
   cimunit_event_table_entry_t *new_entry = 
     (cimunit_event_table_entry_t*)malloc(sizeof(cimunit_event_table_entry_t));
-  cimunit_init_event_table_entry(new_entry, event);
+  cimunit_event_table_entry_init(new_entry, event);
   cimunit_mutex_lock(&(event_table->lock));
   if(event_table->head == NULL){
     event_table->head = new_entry;
@@ -96,19 +108,6 @@ int cimunit_find_event_in_table_on_thread(
   return 0;
 }
 
-
-int cimunit_destroy_event_table(cimunit_event_table_t *event_table){
-  cimunit_event_table_entry_t *current_entry = event_table->head;
-  while(current_entry != NULL){
-    event_table->head = current_entry->next;
-    cimunit_destroy_event_table_entry(current_entry);
-    free(current_entry);
-    current_entry = event_table->head;
-  }
-  cimunit_mutex_destroy(&(event_table->lock));
-  //TODO actually return the correct error code if an error happend.
-  return 0;
-}
 
 
 

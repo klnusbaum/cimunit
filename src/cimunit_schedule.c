@@ -26,7 +26,7 @@ cimunit_schedule_t *cimunit_schedule_init() {
     cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));
     
     schedule->event_list = cimunit_event_list_init();
-    cimunit_init_event_table(&schedule->fired_event_list);
+    cimunit_event_table_init(&schedule->fired_event_list);
     schedule->schedule_string = NULL;
 }
 

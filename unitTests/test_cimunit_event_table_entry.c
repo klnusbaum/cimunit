@@ -26,13 +26,13 @@ static void test_cimunit_event_table_entry_init(void){
   cimunit_event_t event;
   cimunit_event_init(&event, "a");
   cimunit_event_table_entry_t table_entry;
-  cimunit_init_event_table_entry(&table_entry, &event);
+  cimunit_event_table_entry_init(&table_entry, &event);
 
   CU_ASSERT_PTR_NULL(table_entry.next); 
   CU_ASSERT_EQUAL(table_entry.event, &event);
   CU_ASSERT_EQUAL(cimunit_thread_self(), table_entry.thread);
 
-  cimunit_destroy_event_table_entry(&table_entry);
+  cimunit_event_table_entry_destroy(&table_entry);
   cimunit_event_destroy(&event);
 }
 

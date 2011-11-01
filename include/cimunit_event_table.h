@@ -56,7 +56,7 @@ typedef struct cimunit_event_table {
 /// \param entry - entry to initialize
 /// \param event - event this entry is representing
 /// \returns = 0 if the call was succesful, otherwise an error code.
-int cimunit_init_event_table_entry(
+int cimunit_event_table_entry_init(
   cimunit_event_table_entry_t *entry,
   cimunit_event_t *event);
 
@@ -64,13 +64,19 @@ int cimunit_init_event_table_entry(
 ///
 /// \param entry - Entry to destroy.
 /// \return - 0 if the destruction was succesfull, false otherwise.
-int cimunit_destroy_event_table_entry(cimunit_event_table_entry_t *entry);
+int cimunit_event_table_entry_destroy(cimunit_event_table_entry_t *entry);
 
 /// Initializes an event table
 ///
 /// \param event_table - Table to initialize.
 /// \returns - 0 if the initialization was succesfull, error code otherwise.
-int cimunit_init_event_table(cimunit_event_table_t *event_table);
+int cimunit_event_table_init(cimunit_event_table_t *event_table);
+
+/// Frees all allocated resources for the CIMUnit Event Table.
+///
+/// \param event_table - Event table to destroy
+/// \return - 0 if succesful error code otherwise.
+int cimunit_event_table_destroy(cimunit_event_table_t *event_table);
 
 /// Adds and event entry to the table
 ///
@@ -118,11 +124,5 @@ int cimunit_find_event_in_table_on_thread(
   const char *thread_name,
   const cimunit_event_table_entry_t **found_event);
 
-
-/// Frees all allocated resources for the CIMUnit Event Table.
-///
-/// \param event_table - Event table to destroy
-/// \return - 0 if succesful error code otherwise.
-int cimunit_destroy_event_table(cimunit_event_table_t *event_table);
 
 #endif

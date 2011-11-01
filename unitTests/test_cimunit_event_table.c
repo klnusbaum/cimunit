@@ -22,18 +22,18 @@
 #include "cimunit.h"
 #include <assert.h>
 
-static void test_cimunit_event_table_init(void){
+static void test_cimunit_event_table_destroy(void){
   cimunit_event_table_t event_table;
-  cimunit_init_event_table(&event_table);
+  cimunit_event_table_init(&event_table);
   CU_ASSERT_PTR_NULL(event_table.head); 
   CU_ASSERT_PTR_NULL(event_table.tail); 
   CU_ASSERT_EQUAL(0,cimunit_mutex_trylock(&(event_table.lock)));
   cimunit_mutex_unlock(&(event_table.lock));
-  cimunit_destroy_event_table(&event_table);
+  cimunit_event_table_destroy(&event_table);
 }
 
 static CU_TestInfo tests_cimunit_event_table[] = {
-  {"init", test_cimunit_event_table_init},
+  {"init", test_cimunit_event_table_destroy},
   CU_TEST_INFO_NULL,
 };
 
