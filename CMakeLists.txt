@@ -16,7 +16,6 @@ include_directories(.)
 enable_testing()
 FIND_PACKAGE(Threads)
 add_subdirectory(src)
-add_subdirectory(tests)
 add_subdirectory(unitTests)
 
 find_package(Doxygen)
