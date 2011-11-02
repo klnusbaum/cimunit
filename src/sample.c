@@ -17,19 +17,23 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cimunit.h"
+#include "cimunit_tester.h"
 #include <stdio.h>
 
 CIMUNIT_TEST(simple_test, test1){
   if(CIMUNIT_TNUMBER == 0){
-    CIMUNIT_FIRE_EVENT(t1begin) 
+    cimunit_schedule_fire(((cimunit_test_args_t*)args)->schedule,
+                          "t1begin");
     printf("Hello from t1\n");
-    CIMUNIT_FIRE_EVENT(t1end)
+    cimunit_schedule_fire(((cimunit_test_args_t*)args)->schedule,
+                          "t1end");
   }
   else if(CIMUNIT_TNUMBER == 1){
-    CIMUNIT_FIRE_EVENT(t2begin)
+    cimunit_schedule_fire(((cimunit_test_args_t*)args)->schedule,
+                          "t2begin");
     printf("Hello from t2\n");
-    CIMUNIT_FIRE_EVENT(t2end)
+    cimunit_schedule_fire(((cimunit_test_args_t*)args)->schedule,
+                          "t2end");
   }
 }
 
@@ -38,14 +42,8 @@ int main(int argc, char *argv[]){
   cimunit_tester_t tester;
   cimunit_init_tester(&tester);
 
-  cimunit_schedule_t sched1;
-  //cimunit_schedule_t sched2;
-  cimunit_init_schedule(&sched1, "t1end->t2begin", 2);
-  //cimunit_init_schedule(&sched2, "t2end->t1begin", 2);
-
-  
-  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched1)
-  //CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched2)
+  cimunit_schedule_t *sched1 = cimunit_schedule_parse("t1end->t2begin");
+  CIMUNIT_ADD_TEST_SCHEDULE(tester, simple_test, test1, sched1, 2)
 
   return cimunit_run_tests(&tester);
 }

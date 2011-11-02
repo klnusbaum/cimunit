@@ -36,13 +36,13 @@ struct test_event_args {
 
 static void *test_eventA(void *ptr) {
     struct test_event_args *args = ptr;
-    cimunit_fire(args->schedule, "a");
+    cimunit_schedule_fire(args->schedule, "a");
     *args->value *= 2;
 }
 
 static void *test_eventB(void *ptr) {
     struct test_event_args *args = ptr;
-    cimunit_fire(args->schedule, "b");
+    cimunit_schedule_fire(args->schedule, "b");
     *args->value += 3;
 }
 
@@ -370,61 +370,67 @@ static void test_cimunit_macro_or_conditional2(void)
 
 static void test_cimunit_macro_and_conditional1(void)
 {
-    // Create schedule
-    CIMUNIT_SCHEDULE("b2&&a2->c1,a2->b1");
-    int value = 1;
-
-    // Create and execute threads
-    pthread_t threadA;
-    pthread_t threadB;
-    pthread_t threadC;
-    pthread_attr_t attr;
+    // Run tests multiple times attempting to simulate different schedules
+    for (int a = 0; a < 100; ++a) {
+        // Create schedule
+        CIMUNIT_SCHEDULE("b2&&a2->c1,a2->b1");
+        int value = 1;
     
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-    pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
-    pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
-    pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
-
-    pthread_join(threadA, NULL);
-    pthread_join(threadB, NULL);
-    pthread_join(threadC, NULL);
-
-    // Clean up threading
-    pthread_attr_destroy(&attr);
+        // Create and execute threads
+        pthread_t threadA;
+        pthread_t threadB;
+        pthread_t threadC;
+        pthread_attr_t attr;
+        
+        pthread_attr_init(&attr);
+        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+        pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
+        pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
+        pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
     
-    // Verify SUT
-    CU_ASSERT_EQUAL(value, 20);
+        pthread_join(threadA, NULL);
+        pthread_join(threadB, NULL);
+        pthread_join(threadC, NULL);
+    
+        // Clean up threading
+        pthread_attr_destroy(&attr);
+        
+        // Verify SUT
+        CU_ASSERT_EQUAL(value, 20);
+    }
 }
 
 
 static void test_cimunit_macro_and_conditional2(void)
 {
-    // Create schedule
-    CIMUNIT_SCHEDULE("b2&&a2->c1,b2->a1");
-    int value = 1;
-
-    // Create and execute threads
-    pthread_t threadA;
-    pthread_t threadB;
-    pthread_t threadC;
-    pthread_attr_t attr;
+    // Run tests multiple times attempting to simulate different schedules
+    for (int a = 0; a < 100; ++a) {
+        // Create schedule
+        CIMUNIT_SCHEDULE("b2&&a2->c1,b2->a1");
+        int value = 1;
     
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-    pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
-    pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
-    pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
-
-    pthread_join(threadA, NULL);
-    pthread_join(threadB, NULL);
-    pthread_join(threadC, NULL);
-
-    // Clean up threading
-    pthread_attr_destroy(&attr);
+        // Create and execute threads
+        pthread_t threadA;
+        pthread_t threadB;
+        pthread_t threadC;
+        pthread_attr_t attr;
+        
+        pthread_attr_init(&attr);
+        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+        pthread_create(&threadC, &attr, test_macro_eventC, (void *)&value);
+        pthread_create(&threadB, &attr, test_macro_eventB, (void *)&value);
+        pthread_create(&threadA, &attr, test_macro_eventA, (void *)&value);
     
-    // Verify SUT
-    CU_ASSERT_EQUAL(value, 32);
+        pthread_join(threadA, NULL);
+        pthread_join(threadB, NULL);
+        pthread_join(threadC, NULL);
+    
+        // Clean up threading
+        pthread_attr_destroy(&attr);
+        
+        // Verify SUT
+        CU_ASSERT_EQUAL(value, 32);
+    }
 }
 
 

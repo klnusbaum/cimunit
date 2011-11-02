@@ -18,7 +18,6 @@
  */
 #ifndef CIMUNIT_SCHEDULE_H
 #define CIMUNIT_SCHEDULE_H
-#include <stdlib.h>
 
 #include "cimunit_event.h"
 #include "cimunit_event_list.h"
@@ -37,12 +36,6 @@ typedef struct cimunit_schedule {
     
     /// Text version of the schedule
     char *schedule_string;
-
-
-  cimunit_thread_amount_t numThreads;
-  const char *sched_string; 
-  cimunit_event_t **events;
-  size_t numEvents;
 } cimunit_schedule_t;
 
 
@@ -58,32 +51,25 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string);
 /// \param schedule - schedule associated with the test
 /// \param action_event - action event being queried
 /// \return true if event is blocked, else false
-bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
+bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
                                     char *action_event);
+
 
 /// Create a new schedule object
 ///
 /// \return new schedule object
 cimunit_schedule_t *cimunit_schedule_init();
 
+
 /// Destroy the schedule object and free memory
 void cimunit_schedule_destroy(cimunit_schedule_t *schedule);
 
 
-
-
-int cimunit_get_event_names(const char *sched_string, char **event_names);
-
-int cimunit_init_schedule(
-  cimunit_schedule_t *cs, 
-  const char *sched_string, 
-  cimunit_thread_amount_t numThreads);
-
-int cimunit_destroy_schedule(cimunit_schedule_t *cs);
-
-int cimunit_get_schedule_event(
-  const char *event_name,
-  const cimunit_schedule_t *schedule,
-  cimunit_event_t **found_event);
+/// Fire an event using the schedule
+///
+/// \param schedule - schedule associated with the event
+/// \param eventName - name of the event to be fired_event_list
+/// \return true if the event was found, else false
+bool cimunit_schedule_fire(struct cimunit_schedule *schedule, char *eventName);
 
 #endif //CIMUNIT_SCHEDULE_H
