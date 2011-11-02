@@ -21,6 +21,7 @@
  
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "cimunit_event_list.h"
@@ -61,7 +62,7 @@ cimunit_mutex_t *cimunit_parse_event_mutex = NULL;
 /// Build a schedule
 ///
 /// \return the completed schedule
-bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
+bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
                                     char *action_event) {
     /// \todo This is a hack.  There should be an init function that initializes
     ///       this global in a thread safe manner.

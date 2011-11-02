@@ -24,6 +24,7 @@ typedef struct cimunit_test_instance{
   void *(*test_func)(void *);
   cimunit_schedule_t *sc;
   struct cimunit_test_instance *next;
+  size_t numThreads;
 }cimunit_test_instance_t;
 
 /** \brief Struct which represent a sieres of tests to be run. */
@@ -37,7 +38,44 @@ int cimunit_init_tester(cimunit_tester_t *toInit);
 int cimunit_add_test(
   cimunit_tester_t *tester, 
   void *(*test_func)(void *),
-  cimunit_schedule_t *sc );
+  cimunit_schedule_t *sc,
+  size_t numThreads);
 
+/** \name Cimunit Typedefs */
+//@{
+
+/** \brief Type indicating an amount of threads */
+
+typedef size_t cimunit_thread_id_t;
+
+typedef struct{
+  cimunit_schedule_t *schedule;
+  cimunit_thread_id_t thread;
+} cimunit_test_args_t;
+
+struct cimunit_schedule;
+
+//@}
+
+/** \name Cimunit Functions */
+//@{
+
+int cimunit_run_tests(cimunit_tester_t *tester);
+
+//@}
+
+/** \name Cimunit Helper Macros */
+//@{
+
+#define CIMUNIT_TEST(TEST_GROUP, TEST_NAME) \
+ void* TEST_GROUP##_##TEST_NAME##_Cimunit_Test(void *args) 
+
+
+#define CIMUNIT_ADD_TEST_SCHEDULE(TESTER, TEST_GROUP, TEST_NAME, SCHEDULE, NUM_THREADS) \
+  cimunit_add_test(&TESTER, TEST_GROUP##_##TEST_NAME##_Cimunit_Test, SCHEDULE, NUM_THREADS);
+
+#define CIMUNIT_TNUMBER \
+  ((cimunit_test_args_t*)args)->thread
+//@}
 
 #endif
