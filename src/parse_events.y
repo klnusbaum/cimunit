@@ -21,6 +21,7 @@
  
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "cimunit_event_list.h"
@@ -29,7 +30,7 @@
 
 
 // Defines
-
+extern int parse_events_lex_destroy(void); // From parse_events.l
 extern int parse_events_parse(struct cimunit_event_table *fired_event_list,
                               char *action_event,
                               bool *parse_result); // From parse_events.y
@@ -56,16 +57,28 @@ int parse_events_wrap()
 }
 
 
+cimunit_mutex_t *cimunit_parse_event_mutex = NULL;
+
 /// Build a schedule
 ///
 /// \return the completed schedule
-bool cimunit_parse_schedule_runtime(cimunit_schedule_t *schedule,
+bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
                                     char *action_event) {
+    /// \todo This is a hack.  There should be an init function that initializes
+    ///       this global in a thread safe manner.
+    if (!cimunit_parse_event_mutex) {
+        cimunit_parse_event_mutex = malloc(sizeof(cimunit_mutex_t));
+        cimunit_mutex_init(cimunit_parse_event_mutex, NULL);
+    }
+
     bool result = false;
-    
+
     // Parse the schedule string to determine if the action event is unblocked
+    cimunit_mutex_lock(cimunit_parse_event_mutex);   
+    parse_events_lex_destroy();
     parse_events__scan_string(schedule->schedule_string);
     parse_events_parse(&schedule->fired_event_list, action_event, &result);
+    cimunit_mutex_unlock(cimunit_parse_event_mutex);   
     
     return result;
 }
@@ -120,7 +133,7 @@ basicEvent:
     EVENT_NAME
     {
         // Lookup event name in the fired event list
-        const cimunit_event_table_entry_t *event = NULL;
+        cimunit_event_table_entry_t *event = NULL;
         cimunit_find_event_in_table(fired_event_list, $1, &event);
 
         $$ = (NULL != event);

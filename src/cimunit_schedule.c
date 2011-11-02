@@ -44,78 +44,32 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 }
 
 
-
-int cimunit_get_num_events(const char *string, size_t *numEvents){
-  (*numEvents) =0;
-  char *toTokenize = (char*)malloc(sizeof(char)*strlen(string));
-  strncpy(toTokenize, string, strlen(string));
-  char *currentTok;
-  currentTok = strtok(toTokenize, "->,");
-  while(currentTok != NULL){
-    ++(*numEvents);
-    currentTok = strtok(NULL, "->,");
-  } 
-}
-
-int cimunit_get_schedule_event(
-  const char *event_name,
-  const cimunit_schedule_t *schedule,
-  cimunit_event_t **found_event)
+bool cimunit_schedule_fire(struct cimunit_schedule *schedule, char *eventName)
 {
-  int i;
-  for(i=0; i<schedule->numEvents; ++i){
-    if(strcmp(event_name, schedule->events[i]->event_name) ==0){
-      (*found_event) = schedule->events[i];
-      return 0;
+    // Locate the event in the schedule and fire it.
+    cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
+    if (event) {
+        cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
+
+        const cimunit_event_list_t *next_action =
+          cimunit_event_get_action_list(event);
+      
+        // When the event is fired, open the barriers associated with this event.
+        // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
+        // be unlocked.
+        while(next_action) {
+            if (cimunit_schedule_parse_runtime(schedule, next_action->event->event_name)) {
+                cimunit_barrier_unlock(&(next_action->event->condition_barrier));
+            }
+            next_action = next_action->next;
+        }
+      
+        if (event->is_action) {
+            cimunit_barrier_wait(&(event->condition_barrier));
+        }
+    } else {
+        return false;
     }
-  }
-  (*found_event) = NULL;
-  return 1;
+    
+    return true;
 }
-
-int cimunit_init_schedule(
-  cimunit_schedule_t *cs, 
-  const char *sched_string, 
-  cimunit_thread_amount_t numThreads)
-{
-  size_t i;
-  cs->numThreads = numThreads;
-  cs->sched_string = sched_string;
-
-  cimunit_get_num_events(sched_string, &(cs->numEvents));
-
-  //Replace this hardcode with actual parsing of the schedule.
-  cs->events = 
-    (cimunit_event_t**)malloc(sizeof(cimunit_event_t*)*(cs->numEvents));
-  /*
-  for(i = 0; i < cs->numEvents ;++i){
-    cs->events[i] = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
-    //Should probably do per-event initialization in here. including
-    //assigning any dependent events.
-  }
-  */
-
-  //STATIC ASSIGNMENT OF DEPENECIES THIS IS JUST FOR TESTING OUT MY SAMPLE
-  //PROGRAM!!!!
-  char *name1 = (char*)malloc(sizeof(char)*8);
-  strcpy(name1, "t2begin");
-  char *name2 = (char*)malloc(sizeof(char)*6);
-  strcpy(name2, "t1end");
-  cimunit_event_init(cs->events[0], name1);
-  cimunit_event_init(cs->events[1], name2);
-  cimunit_event_t** begin_deps = 
-    (cimunit_event_t**)malloc(sizeof(cimunit_event_t*));
-  
-  cimunit_event_add_action(cs->events[0], cs->events[1]);
-}
-
-int cimunit_destroy_schedule(cimunit_schedule_t *cs){
-  int i;
-  for(i=0; i<cs->numEvents; ++i){
-    cimunit_event_destroy(cs->events[i]);
-    free(cs->events[i]->event_name);
-    free(cs->events[i]);
-  }
-  free(cs->events);
-}
-

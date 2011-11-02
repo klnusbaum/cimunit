@@ -26,21 +26,13 @@
 #include "cimunit_event_list.h"
 
 
-int cimunit_event_init(cimunit_event_t *event, char *name)
+void cimunit_event_init(cimunit_event_t *event, char *name)
 {
     event->event_name = name;
     event->action_events = cimunit_event_list_init();
     cimunit_barrier_init(&(event->condition_barrier));
 
     event->is_action = false;
-
-    cimunit_mutex_init(&(event->mutex), NULL);
-    cimunit_mutex_lock(&(event->mutex));
-    event->dep_events = NULL;
-    event->numDepEvents = 0;
-  
-    //TODO actually return an error code if something bad happened.
-    return 0;
 }
 
 
@@ -61,25 +53,7 @@ void cimunit_event_add_action(cimunit_event_t *condition,
 }
 
 
-void cimunit_event_fire(cimunit_event_t *event)
-{
-    cimunit_event_list_t *next_action = event->action_events;
-  
-    // When the event is fired, open the barriers associated with this event.
-    // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
-    // be unlocked.
-    while(next_action) {
-        cimunit_barrier_unlock(&(next_action->event->condition_barrier));
-        next_action = next_action->next;
-    }
-  
-    if (event->is_action) {
-        cimunit_barrier_wait(&(event->condition_barrier));
-    }
-}
-
-void cimunit_event_lock_and_wait(cimunit_event_t *event)
-{
-    cimunit_barrier_lock(&(event->condition_barrier));
-    cimunit_barrier_wait(&(event->condition_barrier));
+const struct cimunit_event_list *cimunit_event_get_action_list(
+  cimunit_event_t *event) {
+    return event->action_events;
 }

@@ -27,6 +27,7 @@
 #include "cimunit_mutex.h"
 #include "cimunit_barrier.h"
 
+/// Forward declarations
 struct cimunit_event_list;
 
 
@@ -45,11 +46,6 @@ typedef struct cimunit_event {
     /// Is this event an action event?  If so, it may block when it is
     /// fired.  If not, it will not block.
     bool is_action;
-    
-  cimunit_mutex_t mutex;
-  struct cimunit_event **dep_events;
-  size_t numDepEvents;
-  
 } cimunit_event_t;
 
 
@@ -57,8 +53,7 @@ typedef struct cimunit_event {
 ///
 /// \param event - Event to initialize.
 /// \param name - name of the event
-/// \returns - 0 if the initilization was successful, error code otherwise.
-int cimunit_event_init(cimunit_event_t *event, char *name);
+void cimunit_event_init(cimunit_event_t *event, char *name);
 
 
 /// Destroy a CIMUnit event and free its allocated memory.
@@ -76,29 +71,11 @@ void cimunit_event_add_action(cimunit_event_t *condition,
                               cimunit_event_t *action);
 
 
-/// Cause all action events associated with this event to trigger
+/// Get the list of actions that depend on this event
 ///
-/// \note This method will pend if this event is an action event of
-///       a condition event that hasn't fired yet.
-///
-/// \param event - event whose condition events are being triggered
-void cimunit_event_fire(cimunit_event_t *event);
-
-
-/// Cause thread to wait on this event
-///
-/// \note This method will not trigger the fire event actions.  It just
-///       pends on the event's barrier.
-void cimunit_event_lock_and_wait(cimunit_event_t *event);
-
-
-
-
-int cimunit_set_dependent_events(
-    cimunit_event_t *event,
-    cimunit_event_t **depEvents,
-    size_t numDepEvents);
-
-int cimunit_fire_event(cimunit_event_t *event);
+/// \pram event - event whose action list is being retrieved
+/// \return the list of action event dependent on this condition event
+const struct cimunit_event_list *cimunit_event_get_action_list(
+  cimunit_event_t *event);
 
 #endif // CIMUNIT_EVENT_H
