@@ -35,8 +35,11 @@ static void test_cimunit_thread_name(void)
   #else
   cimunit_thread_setname(cimunit_thread_self(), set_name);
   #endif
-  char retrieved_name[6];
-  cimunit_thread_getname(cimunit_thread_self(), retrieved_name, 6);
+  char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
+  cimunit_thread_getname(
+    cimunit_thread_self(),
+    retrieved_name,
+    CIMUNIT_MAX_THREAD_NAME_LENGTH);
   CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
 }
 
