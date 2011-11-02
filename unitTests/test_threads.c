@@ -30,12 +30,20 @@
 static void test_cimunit_thread_name(void)
 {
   const char set_name[] = "steve";
+  #if PLATFORM_Darwin
   cimunit_thread_setname(set_name);
-  char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_thread_getname(cimunit_thread_self(), retrieved_name);
+  #else
+  cimunit_thread_setname(cimunit_thread_self(), set_name);
+  #endif
+  char retrieved_name[6];
+  cimunit_thread_getname(cimunit_thread_self(), retrieved_name, 6);
   CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
 }
 
+#if PLATFORM_Darwin
+#else
+// test setting name of other thread
+#endif
 static CU_TestInfo test_threads[] = {
   {"names", test_cimunit_thread_name },
   CU_TEST_INFO_NULL,

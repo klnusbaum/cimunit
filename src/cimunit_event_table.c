@@ -70,7 +70,10 @@ int cimunit_event_matches_table_entry(
   const char *thread_name)
 {
   char thread_name_buffer[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_thread_getname(table_entry->thread, thread_name_buffer);
+  cimunit_thread_getname(
+    table_entry->thread, 
+    thread_name_buffer,
+    CIMUNIT_MAX_THREAD_NAME_LENGTH);
   return
     !strcmp(table_entry->event->event_name, event_name) &&
       (!strcmp(CIMUNIT_DEFAULT_THREAD_NAME, thread_name) ||

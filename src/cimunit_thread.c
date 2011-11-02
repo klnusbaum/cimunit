@@ -31,21 +31,21 @@ int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr){
   return pthread_join(thread, value_ptr);
 }
 
+#if PLATFORM_Darwin
 int cimunit_thread_setname(const char *name){
-  #if PLATFORM_Darwin
     return pthread_setname_np(name);
-  #else
-    return pthread_setname_np(cimunit_thread_self(), name);
-  #endif
 }
+#else
+int cimunit_thread_setname(cimunit_thread_t thread, const char *name){
+    return pthread_setname_np(thread, name);
+}
+#endif
 
-
-int cimunit_thread_getname(cimunit_thread_t thread, char *name){
-  #if PLATFORM_Darwin
-    return pthread_getname_np(thread, name, CIMUNIT_MAX_THREAD_NAME_LENGTH);
-  #else 
-    return pthread_getname_np(thread, name);
-  #endif
+int cimunit_thread_getname(cimunit_thread_t thread, char *name, size_t buf_size)
+{
+    //TODO throw error if buf_size is greater 
+    // than CIMUNIT_MAX_THREAD_NAME_LENGTH
+    return pthread_getname_np(thread, name, buf_size);
 }
 
 cimunit_thread_t cimunit_thread_self(){
