@@ -22,6 +22,7 @@ CREATE_UNIT_TEST(cimunitTests test_cimunit.c)
 CREATE_UNIT_TEST(testParseEvents test_parse_events.c)
 CREATE_UNIT_TEST(eventTableEntryTests test_cimunit_event_table_entry.c)
 CREATE_UNIT_TEST(eventTableTests test_cimunit_event_table.c)
+CREATE_UNIT_TEST(threadTests test_threads.c)
 
 add_executable(barrierTest barrier_test.c)
 target_link_libraries(barrierTest cimunit)

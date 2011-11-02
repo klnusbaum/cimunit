@@ -20,7 +20,6 @@
  */
 #include "testMain.h"
 #include "cimunit.h"
-#include <assert.h>
 
 #define BASIC_EVENT_TABLE_INIT \
   cimunit_event_table_t event_table; \

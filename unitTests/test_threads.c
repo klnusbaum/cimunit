@@ -18,31 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "testMain.h"
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "cimunit.h"
+#include "testMain.h"
 
-static void test_cimunit_event_table_entry_init(void){
-  cimunit_event_t event;
-  cimunit_event_init(&event, "a");
-  cimunit_event_table_entry_t table_entry;
-  cimunit_event_table_entry_init(&table_entry, &event);
-
-  CU_ASSERT_PTR_NULL(table_entry.next); 
-  CU_ASSERT_EQUAL(table_entry.event, &event);
-  CU_ASSERT_EQUAL(cimunit_thread_self(), table_entry.thread);
-
-  cimunit_event_table_entry_destroy(&table_entry);
-  cimunit_event_destroy(&event);
+static void test_cimunit_thread_name(void)
+{
+  const char set_name[] = "steve";
+  cimunit_thread_setname(set_name);
+  char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
+  cimunit_thread_getname(cimunit_thread_self(), retrieved_name);
+  CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
 }
 
-static CU_TestInfo tests_cimunit_event_table_entry[] = {
-  {"init", test_cimunit_event_table_entry_init},
+static CU_TestInfo test_threads[] = {
+  {"names", test_cimunit_thread_name },
   CU_TEST_INFO_NULL,
 };
 
+
 static CU_SuiteInfo suites[] = {
-  {"suite_cimunit_event_table_entry", NULL, NULL, tests_cimunit_event_table_entry}, 
+  {"suite_cimunit_threads", NULL, NULL, test_threads},
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES(suites)
+RUN_TEST_SUITES( suites )
