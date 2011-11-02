@@ -125,7 +125,7 @@ void processArgs(
 
 void cimunit_register_test_suites(CU_SuiteInfo suites[]);
 
-#define RUN_TEST_SUITE( SUITE ) \
+#define RUN_TEST_SUITES( SUITES ) \
 int main(int argc, char* argv[]) \
 { \
   CU_BasicRunMode mode = CU_BRM_NORMAL; \
@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) \
     printf("\nInitialization of Test Registry failed."); \
   } \
   else { \
-    SUITE; \
+    cimunit_register_test_suites( SUITES ); \
     CU_basic_set_mode(mode); \
     CU_set_error_action(error_action); \
     printf("\nTest run completed with return value %d.\n", CU_basic_run_tests()); \

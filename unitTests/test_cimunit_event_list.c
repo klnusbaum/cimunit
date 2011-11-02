@@ -207,9 +207,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-void AddEventListTests(void)
-{
-  cimunit_register_test_suites(suites);
-}
-
-RUN_TEST_SUITE(AddEventListTests())
+RUN_TEST_SUITES(suites)
