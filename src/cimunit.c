@@ -15,7 +15,7 @@ bool cimunit_fire(struct cimunit_schedule *schedule, char *eventName)
     cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
     if (event) {
         cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
-        cimunit_event_fire(event);        
+        cimunit_event_fire(event);
         if (event->is_action) {
             while (!cimunit_parse_schedule_runtime(schedule, eventName)) {
                 cimunit_event_lock_and_wait(event);
