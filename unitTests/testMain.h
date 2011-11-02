@@ -116,11 +116,14 @@ CU_EXPORT void CU_basic_show_failures(CU_pFailureRecord pFailure);
 
 
 void print_example_results(void);
+
 void processArgs(
   int argc, 
   char* argv[], 
   CU_BasicRunMode *mode,
   CU_ErrorAction *error_action);
+
+void cimunit_register_test_suites(CU_SuiteInfo suites[]);
 
 #define RUN_TEST_SUITE( SUITE ) \
 int main(int argc, char* argv[]) \

@@ -76,15 +76,7 @@ static CU_SuiteInfo suites[] = {
 
 void AddScheduleTests(void)
 {
-  assert(NULL != CU_get_registry());
-  assert(!CU_is_test_running());
-
-	/* Register suites. */
-	if (CU_register_suites(suites) != CUE_SUCCESS) {
-		fprintf(stderr, "suite registration failed - %s\n",
-			CU_get_error_msg());
-		exit(EXIT_FAILURE);
-	}
+  cimunit_register_test_suites(suites);
 }
 
 RUN_TEST_SUITE(AddScheduleTests())
