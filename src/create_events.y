@@ -73,7 +73,7 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
 
 %union 
 {
-	char *string;
+	const char *string;
 	struct cimunit_event_list *conditionList;
 	struct cimunit_event *event;
 }

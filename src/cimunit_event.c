@@ -26,7 +26,7 @@
 #include "cimunit_event_list.h"
 
 
-void cimunit_event_init(cimunit_event_t *event, char *name)
+void cimunit_event_init(cimunit_event_t *event, const char *name)
 {
     event->event_name = name;
     event->action_events = cimunit_event_list_init();

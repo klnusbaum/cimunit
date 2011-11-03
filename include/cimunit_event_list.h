@@ -65,6 +65,6 @@ void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t 
 /// \param list - event list being queried
 /// \param name - name of the event being searched for
 /// \return NULL if the event wasn't found, else a pointer to the event.
-cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list, char *name);
+cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list, const char *name);
 
 #endif // CIMUNIT_EVENT_LIST_H
