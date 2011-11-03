@@ -44,7 +44,8 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 }
 
 
-bool cimunit_schedule_fire(struct cimunit_schedule *schedule, char *eventName)
+bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
+                           const char *eventName)
 {
     // Locate the event in the schedule and fire it.
     cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);

@@ -66,7 +66,8 @@ void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t 
 }
 
 
-cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list, char *name) {
+cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list,
+                                         const char *name) {
     cimunit_event_list_t *entry = list;
     
     while (entry != NULL) {

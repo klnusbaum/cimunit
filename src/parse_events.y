@@ -32,7 +32,7 @@
 // Defines
 extern int parse_events_lex_destroy(void); // From parse_events.l
 extern int parse_events_parse(struct cimunit_event_table *fired_event_list,
-                              char *action_event,
+                              const char *action_event,
                               bool *parse_result); // From parse_events.y
 extern void parse_events__scan_string(char *string); // From parse_events.l
 extern int parse_events_lex (void); // From parse_events.l
@@ -63,7 +63,7 @@ cimunit_mutex_t *cimunit_parse_event_mutex = NULL;
 ///
 /// \return the completed schedule
 bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
-                                    char *action_event) {
+                                    const char *action_event) {
     /// \todo This is a hack.  There should be an init function that initializes
     ///       this global in a thread safe manner.
     if (!cimunit_parse_event_mutex) {
@@ -91,13 +91,13 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
 %union 
 {
 	int bool_value;
-	char *string;
+	const char *string;
 }
 
 %name-prefix "parse_events_"
 
 %parse-param {struct cimunit_event_table *fired_event_list}
-%parse-param {char *action_event}
+%parse-param {const char *action_event}
 %parse-param {bool *parse_result}
 
 %token <number> STATE
