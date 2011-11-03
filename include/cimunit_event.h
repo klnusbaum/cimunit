@@ -34,7 +34,7 @@ struct cimunit_event_list;
 /// Structure defining a CIMUnit event.
 typedef struct cimunit_event {
     /// Textual name of the event, used by scheduling rules
-    char *event_name;
+    const char *event_name;
 
     /// List of action events that wait on this condition event
     struct cimunit_event_list *action_events;
@@ -53,7 +53,7 @@ typedef struct cimunit_event {
 ///
 /// \param event - Event to initialize.
 /// \param name - name of the event
-void cimunit_event_init(cimunit_event_t *event, char *name);
+void cimunit_event_init(cimunit_event_t *event, const char *name);
 
 
 /// Destroy a CIMUnit event and free its allocated memory.

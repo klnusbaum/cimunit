@@ -52,7 +52,7 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string);
 /// \param action_event - action event being queried
 /// \return true if event is blocked, else false
 bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
-                                    char *action_event);
+                                    const char *action_event);
 
 
 /// Create a new schedule object
@@ -70,6 +70,7 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule);
 /// \param schedule - schedule associated with the event
 /// \param eventName - name of the event to be fired_event_list
 /// \return true if the event was found, else false
-bool cimunit_schedule_fire(struct cimunit_schedule *schedule, char *eventName);
+bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
+                           const char *eventName);
 
 #endif //CIMUNIT_SCHEDULE_H
