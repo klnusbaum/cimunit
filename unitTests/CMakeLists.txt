@@ -12,7 +12,7 @@ add_library(cimunit_test_library testMain.c)
 macro (CREATE_UNIT_TEST  testname filename )
   add_executable( ${testname} ${filename} testMain.h)
   target_link_libraries( ${testname} cimunit cimunit_test_library ${CUNIT_LIBRARIES} ${CURSES_LIBRARIES})
-  add_test( ${testname}  ${CMAKE_CURRENT_BINARY_DIR}/${testname})
+  add_test( ${testname}  ${CMAKE_CURRENT_BINARY_DIR}/${testname} "-v")
 endmacro(CREATE_UNIT_TEST)
 
 CREATE_UNIT_TEST(eventTests test_cimunit_event.c)

@@ -27,7 +27,7 @@
 #include "cimunit.h"
 #include "testMain.h"
 
-static void test_cimunit_thread_name(void)
+static void test_cimunit_thread_setname(void)
 {
   const char set_name[] = "steve";
   #if PLATFORM_Darwin
@@ -45,10 +45,44 @@ static void test_cimunit_thread_name(void)
 
 #if PLATFORM_Darwin
 #else
-// test setting name of other thread
+
+cimunit_mutex_t stall_mutex;
+static void *stalling_function(void *arg){
+  cimunit_mutex_lock(&stall_mutex);
+  cimunit_mutex_unlock(&stall_mutex);
+}
+
+
+static void test_cimunit_thread_set_other_name(void){
+  cimunit_mutex_init(&stall_mutex, NULL);
+  cimunit_mutex_lock(&stall_mutex);
+
+  const char set_name[] = "steve";
+  cimunit_thread_t other_thread;
+
+  cimunit_thread_create(&other_thread, NULL, stalling_function, NULL);
+  
+  cimunit_thread_setname(other_thread, set_name);
+  char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
+  cimunit_thread_getname(
+    other_thread,
+    retrieved_name,
+    CIMUNIT_MAX_THREAD_NAME_LENGTH);
+  CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
+  printf("Real name \"%s\" ", set_name);
+  printf("Retrieved name \"%s\" ", retrieved_name);
+  cimunit_mutex_unlock(&stall_mutex);
+  cimunit_thread_join(other_thread, NULL);
+  cimunit_mutex_destroy(&stall_mutex);
+}
 #endif
+
 static CU_TestInfo test_threads[] = {
-  {"names", test_cimunit_thread_name },
+  {"set name", test_cimunit_thread_setname },
+  #if PLATFORM_Darwin
+  #else
+  {"set other name", test_cimunit_thread_set_other_name },
+  #endif
   CU_TEST_INFO_NULL,
 };
 
