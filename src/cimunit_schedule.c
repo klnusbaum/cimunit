@@ -49,16 +49,16 @@ void cimunit_schedule_add_event(struct cimunit_schedule *schedule,
     char *event_name;
     if (NULL == strchr(eventName, '@')) {
         event_name = malloc(strlen(eventName) + 2);
-        strcpy(event_name, event);
+        strcpy(event_name, eventName);
         strcat(event_name, "@");
     } else {
         event_name = malloc(strlen(eventName) + 1);
-        strcpy(event_name, event);
+        strcpy(event_name, eventName);
     }
 
     cimunit_event_t *event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
     cimunit_event_init(event, event_name);
-    cimunit_event_list_add(schedule->event_list, event);           
+    cimunit_event_list_add(&schedule->event_list, event);           
 }
 
 

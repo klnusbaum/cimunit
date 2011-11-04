@@ -64,6 +64,8 @@ cimunit_schedule_t *cimunit_schedule_init();
 /// Destroy the schedule object and free memory
 void cimunit_schedule_destroy(cimunit_schedule_t *schedule);
 
+void cimunit_schedule_add_event(struct cimunit_schedule *schedule,
+                                const char *eventName);
 
 /// Fire an event using the schedule
 ///
