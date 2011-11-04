@@ -44,6 +44,24 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 }
 
 
+void cimunit_schedule_add_event(struct cimunit_schedule *schedule,
+                                const char *eventName) {                           
+    char *event_name;
+    if (NULL == strchr(eventName, '@')) {
+        event_name = malloc(strlen(eventName) + 2);
+        strcpy(event_name, event);
+        strcat(event_name, "@");
+    } else {
+        event_name = malloc(strlen(eventName) + 1);
+        strcpy(event_name, event);
+    }
+
+    cimunit_event_t *event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
+    cimunit_event_init(event, event_name);
+    cimunit_event_list_add(schedule->event_list, event);           
+}
+
+
 bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName)
 {

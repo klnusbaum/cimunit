@@ -132,9 +132,7 @@ printf("Found %s at %s\n", $1, $3);
         cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
         
         if (!event) {
-            event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
-            cimunit_event_init(event, $1);
-            cimunit_event_list_add(event_list, event);
+            cimunit_schedule_add_event(event_list, eventName);
         }
         
         $$ = event;
