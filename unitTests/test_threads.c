@@ -69,7 +69,11 @@ static void test_cimunit_thread_set_other_name(void){
     retrieved_name,
     CIMUNIT_MAX_THREAD_NAME_LENGTH);
   CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
+  printf("Real name \"%s\" ", set_name);
+  printf("Retrieved name \"%s\" ", retrieved_name);
   cimunit_mutex_unlock(&stall_mutex);
+  cimunit_thread_join(other_thread, NULL);
+  cimunit_mutex_destroy(&stall_mutex);
 }
 #endif
 

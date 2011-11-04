@@ -18,6 +18,7 @@
  */
 
 #include "cimunit_thread.h"
+#include <string.h>
 int cimunit_thread_create(
   cimunit_thread_t * RESTRICT thread, 
   const cimunit_thread_attr_t *RESTRICT attr,
@@ -45,7 +46,17 @@ int cimunit_thread_getname(cimunit_thread_t thread, char *name, size_t buf_size)
 {
     //TODO throw error if buf_size is greater 
     // than CIMUNIT_MAX_THREAD_NAME_LENGTH
-    return pthread_getname_np(thread, name, buf_size);
+    int toReturn = pthread_getname_np(thread, name, buf_size);
+    //So for some reason, on ubuntu 11.04, there's a trailing newline
+    //at the end of the returned name. I have no idea why.
+    //So I've made this kludge. I don't know why I have to do it, but I've been
+    //chasing this bug down for over an hour now. I'm just going to do this.
+    //We have a test case that will act up if it ends up screwing stuff up
+    //so I think we should be safe.
+    char *end = name + strlen(name) -1;
+    while(end > name && (*end) == '\n') end--; 
+    *(end+1) = 0;
+    return toReturn;
 }
 
 cimunit_thread_t cimunit_thread_self(){
