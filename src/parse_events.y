@@ -86,12 +86,12 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
 %}
 
 %token SYMBOL_COMMA SYMBOL_IMPLIES SYMBOL_EOL SYMBOL_LPAREN SYMBOL_RPAREN SYMBOL_AND
-       SYMBOL_OR SYMBOL_LBRACKET SYMBOL_RBRACKET
+       SYMBOL_OR SYMBOL_LBRACKET SYMBOL_RBRACKET SYMBOL_AT
 
 %union 
 {
 	int bool_value;
-	const char *string;
+	char *string;
 }
 
 %name-prefix "parse_events_"
@@ -102,7 +102,7 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
 
 %token <number> STATE
 %token <number> NUMBER
-%token <string> EVENT_NAME
+%token <string> NAME
 
 %type <bool_value> basicEvent
 %type <bool_value> basicCondition
@@ -121,21 +121,34 @@ schedule:
     ordering
 
 ordering:
-    condition SYMBOL_IMPLIES EVENT_NAME
+    condition SYMBOL_IMPLIES NAME
     {
         if (!strcmp($3, action_event)) {
             *parse_result = $1;
         }
     }
+    | condition SYMBOL_IMPLIES NAME SYMBOL_AT NAME
+    {
+        if (!strcmp($3, action_event)) {
+            *parse_result = $1;
+        }
+        printf("Need to implement parse_events.y::conditon SYMBOL_IMPLIES NAME SYMBOL_AT NAME\n");
+    }
     ;
 
 basicEvent:
-    EVENT_NAME
+    NAME
     {
         // Lookup event name in the fired event list
         cimunit_event_table_entry_t *event = NULL;
         cimunit_find_event_in_table(fired_event_list, $1, &event);
-
+        $$ = (NULL != event);
+    }
+    | NAME SYMBOL_AT NAME{
+        // Lookup event name in the fired event list
+        cimunit_event_table_entry_t *event = NULL;
+        cimunit_find_event_in_table_on_thread(
+          fired_event_list, $1, $3, &event);
         $$ = (NULL != event);
     }
     ;

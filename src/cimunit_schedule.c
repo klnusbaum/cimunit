@@ -18,9 +18,10 @@
  */
 #include <stdlib.h>
 #include <string.h>
-#include "cimunit_schedule.h"
 #include <stdio.h>
 
+#include "cimunit_schedule.h"
+#include "cimunit_thread.h"
 
 cimunit_schedule_t *cimunit_schedule_init() {
     cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));
@@ -44,29 +45,17 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 }
 
 
-void cimunit_schedule_add_event(struct cimunit_schedule *schedule,
-                                const char *eventName) {                           
-    char *event_name;
-    if (NULL == strchr(eventName, '@')) {
-        event_name = malloc(strlen(eventName) + 2);
-        strcpy(event_name, eventName);
-        strcat(event_name, "@");
-    } else {
-        event_name = malloc(strlen(eventName) + 1);
-        strcpy(event_name, eventName);
-    }
-
-    cimunit_event_t *event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
-    cimunit_event_init(event, event_name);
-    cimunit_event_list_add(&schedule->event_list, event);           
-}
-
-
 bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName)
 {
-    // Locate the event in the schedule and fire it.
-    cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
+    char thread_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
+    cimunit_thread_getname_self(thread_name);
+    cimunit_event_t *event = cimunit_event_list_find_with_thread(
+      schedule->event_list, eventName, thread_name); 
+      
+    if (!event) {
+        event = cimunit_event_list_find(schedule->event_list, eventName);
+    }
     if (event) {
         cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
 

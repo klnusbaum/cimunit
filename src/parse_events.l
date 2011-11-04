@@ -39,7 +39,8 @@
 \|\|            return SYMBOL_OR;
 \[              return SYMBOL_LBRACKET;
 \]              return SYMBOL_RBRACKET;
+@               return SYMBOL_AT;
 
-[a-z0-9]+		parse_events_lval.string=strdup(yytext);return EVENT_NAME;
+[a-z0-9]+		parse_events_lval.string=strdup(yytext);return NAME;
 
 %%

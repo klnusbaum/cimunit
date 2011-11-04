@@ -32,8 +32,9 @@ int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr);
 int cimunit_thread_setname(const char *name);
 
 //!!!!!!!CAREFUL
-//THE NAME BUFFER MUST BE ATLEAST AS BIG AS MAX_THREAD_NAME_LENGTH
+//THE NAME BUFFER MUST BE ATLEAST AS BIG AS CIMUNIT_MAX_THREAD_NAME_LENGTH
 int cimunit_thread_getname(cimunit_thread_t thread, char *name);
+int cimunit_thread_getname_self(char *name);
 
 cimunit_thread_t cimunit_thread_self();
 

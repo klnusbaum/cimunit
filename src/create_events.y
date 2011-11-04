@@ -73,7 +73,7 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
 
 %union 
 {
-	const char *string;
+	char *string;
 	struct cimunit_event_list *conditionList;
 	struct cimunit_event *event;
 }
@@ -125,16 +125,20 @@ basicEvent:
             cimunit_event_list_add(event_list, event);
         }
         
+        free($1);
         $$ = event;
     }
-    | NAME SYMBOL_AT NAME{
-printf("Found %s at %s\n", $1, $3);
+    | NAME SYMBOL_AT NAME
+    {
         cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
         
         if (!event) {
-            cimunit_schedule_add_event(event_list, eventName);
+            event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
+            cimunit_event_init_with_thread(event, $1, $3);
+            cimunit_event_list_add(event_list, event);
         }
         
+        free($1);
         $$ = event;
     }
     ;
@@ -142,7 +146,8 @@ printf("Found %s at %s\n", $1, $3);
 blockEvent:
     SYMBOL_LBRACKET basicEvent SYMBOL_RBRACKET
     {
-        $$ = $2->event_name;
+        yyerror(event_list, "Blocking events are not supported");
+        YYERROR;
     }
     ;
 
@@ -160,8 +165,6 @@ basicCondition:
     | blockEvent
     {
         $$ = NULL;
-        yyerror(event_list, "Blocking events are not supported");
-        YYERROR;
     }
 
 condition:

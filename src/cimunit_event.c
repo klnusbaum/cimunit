@@ -21,18 +21,36 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "cimunit_event.h"
 #include "cimunit_event_list.h"
 
 
-void cimunit_event_init(cimunit_event_t *event, const char *name)
-{
-    event->event_name = name;
+void cimunit_event_init_with_thread(cimunit_event_t *event, const char *name,
+                                    const char *thread) {
+    char *event_name = malloc(strlen(name) + 1);
+    strcpy(event_name, name);
+    event->event_name = event_name;
+    
+    if (thread != NULL) {
+        char *thread_name = malloc(strlen(thread) + 1);
+        strcpy(thread_name, thread);
+        event->thread_name = thread_name;
+    } else {
+        event->thread_name = NULL;
+    }
+    
     event->action_events = cimunit_event_list_init();
     cimunit_barrier_init(&(event->condition_barrier));
 
     event->is_action = false;
+}
+
+
+void cimunit_event_init(cimunit_event_t *event, const char *name)
+{
+    cimunit_event_init_with_thread(event, name, NULL);
 }
 
 

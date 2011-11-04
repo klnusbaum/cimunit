@@ -27,6 +27,8 @@
 
 #include "cimunit.h"
 #include "testMain.h"
+
+
 static void test_cimunit_init_event(void)
 {
     char event_name[] = "test";
@@ -37,6 +39,36 @@ static void test_cimunit_init_event(void)
     /// - Verify the event name is initialized
     CU_ASSERT_PTR_NOT_NULL(event.event_name);
     CU_ASSERT_STRING_EQUAL(event.event_name, event_name);
+    
+    /// - Verify the thread name isn't set
+    CU_ASSERT_PTR_NULL(event.thread_name);
+    
+    CU_ASSERT_FALSE(event.is_action);
+  
+    /// - No cross platform tests for mutex configuration
+  
+    /// - Verify the dependent events list is empty
+    CU_ASSERT_PTR_NULL(event.action_events);
+  
+    cimunit_event_destroy(&event);
+}
+
+
+static void test_cimunit_init_event_with_thread(void)
+{
+    char event_name[] = "test";
+    char thread_name[] = "thread";
+
+    cimunit_event_t event;
+    cimunit_event_init_with_thread(&event, event_name, thread_name);
+  
+    /// - Verify the event name is initialized
+    CU_ASSERT_PTR_NOT_NULL_FATAL(event.event_name);
+    CU_ASSERT_STRING_EQUAL(event.event_name, event_name);
+
+    /// - Verify the thread name is initialized
+    CU_ASSERT_PTR_NOT_NULL_FATAL(event.thread_name);
+    CU_ASSERT_STRING_EQUAL(event.thread_name, thread_name);
     
     CU_ASSERT_FALSE(event.is_action);
   
@@ -100,7 +132,8 @@ static void test_cimunit_event_add_multiple_actions(void)
 
 
 static CU_TestInfo tests_cimunit_event[] = {
-  {"init", test_cimunit_init_event },
+  {"init", test_cimunit_init_event},
+  {"init with thread", test_cimunit_init_event_with_thread},
   {"add_action", test_cimunit_event_add_action},
   {"add_multiple_actions", test_cimunit_event_add_multiple_actions},
   CU_TEST_INFO_NULL,

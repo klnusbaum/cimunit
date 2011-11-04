@@ -66,16 +66,38 @@ void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t 
 }
 
 
-cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list,
-                                         const char *name) {
+cimunit_event_t *cimunit_event_list_find_with_thread(
+  cimunit_event_list_t *list, const char *name, const char *thread) {
     cimunit_event_list_t *entry = list;
     
+    // Find event with matching thread name
     while (entry != NULL) {
         if (strcmp(name, entry->event->event_name) == 0) {
-            return entry->event;
+            if ((NULL != thread) && (NULL != entry->event->thread_name)) {
+                if (strcmp(thread, entry->event->thread_name) == 0) {
+                    return entry->event;
+                }
+            }
+        }
+        entry = entry->next;
+    }
+    
+    entry = list;
+    
+    // Find event without thread
+    while (entry != NULL) {
+        if ((entry->event->thread_name == NULL) &&
+            (strcmp(name, entry->event->event_name) == 0)) {
+                return entry->event;
         }
         entry = entry->next;
     }
     
     return NULL;
+}
+
+
+cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list,
+                                         const char *name) {
+    return cimunit_event_list_find_with_thread(list, name, NULL);
 }

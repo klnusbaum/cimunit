@@ -50,7 +50,8 @@ void cimunit_event_list_destroy(cimunit_event_list_t **list);
 ///
 /// \param list - event list to be updated
 /// \param event - event to be added into the list
-void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event);
+void cimunit_event_list_add(cimunit_event_list_t **list,
+                            cimunit_event_t *event);
 
 /// Merge an event list into the list
 ///
@@ -58,13 +59,23 @@ void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event)
 ///
 /// \param list - event list to be merged into
 /// \param list2 - event list from which data will be pulled
-void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t *list2);
+void cimunit_event_list_union(cimunit_event_list_t **list,
+                              cimunit_event_list_t *list2);
 
-/// Gets an event from the list by namespace
+/// Gets an event from the list by name and thread
 ///
 /// \param list - event list being queried
 /// \param name - name of the event being searched for
 /// \return NULL if the event wasn't found, else a pointer to the event.
-cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list, const char *name);
+cimunit_event_t *cimunit_event_list_find_with_thread(
+  cimunit_event_list_t *list, const char *name, const char *thread);
+
+/// Gets an event from the list by name
+///
+/// \param list - event list being queried
+/// \param name - name of the event being searched for
+/// \return NULL if the event wasn't found, else a pointer to the event.
+cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list,
+                                         const char *name);
 
 #endif // CIMUNIT_EVENT_LIST_H

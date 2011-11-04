@@ -64,8 +64,20 @@ cimunit_schedule_t *cimunit_schedule_init();
 /// Destroy the schedule object and free memory
 void cimunit_schedule_destroy(cimunit_schedule_t *schedule);
 
-void cimunit_schedule_add_event(struct cimunit_schedule *schedule,
-                                const char *eventName);
+
+/// Add a new event into the schedule
+///
+/// \param schedule - schedule associated with the test
+/// \param name - name of the event to be added
+/// \return pointer to the event object
+cimunit_event_t *cimunit_schedule_add_event(struct cimunit_schedule *schedule,
+                                            const char *name);
+
+
+void cimunit_schedule_add_action_event(struct cimunit_schedule *schedule,
+                                       const char *conditionEventName,
+                                       const char *actionEventName);
+
 
 /// Fire an event using the schedule
 ///
