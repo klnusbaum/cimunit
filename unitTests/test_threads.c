@@ -26,7 +26,7 @@
 
 #include "cimunit.h"
 #include "testMain.h"
-/*
+
 static void test_cimunit_thread_setname(void)
 {
   const char set_name[] = "steve";
@@ -92,4 +92,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES( suites )*/
+RUN_TEST_SUITES( suites )
