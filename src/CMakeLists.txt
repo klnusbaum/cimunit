@@ -27,6 +27,7 @@ set(CIMUNIT_SRC
   cimunit_tester.c
   cimunit_thread.c
   cimunit_event_table.c
+  cimunit_thread_table.c
   ${FLEX_create_events_lexer_OUTPUTS}
   ${BISON_create_events_grammar_OUTPUTS}
   ${FLEX_parse_events_lexer_OUTPUTS}
