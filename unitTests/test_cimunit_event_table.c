@@ -23,7 +23,7 @@
 
 #define BASIC_EVENT_TABLE_INIT \
   cimunit_event_table_t event_table; \
-  cimunit_event_table_init(&event_table, NULL);
+  cimunit_event_table_init(&event_table);
 
 #define BASIC_EVENT_TABLE_DESTROY \
   cimunit_event_table_destroy(&event_table);
