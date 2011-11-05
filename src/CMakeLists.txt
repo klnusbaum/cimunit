@@ -1,4 +1,4 @@
-find_package(FLEX 2.5.35 REQUIRED flex)
+find_package(FLEX 2.5.33 REQUIRED flex)
 find_package(BISON 2.4.1 REQUIRED bison)
 
 FLEX_TARGET(create_events_lexer create_events.l
