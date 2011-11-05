@@ -29,17 +29,6 @@ int cimunit_thread_create(
 
 int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr);
 
-#if PLATFORM_Darwin
-int cimunit_thread_setname(const char *name);
-#else
-int cimunit_thread_setname(cimunit_thread_t thread, const char *name);
-#endif
-
-int cimunit_thread_getname(
-  cimunit_thread_t thread, 
-  char *name, 
-  size_t buf_size);
-
 cimunit_thread_t cimunit_thread_self();
 
 #endif //CIMUNIT_THREAD_H

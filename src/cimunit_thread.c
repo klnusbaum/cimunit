@@ -18,6 +18,7 @@
  */
 
 #include "cimunit_thread.h"
+#include <string.h>
 int cimunit_thread_create(
   cimunit_thread_t * RESTRICT thread, 
   const cimunit_thread_attr_t *RESTRICT attr,
@@ -29,23 +30,6 @@ int cimunit_thread_create(
 
 int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr){
   return pthread_join(thread, value_ptr);
-}
-
-#if PLATFORM_Darwin
-int cimunit_thread_setname(const char *name){
-    return pthread_setname_np(name);
-}
-#else
-int cimunit_thread_setname(cimunit_thread_t thread, const char *name){
-    return pthread_setname_np(thread, name);
-}
-#endif
-
-int cimunit_thread_getname(cimunit_thread_t thread, char *name, size_t buf_size)
-{
-    //TODO throw error if buf_size is greater 
-    // than CIMUNIT_MAX_THREAD_NAME_LENGTH
-    return pthread_getname_np(thread, name, buf_size);
 }
 
 cimunit_thread_t cimunit_thread_self(){

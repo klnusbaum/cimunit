@@ -1,4 +1,4 @@
-find_package(FLEX REQUIRED flex)
+find_package(FLEX 2.5.35 REQUIRED flex)
 find_package(BISON 2.4.1 REQUIRED bison)
 
 FLEX_TARGET(create_events_lexer create_events.l
@@ -27,6 +27,7 @@ set(CIMUNIT_SRC
   cimunit_tester.c
   cimunit_thread.c
   cimunit_event_table.c
+  cimunit_thread_table.c
   ${FLEX_create_events_lexer_OUTPUTS}
   ${BISON_create_events_grammar_OUTPUTS}
   ${FLEX_parse_events_lexer_OUTPUTS}
@@ -36,5 +37,5 @@ set(CIMUNIT_SRC
 add_library(cimunit ${CIMUNIT_SRC})
 target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(sample sample.c)
-target_link_libraries(sample cimunit)
+#add_executable(sample sample.c)
+#target_link_libraries(sample cimunit)

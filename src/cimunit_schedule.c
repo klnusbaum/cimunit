@@ -24,14 +24,15 @@
 
 cimunit_schedule_t *cimunit_schedule_init() {
     cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));
-    
+    cimunit_thread_table_init(&(schedule->thread_table)); 
     schedule->event_list = cimunit_event_list_init();
-    cimunit_event_table_init(&schedule->fired_event_list);
+    cimunit_event_table_init(&schedule->fired_event_list, &(schedule->thread_table));
     schedule->schedule_string = NULL;
 }
 
 
 void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
+    cimunit_thread_table_destroy(&(schedule->thread_table));
     cimunit_event_list_t *event_list = schedule->event_list;
     
     while(event_list) {
