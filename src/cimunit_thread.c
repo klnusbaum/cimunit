@@ -31,23 +31,6 @@ int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr){
   return pthread_join(thread, value_ptr);
 }
 
-int cimunit_thread_setname(const char *name){
-  #if PLATFORM_Darwin
-    return pthread_setname_np(name);
-  #else
-    return pthread_setname_np(cimunit_thread_self(), name);
-  #endif
-}
-
-
-int cimunit_thread_getname(cimunit_thread_t thread, char *name){
-  #if PLATFORM_Darwin
-    return pthread_getname_np(thread, name, CIMUNIT_MAX_THREAD_NAME_LENGTH);
-  #else 
-    return pthread_getname_np(thread, name);
-  #endif
-}
-
 cimunit_thread_t cimunit_thread_self(){
   return pthread_self();
 }
