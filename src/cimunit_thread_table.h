@@ -22,9 +22,9 @@
 #include "cimunit_thread.h"
 
 typedef struct cimunit_thread_table_element{
-  cimuint_thread_t thread;
-  const char*;
-  cimunit_thread_table_element *next;  
+  cimunit_thread_t thread;
+  const char* name;
+  struct cimunit_thread_table_element *next;  
 } cimunit_thread_table_element_t;
 
 typedef struct{
@@ -51,7 +51,7 @@ int cimunit_set_thread_name(
   const char *name);
 
 int cimunit_get_thread_name(
-  cimunit_thread_table_t *thread_table,
+  const cimunit_thread_table_t *thread_table,
   cimunit_thread_t thread,
   char *buf);
 

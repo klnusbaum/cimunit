@@ -33,6 +33,9 @@ typedef struct cimunit_schedule {
     
     /// Structure containing the status of fired events
     cimunit_event_table_t fired_event_list;
+
+    ///Table used for thread lookups
+    cimunit_thread_table_t thread_table;
     
     /// Text version of the schedule
     char *schedule_string;

@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "cimunit_thread_table.c"
-#include "string.h"
+#include "cimunit_thread_table.h"
+#include <string.h>
+#include <stdlib.h>
 
 int cimunit_thread_table_element_init(
   cimunit_thread_table_element_t *thread_table_element,
@@ -56,7 +57,7 @@ int cimunit_thread_table_destroy(cimunit_thread_table_t *thread_table){
 }
 
 int cimunit_find_thread_in_table(
-  cimunit_thread_table_t *thread_table,
+  const cimunit_thread_table_t *thread_table,
   cimunit_thread_t thread,
   cimunit_thread_table_element_t **found_element)
 {
@@ -98,7 +99,7 @@ int cimunit_set_thread_name(
 
 //buf must be atleaset CIMUNIT_MAX_THREAD_NAME_LENGTH
 int cimunit_get_thread_name(
-  cimunit_thread_table_t *thread_table,
+  const cimunit_thread_table_t *thread_table,
   cimunit_thread_t thread,
   char *buf)
 {
