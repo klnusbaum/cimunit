@@ -60,7 +60,6 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
     
     schedule->schedule_string = malloc(strlen(schedule_string) + 1);
     strcpy(schedule->schedule_string, schedule_string);
-    //schedule->schedule_string = strdup(schedule_string);
     
     // Parse the schedule string into the schedule object.
     create_events__scan_string(schedule_string);
