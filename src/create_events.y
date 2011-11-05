@@ -21,6 +21,7 @@
  
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "cimunit_event_list.h"
@@ -57,7 +58,8 @@ int create_events_wrap()
 cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
     cimunit_schedule_t *schedule = cimunit_schedule_init();
     
-    schedule->schedule_string = strdup(schedule_string);
+    schedule->schedule_string = malloc(strlen(schedule_string) + 1);
+    strcpy(schedule->schedule_string, schedule_string);
     
     // Parse the schedule string into the schedule object.
     create_events__scan_string(schedule_string);
