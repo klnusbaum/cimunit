@@ -40,6 +40,6 @@
 \[              return SYMBOL_LBRACKET;
 \]              return SYMBOL_RBRACKET;
 
-[a-z0-9]+		parse_events_lval.string=strdup(yytext);return EVENT_NAME;
+[a-z0-9]+		{char *temp_str=malloc(sizeof(yytext)+1);strcpy(temp_str, yytext);parse_events_lval.string=temp_str;return EVENT_NAME;}
 
 %%
