@@ -17,6 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 #include "testMain.h"
+#include <assert.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,6 +83,20 @@ void processArgs(
       exit(0);
     } 
   } 
+}
+
+void cimunit_register_test_suites(CU_SuiteInfo suites[]){
+
+  assert(NULL != CU_get_registry());
+  assert(!CU_is_test_running());
+
+	/* Register suites. */
+	if (CU_register_suites(suites) != CUE_SUCCESS) {
+		fprintf(stderr, "suite registration failed - %s\n",
+			CU_get_error_msg());
+		exit(EXIT_FAILURE);
+	}
+
 }
 
 #ifdef __cplusplus

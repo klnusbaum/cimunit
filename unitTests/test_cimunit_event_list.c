@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 #include "testMain.h"
 #include "cimunit_event_list.h"
@@ -245,17 +244,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-void AddEventListTests(void)
-{
-  assert(NULL != CU_get_registry());
-  assert(!CU_is_test_running());
-
-	/* Register suites. */
-	if (CU_register_suites(suites) != CUE_SUCCESS) {
-		fprintf(stderr, "suite registration failed - %s\n",
-			CU_get_error_msg());
-		exit(EXIT_FAILURE);
-	}
-}
-
-RUN_TEST_SUITE(AddEventListTests())
+RUN_TEST_SUITES(suites)

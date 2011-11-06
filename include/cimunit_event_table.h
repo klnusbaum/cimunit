@@ -19,7 +19,7 @@
 #ifndef CIMUNIT_EVENT_TABLE_H
 #define CIMUNIT_EVENT_TABLE_H
 #include "cimunit_event.h"
-#include "cimunit_thread.h"
+#include "cimunit_thread_table.h"
 
 /// Structure defining a CIMUnit event table entry.
 typedef struct event_table_entry{
@@ -45,6 +45,9 @@ typedef struct cimunit_event_table {
   /// The tail table entry. Is initially NULL.
   cimunit_event_table_entry_t *tail;
 
+  /// The thread table to use for thread name lookups
+  const cimunit_thread_table_t *thread_table;
+
   /// The lock that needs to be aquired before making any modifications to the
   /// table.
   cimunit_mutex_t lock;
@@ -69,8 +72,11 @@ int cimunit_event_table_entry_destroy(cimunit_event_table_entry_t *entry);
 /// Initializes an event table
 ///
 /// \param event_table - Table to initialize.
+/// \param thread_table - Table that should be used to lookup thread names.
 /// \returns - 0 if the initialization was succesfull, error code otherwise.
-int cimunit_event_table_init(cimunit_event_table_t *event_table);
+int cimunit_event_table_init(
+  cimunit_event_table_t *event_table, 
+  const cimunit_thread_table_t *thread_table);
 
 /// Frees all allocated resources for the CIMUnit Event Table.
 ///

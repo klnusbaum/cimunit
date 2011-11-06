@@ -41,6 +41,6 @@
 \]              return SYMBOL_RBRACKET;
 @               return SYMBOL_AT;
 
-[a-z0-9]+		create_events_lval.string=strdup(yytext);return NAME;
+[a-z0-9]+		{char *temp_str=malloc(sizeof(yytext)+1);strcpy(temp_str, yytext);create_events_lval.string=temp_str;return NAME;}
 
 %%

@@ -17,9 +17,13 @@ int cimunit_event_table_entry_destroy(cimunit_event_table_entry_t *entry){
   //this is a no-op at the moment
 }
 
-int cimunit_event_table_init(cimunit_event_table_t *event_table){
+int cimunit_event_table_init(
+  cimunit_event_table_t *event_table, 
+  const cimunit_thread_table_t *thread_table)
+{
   event_table->head = NULL;
   event_table->tail = NULL;
+  event_table->thread_table = thread_table;
   cimunit_mutex_init(&(event_table->lock), NULL);
   //TODO actually return the correct error code if an error happend.
   return 0;
@@ -66,11 +70,15 @@ int cimunit_add_event_to_table(
 
 int cimunit_event_matches_table_entry(
   const cimunit_event_table_entry_t* table_entry,
+  const cimunit_thread_table_t *thread_table,
   const char *event_name,
   const char *thread_name)
 {
   char thread_name_buffer[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_thread_getname(table_entry->thread, thread_name_buffer);
+  cimunit_get_thread_name(
+    thread_table,
+    table_entry->thread, 
+    thread_name_buffer);
   return
     !strcmp(table_entry->event->event_name, event_name) &&
       (!strcmp(CIMUNIT_DEFAULT_THREAD_NAME, thread_name) ||
@@ -98,7 +106,10 @@ int cimunit_find_event_in_table_on_thread(
 {
   (*found_event) = event_table->head;
   while((*found_event) != NULL){
-    if(cimunit_event_matches_table_entry(*found_event, event_name, thread_name))
+    if(cimunit_event_matches_table_entry(
+      *found_event, event_table->thread_table,
+       event_name, 
+       thread_name))
     {
       break;
     }    

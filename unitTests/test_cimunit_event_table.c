@@ -20,11 +20,10 @@
  */
 #include "testMain.h"
 #include "cimunit.h"
-#include <assert.h>
 
 #define BASIC_EVENT_TABLE_INIT \
   cimunit_event_table_t event_table; \
-  cimunit_event_table_init(&event_table);
+  cimunit_event_table_init(&event_table, NULL);
 
 #define BASIC_EVENT_TABLE_DESTROY \
   cimunit_event_table_destroy(&event_table);
@@ -69,16 +68,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-void AddEventTableTests(void){
-  assert(NULL != CU_get_registry());
-  assert(!CU_is_test_running());
-
-	/* Register suites. */
-	if (CU_register_suites(suites) != CUE_SUCCESS) {
-		fprintf(stderr, "suite registration failed - %s\n",
-			CU_get_error_msg());
-		exit(EXIT_FAILURE);
-	}
-}
-
-RUN_TEST_SUITE(AddEventTableTests())
+RUN_TEST_SUITES(suites)
