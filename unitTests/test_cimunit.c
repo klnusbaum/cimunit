@@ -435,15 +435,24 @@ static void test_cimunit_macro_and_conditional2(void)
 
 
 static void *test_macro_eventA_threadX(void *ptr) {
-    cimunit_thread_setname("x");
+    CIMUNIT_THREAD_NAME("x");
     int *value = ptr;
     CIMUNIT_FIRE("a1");
     *value *= 2;
     CIMUNIT_FIRE("a2");
 }
 
+static void *test_macro_eventA_threadZ(void *ptr) {
+    CIMUNIT_THREAD_NAME("z");
+    int *value = ptr;
+    CIMUNIT_FIRE("a1");
+    *value *= 2;
+    CIMUNIT_FIRE("a2");
+}
+
+
 static void *test_macro_eventB_threadY(void *ptr) {
-    cimunit_thread_setname("y");
+    CIMUNIT_THREAD_NAME("y");
     int *value = ptr;
     CIMUNIT_FIRE("b1");
     *value += 3;
@@ -451,7 +460,7 @@ static void *test_macro_eventB_threadY(void *ptr) {
 }
 
 static void *test_macro_eventC_threadZ(void *ptr) {
-    cimunit_thread_setname("z");
+    CIMUNIT_THREAD_NAME("z");
     int *value = ptr;
     CIMUNIT_FIRE("c1");
     *value *= 4;
@@ -462,7 +471,7 @@ static void *test_macro_eventC_threadZ(void *ptr) {
 static void test_cimunit_thread_basic1(void)
 {
     // Create schedule
-    CIMUNIT_SCHEDULE("a2@x->b1@y");
+    CIMUNIT_SCHEDULE("a2@x->b1");
     int value = 1;
 
     // Create and execute threads
@@ -472,17 +481,25 @@ static void test_cimunit_thread_basic1(void)
     
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-    pthread_create(&threadA, &attr, test_macro_eventA_threadX, (void *)&value);
+    pthread_create(&threadA, &attr, test_macro_eventA_threadZ, (void *)&value);
     pthread_create(&threadB, &attr, test_macro_eventB_threadY, (void *)&value);
+
+
+    pthread_join(threadA, NULL);
+    sleep(1);
+
+    CU_ASSERT_EQUAL(value, 2);
+
+    value = 1;
+    pthread_create(&threadA, &attr, test_macro_eventA_threadX, (void *)&value);
 
     pthread_join(threadA, NULL);
     pthread_join(threadB, NULL);
 
+    CU_ASSERT_EQUAL(value, 5);
+
     // Clean up threading
     pthread_attr_destroy(&attr);
-    
-    // Verify SUT
-    CU_ASSERT_EQUAL(value, 5);
 }
 
 
@@ -510,11 +527,11 @@ static void test_cimunit_thread_basic2(void)
     
     // Verify SUT
     CU_ASSERT_EQUAL(value, 8);
+    CU_ASSERT_TRUE(false);  // Not yet implemented
 }
 
 
 static CU_TestInfo tests_cimunit[] = {
-/*
   {"basic1", test_cimunit_basic1},
   {"basic2", test_cimunit_basic2},
   {"macro basic1", test_cimunit_macro_basic1},
@@ -527,7 +544,7 @@ static CU_TestInfo tests_cimunit[] = {
   {"macro or conditional 2", test_cimunit_macro_or_conditional2},
   {"macro and conditional 1", test_cimunit_macro_and_conditional1},
   {"macro and conditional 2", test_cimunit_macro_and_conditional2},
-  {"thread basic1", test_cimunit_thread_basic1},*/
+  {"thread basic1", test_cimunit_thread_basic1},
   {"thread basic2", test_cimunit_thread_basic2},
   CU_TEST_INFO_NULL,
 };

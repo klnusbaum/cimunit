@@ -194,9 +194,12 @@ static void test_cimunit_event_list_without_thread(void) {
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
+
+    printf("==\n");
     
     CU_ASSERT_PTR_NULL(cimunit_event_list_find_with_thread(
                          list, "a", "x"));
+    printf("==\n");
     cimunit_event_list_destroy(&list);
     cimunit_event_destroy(&event1);
     cimunit_event_destroy(&event2);

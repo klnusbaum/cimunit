@@ -74,15 +74,22 @@ int cimunit_event_matches_table_entry(
   const char *event_name,
   const char *thread_name)
 {
-  char thread_name_buffer[CIMUNIT_MAX_THREAD_NAME_LENGTH];
+  const char *thread_name_buffer;
   cimunit_get_thread_name(
     thread_table,
     table_entry->thread, 
-    thread_name_buffer);
-  return
-    !strcmp(table_entry->event->event_name, event_name) &&
-      (!strcmp(CIMUNIT_DEFAULT_THREAD_NAME, thread_name) ||
-       !strcmp(thread_name_buffer, thread_name));
+    &thread_name_buffer);
+
+  if (!strcmp(table_entry->event->event_name, event_name)) {
+    if (thread_name) {
+        return (thread_name_buffer &&
+                !strcmp(thread_name_buffer, thread_name));
+    } else {
+        return true;
+    }
+  }
+  
+  return false;
 }
 
 int cimunit_find_event_in_table(
@@ -93,7 +100,7 @@ int cimunit_find_event_in_table(
   return cimunit_find_event_in_table_on_thread(
     event_table,
     event_name,
-    CIMUNIT_DEFAULT_THREAD_NAME,
+    NULL,
     found_event);
 }
 

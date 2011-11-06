@@ -81,8 +81,8 @@ static void test_cimunit_schedule_parse_single_thread(void)
 static CU_TestInfo tests_cimunit_schedule[] = {
   {"init", test_cimunit_schedule_init},
   {"parse_single", test_cimunit_schedule_parse_single},
-  {"parse_single with thread", test_cimunit_schedule_parse_single_thread},
   {"parse_double", test_cimunit_schedule_parse_double},
+  {"parse_single with thread", test_cimunit_schedule_parse_single_thread},
   CU_TEST_INFO_NULL,
 };
 

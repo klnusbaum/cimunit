@@ -28,6 +28,9 @@ typedef size_t cimunit_thread_amount_t;
 
 /// Structure use to define a CIMUnit schedule
 typedef struct cimunit_schedule {
+    /// Mutex to synchronize operations on the schedule object
+    cimunit_mutex_t mutex;
+    
     /// List of events involved in the schedule
     cimunit_event_list_t *event_list;
     
@@ -89,5 +92,25 @@ void cimunit_schedule_add_action_event(struct cimunit_schedule *schedule,
 /// \return true if the event was found, else false
 bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName);
+
+
+/// Get the thread name associated with the cimunit_thread_t
+///
+/// \param schedule - schedule associated with the name list
+/// \param thread - thread whose name is being set
+/// \param threadName - pointer to the name of the thread
+void cimunit_schedule_set_thread_name(cimunit_schedule_t *schedule,
+                                      cimunit_thread_t thread,
+                                      const char *threadName);
+
+
+/// Get the thread name associated with the cimunit_thread_t
+///
+/// \param schedule - schedule associated with the name list
+/// \param thread - thread whose name is being queried
+/// \return pointer to the name of the thread
+const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
+                                             cimunit_thread_t thread);
+
 
 #endif //CIMUNIT_SCHEDULE_H

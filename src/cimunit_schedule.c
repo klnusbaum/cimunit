@@ -25,6 +25,7 @@
 
 cimunit_schedule_t *cimunit_schedule_init() {
     cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));
+    cimunit_mutex_init(&schedule->mutex, NULL);
     cimunit_thread_table_init(&(schedule->thread_table)); 
     schedule->event_list = cimunit_event_list_init();
     cimunit_event_table_init(&schedule->fired_event_list, &(schedule->thread_table));
@@ -49,8 +50,10 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName)
 {
-    char thread_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-    cimunit_thread_getname_self(thread_name);
+    const char *thread_name;
+    thread_name = cimunit_schedule_get_thread_name(schedule,
+                                                   cimunit_thread_self());
+
     cimunit_event_t *event = cimunit_event_list_find_with_thread(
       schedule->event_list, eventName, thread_name); 
       
@@ -81,4 +84,24 @@ bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
     }
     
     return true;
+}
+
+
+void cimunit_schedule_set_thread_name(cimunit_schedule_t *schedule,
+                                      cimunit_thread_t thread,
+                                      const char *threadName)
+{
+    cimunit_mutex_lock(&schedule->mutex);
+    cimunit_set_thread_name(&schedule->thread_table, thread, threadName);                                      
+    cimunit_mutex_unlock(&schedule->mutex);
+}
+
+
+const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
+                                             cimunit_thread_t thread)
+{
+    const char *thread_name;
+    cimunit_get_thread_name(&schedule->thread_table, thread, &thread_name);
+
+    return thread_name;
 }

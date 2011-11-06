@@ -29,7 +29,6 @@ typedef struct cimunit_thread_table_element{
 
 typedef struct{
   cimunit_thread_table_element_t *head;
-  cimunit_thread_table_element_t *tail;
 } cimunit_thread_table_t;
 
 
@@ -53,6 +52,6 @@ int cimunit_set_thread_name(
 int cimunit_get_thread_name(
   const cimunit_thread_table_t *thread_table,
   cimunit_thread_t thread,
-  char *buf);
+  const char **buf);
 
 #endif //CIMUNIT_THREAD_TABLE_H

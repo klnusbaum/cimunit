@@ -39,7 +39,7 @@ static void test_parse_event_single(void)
     cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
 
     CU_ASSERT_TRUE(cimunit_schedule_parse_runtime(schedule, "x"));
-}
+    }
 
 
 static void test_parse_event_double(void)
