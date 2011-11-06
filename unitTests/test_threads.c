@@ -29,60 +29,19 @@
 
 static void test_cimunit_thread_setname(void)
 {
+  cimunit_thread_table_t thread_table;
+  cimunit_thread_table_init(&thread_table);
   const char set_name[] = "steve";
-  #if PLATFORM_Darwin
-  cimunit_thread_setname(set_name);
-  #else
-  cimunit_thread_setname(cimunit_thread_self(), set_name);
-  #endif
+  cimunit_set_thread_name(&thread_table, cimunit_thread_self(), set_name);
+ 
   char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_thread_getname(
-    cimunit_thread_self(),
-    retrieved_name,
-    CIMUNIT_MAX_THREAD_NAME_LENGTH);
+  cimunit_get_thread_name(&thread_table, cimunit_thread_self(), retrieved_name);
   CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
+  cimunit_thread_table_destroy(&thread_table);
 }
-
-#if PLATFORM_Darwin
-#else
-
-cimunit_mutex_t stall_mutex;
-static void *stalling_function(void *arg){
-  cimunit_mutex_lock(&stall_mutex);
-  cimunit_mutex_unlock(&stall_mutex);
-}
-
-
-static void test_cimunit_thread_set_other_name(void){
-  cimunit_mutex_init(&stall_mutex, NULL);
-  cimunit_mutex_lock(&stall_mutex);
-
-  const char set_name[] = "steve";
-  cimunit_thread_t other_thread;
-
-  cimunit_thread_create(&other_thread, NULL, stalling_function, NULL);
-  
-  cimunit_thread_setname(other_thread, set_name);
-  char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_thread_getname(
-    other_thread,
-    retrieved_name,
-    CIMUNIT_MAX_THREAD_NAME_LENGTH);
-  CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
-  printf("Real name \"%s\" ", set_name);
-  printf("Retrieved name \"%s\" ", retrieved_name);
-  cimunit_mutex_unlock(&stall_mutex);
-  cimunit_thread_join(other_thread, NULL);
-  cimunit_mutex_destroy(&stall_mutex);
-}
-#endif
 
 static CU_TestInfo test_threads[] = {
   {"set name", test_cimunit_thread_setname },
-  #if PLATFORM_Darwin
-  #else
-  {"set other name", test_cimunit_thread_set_other_name },
-  #endif
   CU_TEST_INFO_NULL,
 };
 
