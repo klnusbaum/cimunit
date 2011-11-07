@@ -496,7 +496,7 @@ static void test_cimunit_thread_condition_thread(void)
     pthread_join(threadA, NULL);
     pthread_join(threadB, NULL);
 
-    CU_ASSERT_EQUAL(value, 2);
+    CU_ASSERT_EQUAL(value, 5);
 
     // Clean up threading
     pthread_attr_destroy(&attr);
@@ -581,7 +581,7 @@ static void test_cimunit_thread_unnamed_condition_thread(void)
 }
 
 
-static CU_TestInfo tests_cimunit[] = {/*
+static CU_TestInfo tests_cimunit[] = {
   {"basic1", test_cimunit_basic1},
   {"basic2", test_cimunit_basic2},
   {"macro basic1", test_cimunit_macro_basic1},
@@ -597,7 +597,7 @@ static CU_TestInfo tests_cimunit[] = {/*
   {"thread wrong and right condition thread", test_cimunit_thread_condition_thread},
   {"thread wrong action thread", test_cimunit_thread_wrong_action_thread},
   {"thread right action thread", test_cimunit_thread_right_action_thread},
-  */{"thread unnamed condition thread", test_cimunit_thread_unnamed_condition_thread},
+  {"thread unnamed condition thread", test_cimunit_thread_unnamed_condition_thread},
   CU_TEST_INFO_NULL,
 };
 
