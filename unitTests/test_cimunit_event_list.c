@@ -186,7 +186,7 @@ static void test_cimunit_event_list_merge(void) {
 }
 
 
-static void test_cimunit_event_list_without_thread(void) {
+ static void test_cimunit_event_list_without_thread(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
     cimunit_event_init(&event1, "a");
@@ -195,15 +195,30 @@ static void test_cimunit_event_list_without_thread(void) {
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
 
-    printf("==\n");
-    
     CU_ASSERT_PTR_NULL(cimunit_event_list_find_with_thread(
                          list, "a", "x"));
-    printf("==\n");
+                         
     cimunit_event_list_destroy(&list);
     cimunit_event_destroy(&event1);
     cimunit_event_destroy(&event2);
+}
 
+
+static void test_cimunit_event_list_wrong_thread(void) {
+    cimunit_event_list_t *list = cimunit_event_list_init();
+    cimunit_event_t event1;
+    cimunit_event_init_with_thread(&event1, "a", "x");
+    cimunit_event_t event2;
+    cimunit_event_init_with_thread(&event2, "b", "y");
+    cimunit_event_list_add(&list, &event2);
+    cimunit_event_list_add(&list, &event1);
+
+    CU_ASSERT_PTR_NULL(cimunit_event_list_find_with_thread(
+                         list, "a", "z"));
+
+    cimunit_event_list_destroy(&list);
+    cimunit_event_destroy(&event1);
+    cimunit_event_destroy(&event2);
 }
 
 
@@ -221,7 +236,6 @@ static void test_cimunit_event_list_with_thread(void) {
     cimunit_event_list_destroy(&list);
     cimunit_event_destroy(&event1);
     cimunit_event_destroy(&event2);
-
 }
 
 
@@ -238,6 +252,7 @@ static CU_TestInfo tests_cimunit_event[] = {
   {"merge", test_cimunit_event_list_merge},
   {"find event without thread", test_cimunit_event_list_without_thread},
   {"find event with thread", test_cimunit_event_list_with_thread},
+  {"find event wrong thread", test_cimunit_event_list_wrong_thread},
   CU_TEST_INFO_NULL,
 };
 

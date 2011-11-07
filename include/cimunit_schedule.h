@@ -56,9 +56,11 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string);
 ///
 /// \param schedule - schedule associated with the test
 /// \param action_event - action event being queried
+/// \param thread - name of the thread associated with the action event
 /// \return true if event is blocked, else false
 bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
-                                    const char *action_event);
+                                    const char *action_event,
+                                    const char *thread);
 
 
 /// Create a new schedule object

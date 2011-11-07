@@ -70,7 +70,9 @@ bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
         // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
         // be unlocked.
         while(next_action) {
-            if (cimunit_schedule_parse_runtime(schedule, next_action->event->event_name)) {
+            if (cimunit_schedule_parse_runtime(
+                  schedule, next_action->event->event_name,
+                  next_action->event->thread_name)) {
                 cimunit_barrier_unlock(&(next_action->event->condition_barrier));
             }
             next_action = next_action->next;

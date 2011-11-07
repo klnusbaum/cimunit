@@ -33,6 +33,7 @@
 extern int parse_events_lex_destroy(void); // From parse_events.l
 extern int parse_events_parse(struct cimunit_event_table *fired_event_list,
                               const char *action_event,
+                              const char *thread,
                               bool *parse_result); // From parse_events.y
 extern void parse_events__scan_string(char *string); // From parse_events.l
 extern int parse_events_lex (void); // From parse_events.l
@@ -43,8 +44,8 @@ extern int parse_events_lex (void); // From parse_events.l
 /// \param event_list - event list passed to the parser
 /// \param str - error string
 void parse_events_error(struct cimunit_event_table *fired_event_list,
-                        const char *action_event, bool *parse_result,
-                        const char *str)
+                        const char *action_event, const char *thread,
+                        bool *parse_result, const char *str)
 {
 	fprintf(stderr,"error: %s\n",str);
 }
@@ -63,7 +64,8 @@ cimunit_mutex_t *cimunit_parse_event_mutex = NULL;
 ///
 /// \return the completed schedule
 bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
-                                    const char *action_event) {
+                                    const char *action_event,
+                                    const char *thread) {
     /// \todo This is a hack.  There should be an init function that initializes
     ///       this global in a thread safe manner.
     if (!cimunit_parse_event_mutex) {
@@ -77,7 +79,7 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
     cimunit_mutex_lock(cimunit_parse_event_mutex);   
     parse_events_lex_destroy();
     parse_events__scan_string(schedule->schedule_string);
-    parse_events_parse(&schedule->fired_event_list, action_event, &result);
+    parse_events_parse(&schedule->fired_event_list, action_event, thread, &result);
     cimunit_mutex_unlock(cimunit_parse_event_mutex);   
     
     return result;
@@ -98,6 +100,7 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
 
 %parse-param {struct cimunit_event_table *fired_event_list}
 %parse-param {const char *action_event}
+%parse-param {const char *thread}
 %parse-param {bool *parse_result}
 
 %token <number> STATE
@@ -129,10 +132,10 @@ ordering:
     }
     | condition SYMBOL_IMPLIES NAME SYMBOL_AT NAME
     {
-        if (!strcmp($3, action_event)) {
+        if (!strcmp($3, action_event) &&
+            !strcmp($5, thread)) {
             *parse_result = $1;
         }
-        printf("Need to implement parse_events.y::conditon SYMBOL_IMPLIES NAME SYMBOL_AT NAME\n");
     }
     ;
 
@@ -166,7 +169,7 @@ basicCondition:
     }
     | blockEvent
     {
-        yyerror(fired_event_list, action_event, parse_result,
+        yyerror(fired_event_list, thread, action_event, parse_result,
                 "Blocking events are not supported");
         YYERROR;
     }

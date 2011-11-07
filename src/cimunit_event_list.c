@@ -71,8 +71,9 @@ cimunit_event_t *cimunit_event_list_find_with_thread(
     cimunit_event_list_t *entry = list;
     // If no thread was provided, any event with the specified name will match
     if (NULL == thread) {
-        while (entry != NULL) {
-            if (strcmp(name, entry->event->event_name) == 0) {
+        while (NULL != entry) {
+            if ((NULL == entry->event->thread_name) &&
+                (strcmp(name, entry->event->event_name) == 0)) {
                 return entry->event;
             }
             entry = entry->next;
@@ -89,7 +90,6 @@ cimunit_event_t *cimunit_event_list_find_with_thread(
             entry = entry->next;
         }
     }    
-
     return NULL;
 }
 
