@@ -31,6 +31,7 @@ int cimunit_thread_table_element_init(
   return 0;
 }
 
+
 int cimunit_thread_table_element_destroy(
   cimunit_thread_table_element_t *thread_table_element)
 {
@@ -38,11 +39,12 @@ int cimunit_thread_table_element_destroy(
   return 0;
 }
 
+
 int cimunit_thread_table_init(cimunit_thread_table_t *thread_table){
   thread_table->head = NULL;
-  thread_table->tail = NULL;
   return 0;
 }
+
 
 int cimunit_thread_table_destroy(cimunit_thread_table_t *thread_table){
   cimunit_thread_table_element_t *next_element = thread_table->head;
@@ -75,6 +77,7 @@ int cimunit_find_thread_in_table(
   return 0;
 }
 
+
 int cimunit_set_thread_name(
   cimunit_thread_table_t *thread_table,
   cimunit_thread_t thread,
@@ -84,10 +87,10 @@ int cimunit_set_thread_name(
   cimunit_find_thread_in_table(thread_table, thread, &thread_table_element);
   if(thread_table_element == NULL){
     thread_table_element = (cimunit_thread_table_element_t*)malloc(
-      sizeof(cimunit_thread_table_element_init));
+      sizeof(cimunit_thread_table_element_t));
     cimunit_thread_table_element_init(thread_table_element, thread, name);
-    thread_table->tail->next = thread_table_element;
-    thread_table->tail = thread_table_element;
+    thread_table_element->next = thread_table->head;
+    thread_table->head = thread_table_element;
   }
   else{
     thread_table_element->name = name;
@@ -97,21 +100,18 @@ int cimunit_set_thread_name(
 }
 
 
-//buf must be atleaset CIMUNIT_MAX_THREAD_NAME_LENGTH
 int cimunit_get_thread_name(
   const cimunit_thread_table_t *thread_table,
   cimunit_thread_t thread,
-  char *buf)
+  const char **buf)
 {
   cimunit_thread_table_element_t *thread_table_element = NULL;
   cimunit_find_thread_in_table(thread_table, thread, &thread_table_element);
-  if(thread_table_element != NULL){
-    strcpy(buf, thread_table_element->name);
-    return 0;
-  } 
-  else{
-    return 1;
-  } 
+  if (thread_table_element)
+  {
+    *buf = thread_table_element->name;
+  }
+  return (thread_table_element != NULL);
 }
 
 

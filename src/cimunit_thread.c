@@ -18,7 +18,6 @@
  */
 
 #include "cimunit_thread.h"
-#include <string.h>
 int cimunit_thread_create(
   cimunit_thread_t * RESTRICT thread, 
   const cimunit_thread_attr_t *RESTRICT attr,

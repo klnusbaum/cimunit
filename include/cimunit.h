@@ -43,6 +43,13 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
 /// This differs from cimunit_event_fire as it uses a global variable to simplify test
 /// development.
 #define CIMUNIT_FIRE(eventName) \
-    cimunit_schedule_fire(g_cimunit_default_schedule, eventName) \
+    cimunit_schedule_fire(g_cimunit_default_schedule, eventName)
+
+
+/// Name a thread in the schedule
+#define CIMUNIT_THREAD_NAME(threadName) \
+    cimunit_schedule_set_thread_name(g_cimunit_default_schedule, \
+                                     cimunit_thread_self(), \
+                                     threadName)
 
 #endif //CIMUNIT_H

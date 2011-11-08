@@ -18,12 +18,14 @@
  */
 #include <stdlib.h>
 #include <string.h>
-#include "cimunit_schedule.h"
 #include <stdio.h>
 
+#include "cimunit_schedule.h"
+#include "cimunit_thread.h"
 
 cimunit_schedule_t *cimunit_schedule_init() {
     cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));
+    cimunit_mutex_init(&schedule->mutex, NULL);
     cimunit_thread_table_init(&(schedule->thread_table)); 
     schedule->event_list = cimunit_event_list_init();
     cimunit_event_table_init(&schedule->fired_event_list, &(schedule->thread_table));
@@ -48,8 +50,16 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName)
 {
-    // Locate the event in the schedule and fire it.
-    cimunit_event_t *event = cimunit_event_list_find(schedule->event_list, eventName);
+    const char *thread_name;
+    thread_name = cimunit_schedule_get_thread_name(schedule,
+                                                   cimunit_thread_self());
+
+    cimunit_event_t *event = cimunit_event_list_find_with_thread(
+      schedule->event_list, eventName, thread_name); 
+      
+    if (!event) {
+        event = cimunit_event_list_find(schedule->event_list, eventName);
+    }
     if (event) {
         cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
 
@@ -60,7 +70,9 @@ bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
         // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
         // be unlocked.
         while(next_action) {
-            if (cimunit_schedule_parse_runtime(schedule, next_action->event->event_name)) {
+            if (cimunit_schedule_parse_runtime(
+                  schedule, next_action->event->event_name,
+                  next_action->event->thread_name)) {
                 cimunit_barrier_unlock(&(next_action->event->condition_barrier));
             }
             next_action = next_action->next;
@@ -74,4 +86,24 @@ bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
     }
     
     return true;
+}
+
+
+void cimunit_schedule_set_thread_name(cimunit_schedule_t *schedule,
+                                      cimunit_thread_t thread,
+                                      const char *threadName)
+{
+    cimunit_mutex_lock(&schedule->mutex);
+    cimunit_set_thread_name(&schedule->thread_table, thread, threadName);                                      
+    cimunit_mutex_unlock(&schedule->mutex);
+}
+
+
+const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
+                                             cimunit_thread_t thread)
+{
+    const char *thread_name;
+    cimunit_get_thread_name(&schedule->thread_table, thread, &thread_name);
+
+    return thread_name;
 }

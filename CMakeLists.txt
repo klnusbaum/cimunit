@@ -3,7 +3,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 project(cimunit C)
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -std=c99")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -std=gnu99")
 endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 
 # Add definitions for platform specific code

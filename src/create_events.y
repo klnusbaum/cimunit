@@ -71,11 +71,11 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
 %}
 
 %token SYMBOL_COMMA SYMBOL_IMPLIES SYMBOL_EOL SYMBOL_LPAREN SYMBOL_RPAREN SYMBOL_AND
-       SYMBOL_OR SYMBOL_LBRACKET SYMBOL_RBRACKET
+       SYMBOL_OR SYMBOL_LBRACKET SYMBOL_RBRACKET SYMBOL_AT
 
 %union 
 {
-	const char *string;
+	char *string;
 	struct cimunit_event_list *conditionList;
 	struct cimunit_event *event;
 }
@@ -84,7 +84,7 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string) {
 
 %parse-param {struct cimunit_event_list **event_list}
 
-%token <string> EVENT_NAME
+%token <string> NAME
 
 %type <string> blockEvent
 %type <conditionList> condition basicCondition
@@ -117,7 +117,7 @@ ordering:
     ;
 
 basicEvent:
-    EVENT_NAME
+    NAME
     {
         cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
         
@@ -127,6 +127,20 @@ basicEvent:
             cimunit_event_list_add(event_list, event);
         }
         
+        free($1);
+        $$ = event;
+    }
+    | NAME SYMBOL_AT NAME
+    {
+        cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
+        
+        if (!event) {
+            event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
+            cimunit_event_init_with_thread(event, $1, $3);
+            cimunit_event_list_add(event_list, event);
+        }
+        
+        free($1);
         $$ = event;
     }
     ;
@@ -134,7 +148,8 @@ basicEvent:
 blockEvent:
     SYMBOL_LBRACKET basicEvent SYMBOL_RBRACKET
     {
-        $$ = $2->event_name;
+        yyerror(event_list, "Blocking events are not supported");
+        YYERROR;
     }
     ;
 
@@ -152,8 +167,6 @@ basicCondition:
     | blockEvent
     {
         $$ = NULL;
-        yyerror(event_list, "Blocking events are not supported");
-        YYERROR;
     }
 
 condition:

@@ -27,6 +27,7 @@
 #include "testMain.h"
 #include "cimunit_schedule.h"
 
+
 static void test_cimunit_schedule_init(void)
 {
     cimunit_schedule_t *schedule = cimunit_schedule_init(); 
@@ -45,6 +46,7 @@ static void test_cimunit_schedule_parse_single(void)
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "x"));
 }
 
+
 static void test_cimunit_schedule_parse_double(void)
 {
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x,b->a");
@@ -60,10 +62,27 @@ static void test_cimunit_schedule_parse_double(void)
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "a"));
 }
 
+
+static void test_cimunit_schedule_parse_single_thread(void)
+{
+    cimunit_schedule_t *schedule = cimunit_schedule_parse("a@x->b@y");
+    CU_ASSERT_PTR_NOT_NULL_FATAL(schedule->event_list);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find_with_thread(
+                             schedule->event_list, "b", "y"));
+    
+    cimunit_event_t *action = cimunit_event_list_find_with_thread(
+      schedule->event_list, "a", "x");
+    CU_ASSERT_PTR_NOT_NULL_FATAL(action);
+    CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find_with_thread(
+                             action->action_events, "b", "y"));
+}
+
+
 static CU_TestInfo tests_cimunit_schedule[] = {
   {"init", test_cimunit_schedule_init},
   {"parse_single", test_cimunit_schedule_parse_single},
   {"parse_double", test_cimunit_schedule_parse_double},
+  {"parse_single with thread", test_cimunit_schedule_parse_single_thread},
   CU_TEST_INFO_NULL,
 };
 

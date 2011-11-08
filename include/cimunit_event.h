@@ -35,6 +35,10 @@ struct cimunit_event_list;
 typedef struct cimunit_event {
     /// Textual name of the event, used by scheduling rules
     const char *event_name;
+    
+    /// Textual name of the thread, or NULL if not associated
+    /// with a thread
+    const char *thread_name;
 
     /// List of action events that wait on this condition event
     struct cimunit_event_list *action_events;
@@ -49,7 +53,16 @@ typedef struct cimunit_event {
 } cimunit_event_t;
 
 
-/// Create a new instance of a CIMUnit event
+/// Create a new instance of a CIMUnit event that is associated with a thread
+///
+/// \param event - Event to initialize.
+/// \param name - name of the event
+/// \param thread - name of the thread
+void cimunit_event_init_with_thread(cimunit_event_t *event, const char *name,
+                                    const char *thread);
+
+
+/// Create a new instance of a CIMUnit event not associated with a thread
 ///
 /// \param event - Event to initialize.
 /// \param name - name of the event
