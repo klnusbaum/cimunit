@@ -24,7 +24,6 @@ set(CIMUNIT_SRC
   cimunit_event_list.c
   cimunit_mutex.c
   cimunit_schedule.c
-  cimunit_tester.c
   cimunit_thread.c
   cimunit_event_table.c
   cimunit_thread_table.c
