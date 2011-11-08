@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 Kurtis L. Nusbaum
+ * \file cimunit_thread_table.c
+ *
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 

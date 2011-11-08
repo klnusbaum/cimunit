@@ -1,7 +1,7 @@
 /**
  * \file parse_events.l
  *
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 

@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 Kurtis L. Nusbaum & Dale Frampton
+ * \file cimunit.h
+ *
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 

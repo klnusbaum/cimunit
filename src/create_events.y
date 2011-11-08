@@ -1,7 +1,7 @@
 /**
  * \file create_events.y
  *
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Dale Frampton and Kurtis Nusbuam
  * 
  * This file is part of cimunit.
  * 
