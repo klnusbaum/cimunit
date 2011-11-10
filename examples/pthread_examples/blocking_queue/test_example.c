@@ -1,7 +1,5 @@
 /**
- * \file cimunit_event.c
- *
- * Copyright 2011 Kurtis L. Nusbaum & Dale Frampton
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -18,7 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BLOCKING_QUEUE_H
-#define BLOCKING_QUEUE_H
 
-#endif //BLOCKING_QUEUE_H
+#include "blocking_queue.h"
+
+
+int main(int argc, char *argv[]){
+
+
+
+
+}
