@@ -17,8 +17,10 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "cimunit.h"
 #include "concurrent_queue.h"
-#include "assert.h"
+#include <assert.h>
+#include <stdio.h>
 
 typedef struct{
   cimunit_schedule_t *schedule;
@@ -32,7 +34,7 @@ void *consumer_function(void *args){
   cimunit_schedule_t *schedule = thread_args->schedule;
 
   cimunit_schedule_fire(schedule, "start_dequeue1");
-  concurrent_queue_dequeue(queue, args->*retval);
+  concurrent_queue_dequeue(queue, &(thread_args->retval));
   cimunit_schedule_fire(schedule, "end_dequeue1");
 }
 
@@ -59,8 +61,8 @@ int main(int argc, char *argv[]){
 
   pthread_t producer_thread;
   pthread_t consumer_thread;
-  pthread_create(producer_thread, NULL, producer_function, (void*)(&args));
-  pthread_create(consumer_thread, NULL, consumer_function, (void*)(&args));
+  pthread_create(&producer_thread, NULL, producer_function, (void*)(&args));
+  pthread_create(&consumer_thread, NULL, consumer_function, (void*)(&args));
 
   pthread_join(producer_thread, NULL);
   pthread_join(consumer_thread, NULL);
@@ -68,11 +70,11 @@ int main(int argc, char *argv[]){
 
   cimunit_schedule_destroy(schedule);
   if(args.retval != 5){
-    fprintf(stderr, "Test failed!");
+    fprintf(stderr, "Test failed!\n");
     return 1;
   }
   else{
-    printf("Test passed :)");
+    printf("Test passed :)\n");
     return 0;
   }
 }

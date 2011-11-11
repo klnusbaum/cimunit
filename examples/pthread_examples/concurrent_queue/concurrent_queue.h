@@ -1,4 +1,6 @@
 /**
+ * \file concurrent_queue.h
+ *
  * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
@@ -19,11 +21,10 @@
 #ifndef CONCURRENT_QUEUE_H
 #define CONCURRENT_QUEUE_H
 #include <pthread.h>
-#include <sys/semaphore.h>
 
 typedef struct queue_element{
   int value;
-  struct *queue_element next;
+  struct queue_element *next;
 } queue_element_t;
 
 
@@ -39,8 +40,8 @@ void queue_element_init(queue_element_t *element, int value);
 void concurrent_queue_init(concurrent_queue_t *queue);
 void concurrent_queue_destroy(concurrent_queue_t *queue);
 void concurrent_queue_enqueue(concurrent_queue_t *queue, int value);
-void concurrent_queue_dequeue(concurrent_queue_t *queue, int *value);
-void get_size(concurrent_queue_t *queue, int *value);
+int concurrent_queue_dequeue(concurrent_queue_t *queue, int *value);
+void get_size(concurrent_queue_t *queue, size_t *value);
 
 
 #endif //CONCURRENT_QUEUE_H

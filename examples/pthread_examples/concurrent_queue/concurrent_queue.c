@@ -17,13 +17,14 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "concurrent_queue.h"
+#include <stdlib.h>
 
 void queue_element_init(queue_element_t *element, int value){
   element->value = value;
 }
 
 void concurrent_queue_init(concurrent_queue_t *queue){
-  phtread_mutex_init(&(queue->modify_mutex), NULL); 
+  pthread_mutex_init(&(queue->modify_mutex), NULL); 
   queue->head = NULL;
   queue->tail = NULL;
   queue->size = 0;
@@ -36,7 +37,7 @@ void concurrent_queue_destroy(concurrent_queue_t *queue){
     current_element = current_element->next;
     free(temp); 
   }
-  pthread_mutex_destroy(queue->*modify_mutex);
+  pthread_mutex_destroy(&(queue->modify_mutex));
 }
 
 void concurrent_queue_enqueue(concurrent_queue_t *queue, int value){
@@ -44,7 +45,7 @@ void concurrent_queue_enqueue(concurrent_queue_t *queue, int value){
     (queue_element_t*)malloc(sizeof(queue_element_t));
   new_element->value = value;
   new_element->next = NULL;
-  pthread_mutex_lock(queue->*modify_mutex);
+  pthread_mutex_lock(&(queue->modify_mutex));
   if(queue->head == NULL){
     queue->head = new_element;
     queue->tail = new_element;
@@ -53,18 +54,18 @@ void concurrent_queue_enqueue(concurrent_queue_t *queue, int value){
     queue->tail->next = new_element;
   }
   queue->size++;
-  pthread_mutex_unlock(queue->*modify_mutex);
+  pthread_mutex_unlock(&(queue->modify_mutex));
 }
 
 int concurrent_queue_dequeue(concurrent_queue_t *queue, int *value){
   queue_element_t *dequed_element = NULL;
-  pthread_mutex_lock(queue->*modify_mutex);
+  pthread_mutex_lock(&(queue->modify_mutex));
   if(queue->size > 0){
-    *dequed_element = queue->head;
+    dequed_element = queue->head;
     queue->head = queue->head->next;
     queue->size--;
   }
-  pthread_mutex_unlock(queue->*modify_mutex);
+  pthread_mutex_unlock(&(queue->modify_mutex));
 
   if(dequed_element != NULL){
     *value = dequed_element->value;
@@ -77,7 +78,7 @@ int concurrent_queue_dequeue(concurrent_queue_t *queue, int *value){
 }
 
 void get_size(concurrent_queue_t *queue, size_t *value){
-  pthread_mutex_lock(queue->*modify_mutex);
+  pthread_mutex_lock(&(queue->modify_mutex));
   *value  = queue->size;
-  pthread_mutex_unlock(queue->*modify_mutex);
+  pthread_mutex_unlock(&(queue->modify_mutex));
 }
