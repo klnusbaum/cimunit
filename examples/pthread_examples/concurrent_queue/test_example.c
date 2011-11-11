@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
    * the simple line of code below.
    */
   cimunit_schedule_t *schedule = cimunit_schedule_parse(
-    "endEnqueue1->startDequeue1");
+    "endenqueue1->startdequeue1");
 
   /**
    * CIMUnit schedules are comprised mostly of what are called "events". 
@@ -172,7 +172,7 @@ int main(int argc, char *argv[]){
    * verify this behavior. Let's create a new schedule were we finish our
    * dequeue attempt before the enqueue starts.
    */
-  schedule = cimunit_schedule_parse("endDequeue1->startEnqueue1");
+  schedule = cimunit_schedule_parse("enddequeue1->startenqueue1");
  
   /**
    * Once again, we'll initilize our queue and the values for the arguements
@@ -245,13 +245,13 @@ void *consumer_function(void *args){
   /**
    * Inform the schedule that we've begun attempting to dequeue an element.
    */
-  cimunit_schedule_fire(schedule, "startDequeue1");
+  cimunit_schedule_fire(schedule, "startdequeue1");
   thread_args->dequeue_return_val = 
     concurrent_queue_dequeue(queue, &(thread_args->dequeued_value));
   /**
    * Inform the schedule that we've finished attempting to dequeue an element.
    */
-  cimunit_schedule_fire(schedule, "endDequeue1");
+  cimunit_schedule_fire(schedule, "enddequeue1");
 }
 
 /// Producer thread funciton
@@ -263,11 +263,11 @@ void *producer_function(void *args){
   /**
    * Inform the schedule that we've begun enquue an element.
    */
-  cimunit_schedule_fire(schedule, "startEnqueue1");
+  cimunit_schedule_fire(schedule, "startenqueue1");
   concurrent_queue_enqueue(queue, 5);
   /**
    * Inform the schedule that we've finished enquueing an element.
    */
-  cimunit_schedule_fire(schedule, "endEnqueue1");
+  cimunit_schedule_fire(schedule, "endenqueue1");
 }
 
