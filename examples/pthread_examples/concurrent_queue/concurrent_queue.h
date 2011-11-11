@@ -77,7 +77,7 @@ void concurrent_queue_enqueue(concurrent_queue_t *queue, int value);
 ///
 /// \param queue - The queue from which a value should be dequeued.
 /// \param value - A pointer into which the value of the dequeued element is
-///  stored.
+///  stored. If no element is dequeued, the value remains unchanged.
 /// \return - 0 if an element was successfully dequeued. If the queue
 ///  was empty and therefore nothing was dequeued, this funciton returns 1.
 int concurrent_queue_dequeue(concurrent_queue_t *queue, int *value);

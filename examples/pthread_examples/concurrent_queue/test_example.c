@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 /// This is a structure we will use to pass arguements to our thread 
-/// functions
+/// functions. Don't worry about it just yet.
 typedef struct{
   cimunit_schedule_t *schedule;
   concurrent_queue_t *queue;
@@ -46,9 +46,9 @@ int main(int argc, char *argv[]){
 
   /**
    * In this example we're going to be testing a basic concurrent queue 
-   * structure we've put together. This data strcuture is basic queue that allow
-   * for multiple threads to queue and dequeue elements from it in a safe 
-   * manner. There's an important feature of our queue to note, if one thread
+   * structure we've put together. This data strcuture is a basic queue that 
+   * allow for multiple threads to queue and dequeue elements from it in a safe 
+   * manner. There's an important feature of our queue to note: if one thread
    * attempts to dequeue an element from the queue and the queue is empty, 
    * the dequeue funtion will return an error code. Don't worry about this
    * too much now, but it's a little detail that's going to come up later.
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 
   /**
    * CIMUnit is flexible and can be integrated into your testing framework of
-   * choice. For this example thought, we're just going to use a simple error
+   * choice. For this example though, we're just going to use a simple error
    * variable to keep track of any testing failures.
    */
   int error = 0;
@@ -89,22 +89,23 @@ int main(int argc, char *argv[]){
    * CIMUnit schedules are comprised mostly of what are called "events". 
    * CIMUnit schedules enforce particular threading schedules by ensuring that
    * a certain sequence of events occur. The schedule 
-   * "end_equeue1->start_dequeue1" says that the "end_enqueue1" event must
-   * occur before the "start_dequeue1" event occurs.
+   * "endequeue1->startdequeue1" says that the "endenqueue1" event must
+   * occur before the "startdequeue1" event occurs.
    *
    * Now, you may be saying to yourself, "Hey bub, how does the schedule know
-   * when my enqueue has ended and my dequeue has started?" Well take a quick
+   * when my enqueue has ended and my dequeue has started?" Well, take a quick
    * look down at our producer and consumer funcitons. You'll notice that 
    * we've passed our schedule object down into them and we "fire" off events
-   * let to let the schedule know certain events have occurred.
+   * to let the schedule know certain events have occurred.
    */
 
 
   /** 
    * Here we're just packing up the arguments that we want to send to each
    * of our thread functions. Note that we're passing the schedule to the
-   * funcitons. As a generall rule of thumb, you're pretty much always going
-   * to want to be passing a pointer to the schedule to your thread functions.
+   * funcitons. This is so we can fire off events as described above. As a 
+   * generall rule of thumb, you're pretty much always going to want to be 
+   * passing the schedule to your thread functions.
    */
   thread_args_t args;
   args.queue = &queue;
@@ -128,15 +129,15 @@ int main(int argc, char *argv[]){
   pthread_join(consumer_thread, NULL);
 
   /**
-   * Ok, our thread functions ran. What just happened. Well if you take 
+   * Ok, our thread functions ran. What just happened? Well if you take 
    * another peek down at the thread functions you'll see that if our
    * schedule was enforces properly, the enqueue function should have
    * first enqueued a "5" and then our consumer function should have dequeued
    * the "5". If our concurrent queue structure functioned the way it should
-   * have, we should no have args.revale set to 5, the dequeue_return_val set
-   * set to 0, and the queue size be equal to one. This is what we check below.
-   * When you run this executable, hopefully your get the message that the
-   * test passed!
+   * have, we should now have args.dequeued_value set to 5, 
+   * the dequeue_return_val set set to 0, and the queue size be equal to zero.
+   *  This is what we check below. When you run this executable, hopefully 
+   * your get the message that the test passed!
    */
   size_t queue_size;
   concurrent_queue_size(&queue, &queue_size);
@@ -163,11 +164,11 @@ int main(int argc, char *argv[]){
 
   /**
    * One of the cool things about CIMUnit is that you can test the same set
-   * of functions with a differnet thread schedule. The idea being that you
+   * of functions with a differnet thread schedule. The idea is that you
    * shouldn't have to write essentially identical functions just to test 
    * different thread schedules. Let's try testing some different functionaliy
-   * this time around. Remember how I told you that if you try to dequeue 
-   * something from an empty queue, you're not going to qet anything out and the
+   * this time around. Remember how we told you that if you try to dequeue 
+   * something from an empty queue, you're not going to get anything out and the
    * dequeue function should return an error code? We'll let's see if we can
    * verify this behavior. Let's create a new schedule were we finish our
    * dequeue attempt before the enqueue starts.
@@ -184,7 +185,7 @@ int main(int argc, char *argv[]){
   args.schedule = schedule;
   
   /**
-   * We then create, launch and join our threads using the standard pthread
+   * We then create, launch, and join our threads using the standard pthread
    * funcitons just like before.
    */
   pthread_create(&producer_thread, NULL, producer_function, (void*)(&args));
@@ -199,8 +200,8 @@ int main(int argc, char *argv[]){
    * to dequeue before anything was ever equeued in the queue. This should
    * result in our dequeued value not chaning from 0, the return value from
    * the dequeue funciton not being 0 (it's an error code), and the queue
-   * size now being one because we did after all actually enqueue and element.
-   * The code below verifies this and if you run the test you should see 
+   * size now being one because we did after all actually enqueue an element.
+   * The code below verifies this and if you run this test you should see 
    * that it passed.
    */
 
@@ -229,7 +230,8 @@ int main(int argc, char *argv[]){
    * That's about it. If there were any errors (which there shouldn't have been)
    * our return value would be non-zero. Once agin, CIMUnit is flexible
    * enough that you can use your testing framework of choice to verify test
-   * results. This has been just a basic example of how to use CIMUnit.
+   * results, we just used a simple int to store our errors for simplicity's 
+   * sake. This has been just a basic example of how to use CIMUnit.
    * If you're interested in learning more, checkout some of our more 
    * complicated examples.
    */
