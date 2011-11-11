@@ -18,7 +18,7 @@
  */
 
 #include "cimunit.h"
-#include "concurrent_queue.h"
+#include "../concurrent_queue.h"
 #include <assert.h>
 #include <stdio.h>
 

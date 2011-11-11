@@ -1,1 +1,1 @@
-add_subdirectory("concurrent_queue")
+add_subdirectory("simple_example")
