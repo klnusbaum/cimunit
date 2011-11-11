@@ -26,6 +26,7 @@ typedef struct{
   cimunit_schedule_t *schedule;
   concurrent_queue_t *queue;
   int retval;
+  int dequeue_return_val;
 } thread_args_t;
 
 void *consumer_function(void *args){
@@ -34,7 +35,8 @@ void *consumer_function(void *args){
   cimunit_schedule_t *schedule = thread_args->schedule;
 
   cimunit_schedule_fire(schedule, "start_dequeue1");
-  concurrent_queue_dequeue(queue, &(thread_args->retval));
+  thread_args->dequeue_return_val = 
+    concurrent_queue_dequeue(queue, &(thread_args->retval));
   cimunit_schedule_fire(schedule, "end_dequeue1");
 }
 
@@ -49,6 +51,7 @@ void *producer_function(void *args){
 }
 
 int main(int argc, char *argv[]){
+  int error = 0;
   cimunit_schedule_t *schedule = cimunit_schedule_parse(
     "end_enqueue1->start_dequeue1");
   concurrent_queue_t queue;
@@ -58,6 +61,7 @@ int main(int argc, char *argv[]){
   args.queue = &queue;
   args.schedule = schedule;
   args.retval = 0;
+  args.dequeue_return_val = 0;
 
   pthread_t producer_thread;
   pthread_t consumer_thread;
@@ -69,12 +73,37 @@ int main(int argc, char *argv[]){
 
 
   cimunit_schedule_destroy(schedule);
-  if(args.retval != 5){
+  concurrent_queue_destroy(&queue);
+  if(args.retval != 5 && args.dequeue_return_val != 0){
     fprintf(stderr, "Test failed!\n");
-    return 1;
+    error +=1;
   }
   else{
     printf("Test passed :)\n");
-    return 0;
   }
+
+
+  schedule = cimunit_schedule_parse("end_dequeue1->start_enqueue1");
+  concurrent_queue_init(&queue);
+  args.retval=0;
+  args.dequeue_return_val = 0;
+  args.schedule = schedule;
+  
+  pthread_create(&producer_thread, NULL, producer_function, (void*)(&args));
+  pthread_create(&consumer_thread, NULL, consumer_function, (void*)(&args));
+
+  pthread_join(producer_thread, NULL);
+  pthread_join(consumer_thread, NULL);
+
+  if(args.retval != 0 && args.dequeue_return_val != 1){
+    fprintf(stderr, "Test failed!\n");
+    error +=1;
+  }
+  else{
+    printf("Test passed :)\n");
+  }
+  
+  return error;
+
+
 }
