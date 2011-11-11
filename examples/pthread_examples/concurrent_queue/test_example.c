@@ -71,16 +71,19 @@ int main(int argc, char *argv[]){
   pthread_join(producer_thread, NULL);
   pthread_join(consumer_thread, NULL);
 
+  size_t queue_size;
 
-  cimunit_schedule_destroy(schedule);
-  concurrent_queue_destroy(&queue);
-  if(args.retval != 5 && args.dequeue_return_val != 0){
-    fprintf(stderr, "Test failed!\n");
+  concurrent_queue_size(&queue, &queue_size);
+  if(args.retval != 5 && args.dequeue_return_val != 0 && queue_size == 0){
+    fprintf(stderr, "Test 1 failed!\n");
     error +=1;
   }
   else{
-    printf("Test passed :)\n");
+    printf("Test 1 passed :)\n");
   }
+
+  cimunit_schedule_destroy(schedule);
+  concurrent_queue_destroy(&queue);
 
 
   schedule = cimunit_schedule_parse("end_dequeue1->start_enqueue1");
@@ -94,14 +97,19 @@ int main(int argc, char *argv[]){
 
   pthread_join(producer_thread, NULL);
   pthread_join(consumer_thread, NULL);
+  concurrent_queue_size(&queue, &queue_size);
 
-  if(args.retval != 0 && args.dequeue_return_val != 1){
-    fprintf(stderr, "Test failed!\n");
+
+  if(args.retval != 0 && args.dequeue_return_val != 1 && queue_size ==1){
+    fprintf(stderr, "Test 2 failed!\n");
     error +=1;
   }
   else{
-    printf("Test passed :)\n");
+    printf("Test 2 passed :)\n");
   }
+
+  cimunit_schedule_destroy(schedule);
+  concurrent_queue_destroy(&queue);
   
   return error;
 

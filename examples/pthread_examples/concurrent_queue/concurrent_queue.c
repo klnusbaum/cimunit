@@ -77,7 +77,7 @@ int concurrent_queue_dequeue(concurrent_queue_t *queue, int *value){
   }
 }
 
-void get_size(concurrent_queue_t *queue, size_t *value){
+void concurrent_queue_size(concurrent_queue_t *queue, size_t *value){
   pthread_mutex_lock(&(queue->modify_mutex));
   *value  = queue->size;
   pthread_mutex_unlock(&(queue->modify_mutex));
