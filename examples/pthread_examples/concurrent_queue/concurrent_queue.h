@@ -51,13 +51,42 @@ typedef struct{
   size_t size;
 } concurrent_queue_t;
 
+/// Initalizes an element for a queue.
+///
+/// \param element - The queue element to be initialized
+/// \param element - The value which the element shall hold.
 void queue_element_init(queue_element_t *element, int value);
   
+/// Initializes a concurrent queue.
+///
+/// \param queue - The queue to be initialized
 void concurrent_queue_init(concurrent_queue_t *queue);
+
+/// Frees all alocated resources for concurrent queue.
+///
+/// \param queue - The queue to be destroyed.
 void concurrent_queue_destroy(concurrent_queue_t *queue);
+
+/// Enqueues a value in the given concurrent queue.
+///
+/// \param queue - The queue into which the value shall be enqueue.
+/// \param value - The value to enqueue.
 void concurrent_queue_enqueue(concurrent_queue_t *queue, int value);
+
+/// Dequeus the next element from the queue.
+///
+/// \param queue - The queue from which a value should be dequeued.
+/// \param value - A pointer into which the value of the dequeued element is
+///  stored.
+/// \return - 0 if an element was successfully dequeued. If the queue
+///  was empty and therefore nothing was dequeued, this funciton returns 1.
 int concurrent_queue_dequeue(concurrent_queue_t *queue, int *value);
-void concurrent_queue_size(concurrent_queue_t *queue, size_t *value);
+
+/// Gets the size of a queue.
+///
+/// \param queue - The queue whose size is desired.
+/// \param value - A pointer into which the size of the queue will be stored.
+void concurrent_queue_size(concurrent_queue_t *queue, size_t *size);
 
 
 #endif //CONCURRENT_QUEUE_H

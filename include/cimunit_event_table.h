@@ -56,7 +56,7 @@ typedef struct cimunit_event_table {
 } cimunit_event_table_t;
 
 
-/// Initializes and event table entry
+/// Initializes and event table entry.
 ///
 /// \param entry - entry to initialize
 /// \param event - event this entry is representing
@@ -65,13 +65,13 @@ int cimunit_event_table_entry_init(
   cimunit_event_table_entry_t *entry,
   cimunit_event_t *event);
 
-/// Frees all alocated resources for the event table entry
+/// Frees all alocated resources for the event table entry.
 ///
 /// \param entry - Entry to destroy.
 /// \return - 0 if the destruction was succesfull, false otherwise.
 int cimunit_event_table_entry_destroy(cimunit_event_table_entry_t *entry);
 
-/// Initializes an event table
+/// Initializes an event table.
 ///
 /// \param event_table - Table to initialize.
 /// \param thread_table - Table that should be used to lookup thread names.
