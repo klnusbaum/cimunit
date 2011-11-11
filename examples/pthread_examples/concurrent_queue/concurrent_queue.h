@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef BLOCKING_QUEUE_H
-#define BLOCKING_QUEUE_H
+#ifndef CONCURRENT_QUEUE_H
+#define CONCURRENT_QUEUE_H
 #include <pthread.h>
 #include <sys/semaphore.h>
 
@@ -30,17 +30,17 @@ typedef struct queue_element{
 typedef struct{
   queue_element_t *head;
   queue_element_t *tail;
-  sem_t num_items_avail;
   pthread_mutex_t modify_mutex;
-} blocking_queue_t;
+  size_t size;
+} concurrent_queue_t;
 
 void queue_element_init(queue_element_t *element, int value);
   
-void blocking_queue_init(blocking_queue_t *queue);
-void blocking_queue_destroy(blocking_queue_t *queue);
-void blocking_queue_enqueue(blocking_queue_t *queue, int value);
-void blocking_queue_dequeue(blocking_queue_t *queue, int *value);
-void get_size(blocking_queue_t *queue, int *value);
+void concurrent_queue_init(concurrent_queue_t *queue);
+void concurrent_queue_destroy(concurrent_queue_t *queue);
+void concurrent_queue_enqueue(concurrent_queue_t *queue, int value);
+void concurrent_queue_dequeue(concurrent_queue_t *queue, int *value);
+void get_size(concurrent_queue_t *queue, int *value);
 
 
-#endif //BLOCKING_QUEUE_H
+#endif //CONCURRENT_QUEUE_H
