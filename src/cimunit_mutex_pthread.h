@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 Dale Frampton
+ * \file cimunit_mutex_pthread.h
+ *
+ * Copyright 2011 Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -16,9 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+#ifndef CIMUNIT_MUTEX_PTHREAD_H
+#define CIMUNIT_MUTEX_PTHREAD_H
+
 #include <pthread.h>
 
-#define CIMUNIT_DEFAULT_THREAD_NAME ""
-#define CIMUNIT_MAX_THREAD_NAME_LENGTH 16
- 
+typedef pthread_mutex_t cimunit_mutex_t;
+typedef pthread_mutexattr_t cimunit_mutex_attr_t;
+
+#endif // CIMUNIT_MUTEX_PTHREAD_H
+

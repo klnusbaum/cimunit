@@ -25,6 +25,7 @@
 #elif PLATFORM_Linux
   /// Include the customizations for Linxu
   #include "cimunit_platform_linux.h"
-#else
-  #error "No PLATFORM_{system name} macro defined!"
+#elif PLATFORM_VxWorks
+  #include "cimunit_platform_vxworks.h"
+  //#error "No PLATFORM_{system name} macro defined!"
 #endif

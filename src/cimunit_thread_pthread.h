@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -16,9 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-#include <pthread.h>
+#ifndef CIMUNIT_THREAD_PTHREAD_H
+#define CIMUNIT_THREAD_PTHREAD_H
 
-#define CIMUNIT_DEFAULT_THREAD_NAME ""
-#define CIMUNIT_MAX_THREAD_NAME_LENGTH 16
- 
+#include "pthread.h"
+
+typedef pthread_t cimunit_thread_t;
+typedef pthread_attr_t cimunit_thread_attr_t;
+
+#endif // CIMUNIT_THREAD_PTHREAD_H

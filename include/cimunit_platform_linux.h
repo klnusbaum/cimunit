@@ -19,4 +19,7 @@
 
 #include "cimunit_platform_unix_pthreads.h"
 
+#include <stdbool.h>
+
 #define RESTRICT restrict
+#define BOOL bool

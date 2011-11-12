@@ -19,13 +19,13 @@ ADD_FLEX_BISON_DEPENDENCY(parse_events_lexer parse_events_grammar)
 
 set(CIMUNIT_SRC
   cimunit.c
-  cimunit_barrier_unix.c
+  cimunit_barrier_pthread.c
   cimunit_event.c
   cimunit_event_list.c
-  cimunit_mutex.c
+  cimunit_mutex_pthread.c
   cimunit_schedule.c
-  cimunit_tester.c
-  cimunit_thread.c
+  #cimunit_tester.c
+  cimunit_thread_pthread.c
   cimunit_event_table.c
   cimunit_thread_table.c
   ${FLEX_create_events_lexer_OUTPUTS}

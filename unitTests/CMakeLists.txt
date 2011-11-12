@@ -24,10 +24,10 @@ CREATE_UNIT_TEST(eventTableEntryTests test_cimunit_event_table_entry.c)
 CREATE_UNIT_TEST(eventTableTests test_cimunit_event_table.c)
 #CREATE_UNIT_TEST(threadTests test_threads.c)
 
-add_executable(barrierTest barrier_test.c)
+add_executable(barrierTest test_cimunit_barrier.c)
 target_link_libraries(barrierTest cimunit)
 add_test(barrierTest ${CMAKE_CURRENT_BINARY_DIR}/barrierTest)
 
-add_executable(scantest scantest.c)
+add_executable(scantest test_scantest.c)
 target_link_libraries(scantest cimunit)
 add_test(scantest ${CMAKE_CURRENT_BINARY_DIR}/scantest)

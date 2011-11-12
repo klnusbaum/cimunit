@@ -16,19 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CIMUNIT_THREAD_H
-#define CIMUNIT_THREAD_H
 
-#include "cimunit_platform.h"
+#include <pthread.h>
+#include "cimunit_thread.h"
 
 int cimunit_thread_create(
-  cimunit_thread_t *RESTRICT thread, 
-  const cimunit_thread_attr_t * RESTRICT  attr,
-  void *(*function)(void *),
-  void * RESTRICT arg);
+  cimunit_thread_t * RESTRICT thread, 
+  cimunit_task_entry_t function,
+  void *RESTRICT arg)
+{
+  int result;
 
-int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr);
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+  result = pthread_create(thread, &attr, function, arg);
+  pthread_attr_destroy(&attr);
 
-cimunit_thread_t cimunit_thread_self();
+  return result;
+}
 
-#endif //CIMUNIT_THREAD_H
+int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr){
+  return pthread_join(thread, value_ptr);
+}
+
+cimunit_thread_t cimunit_thread_self(){
+  return pthread_self();
+}
+
