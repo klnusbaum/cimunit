@@ -1,5 +1,5 @@
 /**
- * \file create_events.l
+ * \file cimunit_barrier_pthread.h
  *
  * Copyright 2011 Dale Frampton
  * 
@@ -19,28 +19,21 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-%{
-#include <stdio.h>
-#include <string.h>
-#include "create_events_grammar.h"
-%}
+#ifndef CIMUNIT_BARRIER_PTHREAD_H
+#define CIMUNIT_BARRIER_PTHREAD_H
 
-%option prefix="create_events_"
+#include <pthread.h>
 
-%%
-[ \t]+                  /* ignore whitespace */;
+#include "cimunit_platform.h"
 
-\n              return SYMBOL_EOL;
-,               return SYMBOL_COMMA;
-->              return SYMBOL_IMPLIES;
-\(              return SYMBOL_LPAREN;
-\)              return SYMBOL_RPAREN;
-&&              return SYMBOL_AND;
-\|\|            return SYMBOL_OR;
-\[              return SYMBOL_LBRACKET;
-\]              return SYMBOL_RBRACKET;
-@               return SYMBOL_AT;
+/// Structure containing the data needed to support the barrier.
+typedef struct cimunit_barrier {
+    /// Mutex used to support the mutex/condition construct
+    pthread_mutex_t mutex;
+    /// Pthread condition used to support the mutex/condition construct
+    pthread_cond_t cond;
+    /// Is the barrier locked.  True if locked, else false.
+    BOOL is_locked;
+} cimunit_barrier_t;
 
-[a-z0-9]+		{char *temp_str=malloc(sizeof(yytext)+1);strcpy(temp_str, yytext);create_events_lval.string=temp_str;return NAME;}
-
-%%
+#endif // CIMUNIT_BARRIER_PTHREAD_H

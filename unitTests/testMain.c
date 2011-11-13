@@ -16,6 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+#include <stdio.h>
 #include "testMain.h"
 #include <assert.h>
 
@@ -68,7 +69,7 @@ void processArgs(
     } 
     else if (!strcmp("-e", argv[i])) { 
       print_example_results(); 
-      exit(0); 
+      return;
     } 
     else { 
       printf("\nUsage:  BasicTest [options]\n\n" 
@@ -80,21 +81,19 @@ void processArgs(
                "           -v   verbose mode - max output to screen [default].\n\n" 
                "           -e   print expected test results and exit.\n" 
                "           -h   print this message and exit.\n\n"); 
-      exit(0);
+      return;
     } 
   } 
 }
-
 void cimunit_register_test_suites(CU_SuiteInfo suites[]){
 
   assert(NULL != CU_get_registry());
   assert(!CU_is_test_running());
 
-	/* Register suites. */
 	if (CU_register_suites(suites) != CUE_SUCCESS) {
 		fprintf(stderr, "suite registration failed - %s\n",
 			CU_get_error_msg());
-		exit(EXIT_FAILURE);
+		return;
 	}
 
 }

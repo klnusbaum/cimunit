@@ -23,3 +23,5 @@
 
 #define RESTRICT restrict
 #define BOOL bool
+#define FALSE false
+#define TRUE true

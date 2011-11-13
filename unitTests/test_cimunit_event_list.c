@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "testMain.h"
+#include "cimunit_event.h"
 #include "cimunit_event_list.h"
 
 
@@ -57,8 +58,9 @@ static void test_cimunit_event_list_find_empty(void) {
 static void test_cimunit_event_list_find_missing(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init(&event1, "a");
     cimunit_event_t event2;
+
+    cimunit_event_init(&event1, "a");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
@@ -73,8 +75,9 @@ static void test_cimunit_event_list_find_missing(void) {
 static void test_cimunit_event_list_find_first(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init(&event1, "a");
     cimunit_event_t event2;
+
+    cimunit_event_init(&event1, "a");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
@@ -89,8 +92,9 @@ static void test_cimunit_event_list_find_first(void) {
 static void test_cimunit_event_list_find_second(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init(&event1, "a");
     cimunit_event_t event2;
+
+    cimunit_event_init(&event1, "a");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
@@ -105,13 +109,14 @@ static void test_cimunit_event_list_find_second(void) {
 static void test_cimunit_event_list_merge_empty_first(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init(&event1, "a");
     cimunit_event_t event2;
+    cimunit_event_list_t *new_list = cimunit_event_list_init();
+
+    cimunit_event_init(&event1, "a");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
 
-    cimunit_event_list_t *new_list = cimunit_event_list_init();
 
     cimunit_event_list_union(&new_list, list);
     CU_ASSERT_PTR_NOT_NULL(new_list);
@@ -127,13 +132,14 @@ static void test_cimunit_event_list_merge_empty_first(void) {
 static void test_cimunit_event_list_merge_empty_second(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init(&event1, "a");
     cimunit_event_t event2;
+    cimunit_event_list_t *new_list = cimunit_event_list_init();
+
+    cimunit_event_init(&event1, "a");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
 
-    cimunit_event_list_t *new_list = cimunit_event_list_init();
 
     cimunit_event_list_union(&list, new_list);
     CU_ASSERT_PTR_NOT_NULL(list);
@@ -150,6 +156,7 @@ static void test_cimunit_event_list_merge_duplicate(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_list_t *list2 = cimunit_event_list_init();
     cimunit_event_t event1;
+
     cimunit_event_init(&event1, "a");
     cimunit_event_list_add(&list, &event1);
     cimunit_event_list_add(&list2, &event1);
@@ -167,11 +174,12 @@ static void test_cimunit_event_list_merge_duplicate(void) {
 static void test_cimunit_event_list_merge(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
+    cimunit_event_list_t *list2 = cimunit_event_list_init();
+    cimunit_event_t event2;
+
     cimunit_event_init(&event1, "a");
     cimunit_event_list_add(&list, &event1);
 
-    cimunit_event_list_t *list2 = cimunit_event_list_init();
-    cimunit_event_t event2;
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list2, &event2);
 
@@ -189,8 +197,9 @@ static void test_cimunit_event_list_merge(void) {
  static void test_cimunit_event_list_without_thread(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init(&event1, "a");
     cimunit_event_t event2;
+
+    cimunit_event_init(&event1, "a");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
@@ -207,8 +216,9 @@ static void test_cimunit_event_list_merge(void) {
 static void test_cimunit_event_list_wrong_thread(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init_with_thread(&event1, "a", "x");
     cimunit_event_t event2;
+
+    cimunit_event_init_with_thread(&event1, "a", "x");
     cimunit_event_init_with_thread(&event2, "b", "y");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
@@ -225,8 +235,9 @@ static void test_cimunit_event_list_wrong_thread(void) {
 static void test_cimunit_event_list_with_thread(void) {
     cimunit_event_list_t *list = cimunit_event_list_init();
     cimunit_event_t event1;
-    cimunit_event_init_with_thread(&event1, "a", "x");
     cimunit_event_t event2;
+
+    cimunit_event_init_with_thread(&event1, "a", "x");
     cimunit_event_init(&event2, "b");
     cimunit_event_list_add(&list, &event2);
     cimunit_event_list_add(&list, &event1);
@@ -262,4 +273,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES(suites)
+RUN_TEST_SUITES(suites, test_cimunit_event_list)

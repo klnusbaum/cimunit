@@ -44,7 +44,7 @@ void cimunit_event_init_with_thread(cimunit_event_t *event, const char *name,
     event->action_events = cimunit_event_list_init();
     cimunit_barrier_init(&(event->condition_barrier));
 
-    event->is_action = false;
+    event->is_action = FALSE;
 }
 
 
@@ -67,7 +67,7 @@ void cimunit_event_add_action(cimunit_event_t *condition,
     cimunit_event_list_add(&condition->action_events, action);
     
     // action event now needs to be marked as such
-    action->is_action = true;
+    action->is_action = TRUE;
 }
 
 

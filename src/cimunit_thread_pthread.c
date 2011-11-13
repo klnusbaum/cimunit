@@ -18,6 +18,7 @@
  */
 
 #include <pthread.h>
+#include <unistd.h>
 #include "cimunit_thread.h"
 
 int cimunit_thread_create(
@@ -31,7 +32,7 @@ int cimunit_thread_create(
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
   result = pthread_create(thread, &attr, function, arg);
-  pthread_attr_destroy(&attr);
+  //pthread_attr_destory(&attr);
 
   return result;
 }
@@ -44,3 +45,6 @@ cimunit_thread_t cimunit_thread_self(){
   return pthread_self();
 }
 
+void cimunit_thread_sleep(int time) {
+    usleep(time);
+}

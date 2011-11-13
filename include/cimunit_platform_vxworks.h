@@ -1,6 +1,4 @@
 /**
- * \file create_events.l
- *
  * Copyright 2011 Dale Frampton
  * 
  * This file is part of cimunit.
@@ -19,28 +17,10 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-%{
-#include <stdio.h>
-#include <string.h>
-#include "create_events_grammar.h"
-%}
+// Adds #define for BOOL
+#include <vxWorks.h>
 
-%option prefix="create_events_"
+#define RESTRICT 
 
-%%
-[ \t]+                  /* ignore whitespace */;
-
-\n              return SYMBOL_EOL;
-,               return SYMBOL_COMMA;
-->              return SYMBOL_IMPLIES;
-\(              return SYMBOL_LPAREN;
-\)              return SYMBOL_RPAREN;
-&&              return SYMBOL_AND;
-\|\|            return SYMBOL_OR;
-\[              return SYMBOL_LBRACKET;
-\]              return SYMBOL_RBRACKET;
-@               return SYMBOL_AT;
-
-[a-z0-9]+		{char *temp_str=malloc(sizeof(yytext)+1);strcpy(temp_str, yytext);create_events_lval.string=temp_str;return NAME;}
-
-%%
+#define CIMUNIT_DEFAULT_THREAD_NAME ""
+#define CIMUNIT_MAX_THREAD_NAME_LENGTH 16

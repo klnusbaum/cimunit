@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include "cimunit_event_list.h"
+#include "cimunit_event.h"
 
 
 cimunit_event_list_t *cimunit_event_list_init() {
@@ -45,7 +46,8 @@ void cimunit_event_list_destroy(cimunit_event_list_t **list) {
 }
 
 
-void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event) {
+void cimunit_event_list_add(cimunit_event_list_t **list,
+                            struct cimunit_event *event) {
     cimunit_event_list_t *new_entry = malloc(sizeof(cimunit_event_list_t));
 
     // Insert new entry at the head of the list
@@ -55,7 +57,8 @@ void cimunit_event_list_add(cimunit_event_list_t **list, cimunit_event_t *event)
 }
 
 
-void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t *list2) {
+void cimunit_event_list_union(cimunit_event_list_t **list,
+                              cimunit_event_list_t *list2) {
     cimunit_event_list_t *data = list2;
     while (data != NULL) {
         if (NULL == cimunit_event_list_find(*list, data->event->event_name)) {
@@ -66,7 +69,7 @@ void cimunit_event_list_union(cimunit_event_list_t **list, cimunit_event_list_t 
 }
 
 
-cimunit_event_t *cimunit_event_list_find_with_thread(
+struct cimunit_event *cimunit_event_list_find_with_thread(
   cimunit_event_list_t *list, const char *name, const char *thread) {
     cimunit_event_list_t *entry = list;
     // If no thread was provided, any event with the specified name will match
@@ -94,7 +97,7 @@ cimunit_event_t *cimunit_event_list_find_with_thread(
 }
 
 
-cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list,
-                                         const char *name) {
+struct cimunit_event *cimunit_event_list_find(cimunit_event_list_t *list,
+                                              const char *name) {
     return cimunit_event_list_find_with_thread(list, name, NULL);
 }

@@ -24,7 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cimunit.h"
+#include "cimunit_event.h"
+#include "cimunit_event_list.h"
 #include "testMain.h"
 
 
@@ -83,8 +84,9 @@ static void test_cimunit_init_event_with_thread(void)
 static void test_cimunit_event_add_action(void)
 {
     cimunit_event_t condition;
-    cimunit_event_init(&condition, "condition");
     cimunit_event_t action;
+
+    cimunit_event_init(&condition, "condition");
     cimunit_event_init(&action, "action");
   
     /// - Run SUT
@@ -107,10 +109,11 @@ static void test_cimunit_event_add_action(void)
 static void test_cimunit_event_add_multiple_actions(void)
 {
     cimunit_event_t condition;
-    cimunit_event_init(&condition, "condition");
     cimunit_event_t action1;
-    cimunit_event_init(&action1, "action1");
     cimunit_event_t action2;
+
+    cimunit_event_init(&condition, "condition");
+    cimunit_event_init(&action1, "action1");
     cimunit_event_init(&action2, "action2");
     cimunit_event_add_action(&condition, &action1);
   
@@ -144,5 +147,5 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES( suites )
+RUN_TEST_SUITES(suites, test_cimunit_event);
 

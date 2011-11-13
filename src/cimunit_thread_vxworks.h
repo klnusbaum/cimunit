@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -16,13 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef CIMUNIT_THREAD_VXWORKS_H
+#define CIMUNIT_THREAD_VXWORKS_H
 
-#include "cimunit_platform_unix_pthreads.h"
+typedef int cimunit_thread_t;
+typedef void *cimunit_thread_attr_t;
 
-#include <stdbool.h>
-
-/// As of Apple's gcc 4.2.1, restrict isn't supported, but __restrict is.
-#define RESTRICT __restrict
-#define BOOL bool
-#define FALSE false
-#define TRUE true
+#endif // CIMUNIT_THREAD_VXWORKS_H

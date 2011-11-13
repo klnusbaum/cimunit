@@ -30,12 +30,15 @@ cimunit_schedule_t *cimunit_schedule_init() {
     schedule->event_list = cimunit_event_list_init();
     cimunit_event_table_init(&schedule->fired_event_list, &(schedule->thread_table));
     schedule->schedule_string = NULL;
+
+    return schedule;
 }
 
 
 void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
-    cimunit_thread_table_destroy(&(schedule->thread_table));
     cimunit_event_list_t *event_list = schedule->event_list;
+
+    cimunit_thread_table_destroy(&(schedule->thread_table));
     
     while(event_list) {
         cimunit_event_destroy(event_list->event);
@@ -47,15 +50,18 @@ void cimunit_schedule_destroy(cimunit_schedule_t *schedule) {
 }
 
 
-bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
+BOOL cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName)
 {
     const char *thread_name;
+    cimunit_event_t *event;
+    const cimunit_event_list_t *next_action;
+
     thread_name = cimunit_schedule_get_thread_name(schedule,
                                                    cimunit_thread_self());
 
-    cimunit_event_t *event = cimunit_event_list_find_with_thread(
-      schedule->event_list, eventName, thread_name); 
+    event = cimunit_event_list_find_with_thread(schedule->event_list,
+                                                eventName, thread_name); 
       
     if (!event) {
         event = cimunit_event_list_find(schedule->event_list, eventName);
@@ -63,8 +69,7 @@ bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
     if (event) {
         cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
 
-        const cimunit_event_list_t *next_action =
-          cimunit_event_get_action_list(event);
+        next_action = cimunit_event_get_action_list(event);
       
         // When the event is fired, open the barriers associated with this event.
         // e.x.  a->b   fire_event('a') causes the barrier associated with 'b' to
@@ -82,10 +87,10 @@ bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
             cimunit_barrier_wait(&(event->condition_barrier));
         }
     } else {
-        return false;
+        return FALSE;
     }
     
-    return true;
+    return TRUE;
 }
 
 

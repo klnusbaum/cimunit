@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "cimunit_platform.h"
 #include "cimunit_event_list.h"
 #include "cimunit_event_table.h"
 #include "cimunit_schedule.h"
@@ -34,7 +35,7 @@ extern int parse_events_lex_destroy(void); // From parse_events.l
 extern int parse_events_parse(struct cimunit_event_table *fired_event_list,
                               const char *action_event,
                               const char *thread,
-                              bool *parse_result); // From parse_events.y
+                              BOOL *parse_result); // From parse_events.y
 extern void parse_events__scan_string(char *string); // From parse_events.l
 extern int parse_events_lex (void); // From parse_events.l
 
@@ -45,7 +46,7 @@ extern int parse_events_lex (void); // From parse_events.l
 /// \param str - error string
 void parse_events_error(struct cimunit_event_table *fired_event_list,
                         const char *action_event, const char *thread,
-                        bool *parse_result, const char *str)
+                        BOOL *parse_result, const char *str)
 {
 	fprintf(stderr,"error: %s\n",str);
 }
@@ -63,9 +64,11 @@ cimunit_mutex_t *cimunit_parse_event_mutex = NULL;
 /// Build a schedule
 ///
 /// \return the completed schedule
-bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
+BOOL cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
                                     const char *action_event,
                                     const char *thread) {
+    BOOL result = FALSE;
+
     /// \todo This is a hack.  There should be an init function that initializes
     ///       this global in a thread safe manner.
     if (!cimunit_parse_event_mutex) {
@@ -73,7 +76,6 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
         cimunit_mutex_init(cimunit_parse_event_mutex, NULL);
     }
 
-    bool result = false;
 
     // Parse the schedule string to determine if the action event is unblocked
     cimunit_mutex_lock(cimunit_parse_event_mutex);   
@@ -101,7 +103,7 @@ bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
 %parse-param {struct cimunit_event_table *fired_event_list}
 %parse-param {const char *action_event}
 %parse-param {const char *thread}
-%parse-param {bool *parse_result}
+%parse-param {BOOL *parse_result}
 
 %token <number> STATE
 %token <number> NUMBER

@@ -19,7 +19,6 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,12 +29,12 @@
 static void test_parse_event_single(void)
 {
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x");
+    cimunit_event_t *event = NULL;
 
     CU_ASSERT_FALSE(cimunit_schedule_parse_runtime(schedule, "x", NULL));
 
     /// - Add event to the fired event list
-    cimunit_event_t *event =
-      cimunit_event_list_find(schedule->event_list, "a");
+    event = cimunit_event_list_find(schedule->event_list, "a");
     cimunit_add_event_to_table(&schedule->fired_event_list, event, NULL);
 
     CU_ASSERT_TRUE(cimunit_schedule_parse_runtime(schedule, "x", NULL));
@@ -187,4 +186,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES(suites)
+RUN_TEST_SUITES(suites, test_parse_events);

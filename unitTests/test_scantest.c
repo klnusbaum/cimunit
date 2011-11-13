@@ -20,16 +20,19 @@
  */
  
 #include <stdio.h>
+#include "testMain.h"
+#include "cimunit.h"
 #include "cimunit_schedule.h"
+#include "cimunit_event_list.h"
 
 
 /// Display all conditions that are associated with the passed action
 ///
 /// \param event - action event
-void printConditionsForActionEvent(cimunit_event_t *event) {
-    printf("%s has the following actions that wait on it\n", event->event_name);
-    
+static void printConditionsForActionEvent(cimunit_event_t *event) {
     cimunit_event_list_t *action_list = event->action_events;
+
+    printf("%s has the following actions that wait on it\n", event->event_name);
     if (!action_list) {
         printf("\tnone\n");
     } else {
@@ -41,12 +44,13 @@ void printConditionsForActionEvent(cimunit_event_t *event) {
 }
 
 
-int main()
+static void test_scantest_func(void)
 {
 
-    cimunit_schedule_t *schedule = cimunit_schedule_parse("a->b,b->c");
-	printf("Print the first schedule\n");
+  cimunit_schedule_t *schedule = cimunit_schedule_parse("a->b,b->c");
 	cimunit_event_list_t *condition_list = schedule->event_list;
+
+	printf("Print the first schedule\n");
 	while(condition_list != NULL) {
 	    printConditionsForActionEvent(condition_list->event);
 	    condition_list = condition_list->next;
@@ -62,3 +66,16 @@ int main()
 	}
 	cimunit_schedule_destroy(schedule);
 }
+
+static CU_TestInfo tests_scantest[] = {
+  {"scantest", test_scantest_func},
+  CU_TEST_INFO_NULL,
+};
+
+
+static CU_SuiteInfo suites[] = {
+  {"scan test", NULL, NULL, tests_scantest},
+  CU_SUITE_INFO_NULL,
+};
+
+RUN_TEST_SUITES(suites, test_scantest);

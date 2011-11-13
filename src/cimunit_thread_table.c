@@ -63,8 +63,9 @@ int cimunit_find_thread_in_table(
   cimunit_thread_t thread,
   cimunit_thread_table_element_t **found_element)
 {
-  *found_element = NULL;
   cimunit_thread_table_element_t *current_element = thread_table->head;
+
+  *found_element = NULL;
   while(current_element != NULL){
     if(current_element->thread == thread){
       *found_element = current_element;

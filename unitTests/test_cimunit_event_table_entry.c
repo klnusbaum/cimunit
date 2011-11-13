@@ -19,12 +19,13 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "testMain.h"
-#include "cimunit.h"
+#include "cimunit_event_table.h"
 
 static void test_cimunit_event_table_entry_init(void){
   cimunit_event_t event;
-  cimunit_event_init(&event, "a");
   cimunit_event_table_entry_t table_entry;
+
+  cimunit_event_init(&event, "a");
   cimunit_event_table_entry_init(&table_entry, &event);
 
   CU_ASSERT_PTR_NULL(table_entry.next); 
@@ -45,4 +46,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES(suites)
+RUN_TEST_SUITES(suites, test_cimunit_event_table_entry)

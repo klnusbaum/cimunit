@@ -1,6 +1,4 @@
 /**
- * \file create_events.l
- *
  * Copyright 2011 Dale Frampton
  * 
  * This file is part of cimunit.
@@ -19,28 +17,24 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-%{
-#include <stdio.h>
-#include <string.h>
-#include "create_events_grammar.h"
-%}
+#include "cimunit_mutex.h"
 
-%option prefix="create_events_"
+int cimunit_mutex_init(
+  cimunit_mutex_t *mutex, 
+  const cimunit_mutex_attr_t *attr)
+{
+  *mutex = semMCreate(0);
+}
 
-%%
-[ \t]+                  /* ignore whitespace */;
+int cimunit_mutex_destroy(cimunit_mutex_t *mutex){
+  return semDelete(*mutex);
+}
 
-\n              return SYMBOL_EOL;
-,               return SYMBOL_COMMA;
-->              return SYMBOL_IMPLIES;
-\(              return SYMBOL_LPAREN;
-\)              return SYMBOL_RPAREN;
-&&              return SYMBOL_AND;
-\|\|            return SYMBOL_OR;
-\[              return SYMBOL_LBRACKET;
-\]              return SYMBOL_RBRACKET;
-@               return SYMBOL_AT;
+int cimunit_mutex_lock(cimunit_mutex_t *mutex){
+  return semTake(*mutex, WAIT_FOREVER);
+}
 
-[a-z0-9]+		{char *temp_str=malloc(sizeof(yytext)+1);strcpy(temp_str, yytext);create_events_lval.string=temp_str;return NAME;}
+int cimunit_mutex_unlock(cimunit_mutex_t *mutex){
+  return semGive(*mutex);
+}
 
-%%

@@ -22,15 +22,14 @@
 #ifndef CIMUNIT_BARRIER_H
 #define CIMUNIT_BARRIER_H
  
-#include <stdbool.h>
 #include <unistd.h>
 
-#if PLATFORM_Darwin
-  /// Include the customizations for Darwin
-  #include "cimunit_barrier_unix.h"
-#elif PLATFORM_Linux
-  /// Include the customizations for Linxu
-  #include "cimunit_barrier_unix.h"
+#if defined(PLATFORM_Darwin) || \
+    defined(PLATFORM_Linux)
+  #include "cimunit_barrier_pthread.h"
+#elif PLATFORM_VxWorks
+  /// Include the customizations for VxWorks
+  #include "cimunit_barrier_vxworks.h"
 #else
   #error "No PLATFORM_{system name} macro defined!"
 #endif

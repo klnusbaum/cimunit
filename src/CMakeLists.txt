@@ -24,7 +24,6 @@ set(CIMUNIT_SRC
   cimunit_event_list.c
   cimunit_mutex_pthread.c
   cimunit_schedule.c
-  #cimunit_tester.c
   cimunit_thread_pthread.c
   cimunit_event_table.c
   cimunit_thread_table.c
@@ -36,6 +35,3 @@ set(CIMUNIT_SRC
 
 add_library(cimunit ${CIMUNIT_SRC})
 target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})
-
-#add_executable(sample sample.c)
-#target_link_libraries(sample cimunit)

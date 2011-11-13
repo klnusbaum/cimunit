@@ -37,11 +37,12 @@ static void test_cimunit_schedule_init(void)
 
 static void test_cimunit_schedule_parse_single(void)
 {
+    cimunit_event_t *action;
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x");
     CU_ASSERT_PTR_NOT_NULL_FATAL(schedule->event_list);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(schedule->event_list, "x"));
     
-    cimunit_event_t *action = cimunit_event_list_find(schedule->event_list, "a");
+    action = cimunit_event_list_find(schedule->event_list, "a");
     CU_ASSERT_PTR_NOT_NULL_FATAL(action);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "x"));
 }
@@ -49,11 +50,12 @@ static void test_cimunit_schedule_parse_single(void)
 
 static void test_cimunit_schedule_parse_double(void)
 {
+    cimunit_event_t *action;
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a->x,b->a");
     CU_ASSERT_PTR_NOT_NULL_FATAL(schedule->event_list);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(schedule->event_list, "x"));
     
-    cimunit_event_t *action = cimunit_event_list_find(schedule->event_list, "a");
+    action = cimunit_event_list_find(schedule->event_list, "a");
     CU_ASSERT_PTR_NOT_NULL_FATAL(action);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find(action->action_events, "x"));
 
@@ -65,12 +67,13 @@ static void test_cimunit_schedule_parse_double(void)
 
 static void test_cimunit_schedule_parse_single_thread(void)
 {
+    cimunit_event_t *action;
     cimunit_schedule_t *schedule = cimunit_schedule_parse("a@x->b@y");
     CU_ASSERT_PTR_NOT_NULL_FATAL(schedule->event_list);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find_with_thread(
                              schedule->event_list, "b", "y"));
     
-    cimunit_event_t *action = cimunit_event_list_find_with_thread(
+    action = cimunit_event_list_find_with_thread(
       schedule->event_list, "a", "x");
     CU_ASSERT_PTR_NOT_NULL_FATAL(action);
     CU_ASSERT_PTR_NOT_NULL(cimunit_event_list_find_with_thread(
@@ -92,4 +95,4 @@ static CU_SuiteInfo suites[] = {
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES(suites)
+RUN_TEST_SUITES(suites, test_cimunit_schedule)

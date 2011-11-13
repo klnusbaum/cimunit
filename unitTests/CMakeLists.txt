@@ -10,7 +10,7 @@ add_library(cimunit_test_library testMain.c)
 
 
 macro (CREATE_UNIT_TEST  testname filename )
-  add_executable( ${testname} ${filename} testMain.h)
+  add_executable( ${testname} ${filename} testMain.c)
   target_link_libraries( ${testname} cimunit cimunit_test_library ${CUNIT_LIBRARIES} ${CURSES_LIBRARIES})
   add_test( ${testname}  ${CMAKE_CURRENT_BINARY_DIR}/${testname} "-v")
 endmacro(CREATE_UNIT_TEST)
@@ -22,12 +22,7 @@ CREATE_UNIT_TEST(cimunitTests test_cimunit.c)
 CREATE_UNIT_TEST(testParseEvents test_parse_events.c)
 CREATE_UNIT_TEST(eventTableEntryTests test_cimunit_event_table_entry.c)
 CREATE_UNIT_TEST(eventTableTests test_cimunit_event_table.c)
-#CREATE_UNIT_TEST(threadTests test_threads.c)
+CREATE_UNIT_TEST(scanTest test_scantest.c)
+CREATE_UNIT_TEST(barrierTest test_cimunit_barrier.c)
 
-add_executable(barrierTest test_cimunit_barrier.c)
-target_link_libraries(barrierTest cimunit)
-add_test(barrierTest ${CMAKE_CURRENT_BINARY_DIR}/barrierTest)
 
-add_executable(scantest test_scantest.c)
-target_link_libraries(scantest cimunit)
-add_test(scantest ${CMAKE_CURRENT_BINARY_DIR}/scantest)

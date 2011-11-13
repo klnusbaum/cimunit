@@ -19,6 +19,7 @@
 #ifndef CIMUNIT_SCHEDULE_H
 #define CIMUNIT_SCHEDULE_H
 
+#include "cimunit_platform.h"
 #include "cimunit_event.h"
 #include "cimunit_event_list.h"
 #include "cimunit_event_table.h"
@@ -58,7 +59,7 @@ cimunit_schedule_t *cimunit_schedule_parse(char *schedule_string);
 /// \param action_event - action event being queried
 /// \param thread - name of the thread associated with the action event
 /// \return true if event is blocked, else false
-bool cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
+BOOL cimunit_schedule_parse_runtime(cimunit_schedule_t *schedule,
                                     const char *action_event,
                                     const char *thread);
 
@@ -92,7 +93,7 @@ void cimunit_schedule_add_action_event(struct cimunit_schedule *schedule,
 /// \param schedule - schedule associated with the event
 /// \param eventName - name of the event to be fired_event_list
 /// \return true if the event was found, else false
-bool cimunit_schedule_fire(struct cimunit_schedule *schedule,
+BOOL cimunit_schedule_fire(struct cimunit_schedule *schedule,
                            const char *eventName);
 
 

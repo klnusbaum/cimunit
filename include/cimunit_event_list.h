@@ -22,14 +22,15 @@
 #ifndef CIMUNIT_EVENT_LIST_H
 #define CIMUNIT_EVENT_LIST_H
 
-#include <stdbool.h>
+//#include "cimunit_event.h"
 
-#include "cimunit_event.h"
+/// Forward declaration
+struct cimunit_event;
 
 /// Structure defining a CIMUnit event.
 typedef struct cimunit_event_list {
     /// Pointer to event structure
-    cimunit_event_t *event;
+    struct cimunit_event *event;
 
     /// Next event in the list
     struct cimunit_event_list *next;
@@ -51,7 +52,7 @@ void cimunit_event_list_destroy(cimunit_event_list_t **list);
 /// \param list - event list to be updated
 /// \param event - event to be added into the list
 void cimunit_event_list_add(cimunit_event_list_t **list,
-                            cimunit_event_t *event);
+                            struct cimunit_event *event);
 
 /// Merge an event list into the list
 ///
@@ -67,7 +68,7 @@ void cimunit_event_list_union(cimunit_event_list_t **list,
 /// \param list - event list being queried
 /// \param name - name of the event being searched for
 /// \return NULL if the event wasn't found, else a pointer to the event.
-cimunit_event_t *cimunit_event_list_find_with_thread(
+struct cimunit_event *cimunit_event_list_find_with_thread(
   cimunit_event_list_t *list, const char *name, const char *thread);
 
 /// Gets an event from the list by name
@@ -75,7 +76,7 @@ cimunit_event_t *cimunit_event_list_find_with_thread(
 /// \param list - event list being queried
 /// \param name - name of the event being searched for
 /// \return NULL if the event wasn't found, else a pointer to the event.
-cimunit_event_t *cimunit_event_list_find(cimunit_event_list_t *list,
-                                         const char *name);
+struct cimunit_event *cimunit_event_list_find(cimunit_event_list_t *list,
+                                              const char *name);
 
 #endif // CIMUNIT_EVENT_LIST_H

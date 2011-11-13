@@ -1,5 +1,5 @@
 /**
- * \file barrier_test.c
+ * \file test_cimunit_barrier.c
  *
  * Copyright 2011 Dale Frampton
  * 
@@ -20,49 +20,60 @@
  */
  
 #include <stdio.h>
+#include "testMain.h"
 
 #include "cimunit_barrier.h"
+#include "cimunit_thread.h"
 
 cimunit_barrier_t my_barrier;
-int count = 0;
-
 
 void *bwait(void *value) {
-    cimunit_barrier_wait(&my_barrier);
-    //printf("Wait thread\n", ((long int)value));
-    pthread_exit(NULL);
+  int *intValue = value;
+  cimunit_barrier_wait(&my_barrier);
+  ++(*intValue);
 }
 
 
+static void barrier_test(void) {
+  int value1 = 0;
+  int value2 = 0;
 
-int main() {
-    pthread_t thread1;
-    pthread_t thread2;
-    pthread_t thread3;
-    pthread_attr_t attr;
-    
-    cimunit_barrier_init(&my_barrier);
-        
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-    pthread_create(&thread1, &attr, bwait, (void *)1);
-    pthread_create(&thread2, &attr, bwait, (void *)2);
-    pthread_create(&thread3, &attr, bwait, (void *)3);
+  cimunit_thread_t thread1;
+  cimunit_thread_t thread2;
 
-    //printf("Ready to signal\n");
-    cimunit_barrier_unlock(&my_barrier);
-    //printf("Signaled\n");
+  cimunit_barrier_init(&my_barrier);
+  cimunit_thread_create(&thread1, bwait, &value1);
+  cimunit_thread_create(&thread2, bwait, &value2);
     
-    pthread_join(thread1, NULL);
-    pthread_join(thread2, NULL);
-    pthread_join(thread3, NULL);
-    
-    //printf("Done\n");
 
-    pthread_attr_destroy(&attr);
+  cimunit_thread_sleep(100);
+
+  CU_ASSERT_FALSE(value1);
+  CU_ASSERT_FALSE(value2);
+
+  cimunit_barrier_unlock(&my_barrier);
+
+  cimunit_thread_sleep(100);
+  CU_ASSERT_TRUE(value1);
+  CU_ASSERT_TRUE(value2);
     
-    cimunit_barrier_destroy(&my_barrier);
-    pthread_exit(NULL);
-    
-    return 0;
+  cimunit_thread_join(thread1, NULL);
+  cimunit_thread_join(thread2, NULL);
+
+  cimunit_barrier_destroy(&my_barrier);
 }
+
+
+static CU_TestInfo tests_cimunit[] = {
+  {"barrier test",  barrier_test},
+  CU_TEST_INFO_NULL,
+};
+
+
+static CU_SuiteInfo suites[] = {
+  {"suite_cimunit_schedule", NULL, NULL, tests_cimunit},
+  CU_SUITE_INFO_NULL,
+};
+
+RUN_TEST_SUITES(suites, test_cimunit_barrier)
+

@@ -19,36 +19,35 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "cimunit.h"
 #include "testMain.h"
+#include "cimunit_thread.h"
+#include "cimunit_thread_table.h"
+#include "cimunit_platform.h"
 
 static void test_cimunit_thread_setname(void)
 {
   cimunit_thread_table_t thread_table;
-  cimunit_thread_table_init(&thread_table);
   const char set_name[] = "steve";
+  const char *retrieved_name;
+
+  cimunit_thread_table_init(&thread_table);
   cimunit_set_thread_name(&thread_table, cimunit_thread_self(), set_name);
  
-  char retrieved_name[CIMUNIT_MAX_THREAD_NAME_LENGTH];
-  cimunit_get_thread_name(&thread_table, cimunit_thread_self(), retrieved_name);
+  cimunit_get_thread_name(&thread_table, cimunit_thread_self(),
+                          &retrieved_name);
   CU_ASSERT_STRING_EQUAL(set_name, retrieved_name);
   cimunit_thread_table_destroy(&thread_table);
 }
 
-static CU_TestInfo test_threads[] = {
+static CU_TestInfo test_thread[] = {
   {"set name", test_cimunit_thread_setname },
   CU_TEST_INFO_NULL,
 };
 
 
 static CU_SuiteInfo suites[] = {
-  {"suite_cimunit_threads", NULL, NULL, test_threads},
+  {"suite_cimunit_threads", NULL, NULL, test_thread},
   CU_SUITE_INFO_NULL,
 };
 
-RUN_TEST_SUITES( suites )
+RUN_TEST_SUITES(suites, test_threads);

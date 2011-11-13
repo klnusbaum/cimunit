@@ -22,7 +22,7 @@
 #ifndef CIMUNIT_EVENT_H
 #define CIMUNIT_EVENT_H
 
-#include <stdbool.h>
+#include "cimunit_platform.h"
 
 #include "cimunit_mutex.h"
 #include "cimunit_barrier.h"
@@ -49,7 +49,7 @@ typedef struct cimunit_event {
 
     /// Is this event an action event?  If so, it may block when it is
     /// fired.  If not, it will not block.
-    bool is_action;
+    BOOL is_action;
 } cimunit_event_t;
 
 

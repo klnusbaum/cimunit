@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cimunit_event_table.h"
+#include "cimunit_platform.h"
 
 int cimunit_event_table_entry_init(
   cimunit_event_table_entry_t *entry,
@@ -85,11 +86,11 @@ int cimunit_event_matches_table_entry(
         return (thread_name_buffer &&
                 !strcmp(thread_name_buffer, thread_name));
     } else {
-        return true;
+        return TRUE;
     }
   }
   
-  return false;
+  return FALSE;
 }
 
 int cimunit_find_event_in_table(
