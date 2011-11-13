@@ -1,7 +1,7 @@
 /**
  * \file cimunit_platform.h
  *
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -27,5 +27,6 @@
   #include "cimunit_platform_linux.h"
 #elif PLATFORM_VxWorks
   #include "cimunit_platform_vxworks.h"
-  //#error "No PLATFORM_{system name} macro defined!"
+#else
+  #error "No PLATFORM_{system name} macro defined!"
 #endif

@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 Dale Frampton
+ * \file cimunit_platform_darwin.h
+ *
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 

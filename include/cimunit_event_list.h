@@ -1,7 +1,7 @@
 /**
  * \file cimunit_event_list.h
  *
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -21,8 +21,6 @@
 
 #ifndef CIMUNIT_EVENT_LIST_H
 #define CIMUNIT_EVENT_LIST_H
-
-//#include "cimunit_event.h"
 
 /// Forward declaration
 struct cimunit_event;

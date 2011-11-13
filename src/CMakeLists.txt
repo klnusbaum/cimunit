@@ -35,3 +35,4 @@ set(CIMUNIT_SRC
 
 add_library(cimunit ${CIMUNIT_SRC})
 target_link_libraries(cimunit ${CMAKE_THREAD_LIBS_INIT})
+

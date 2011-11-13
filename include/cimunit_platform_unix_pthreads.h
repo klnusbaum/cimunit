@@ -1,5 +1,6 @@
 /**
- * Copyright 2011 Dale Frampton
+ * \file cimunit_platform_unix_pthreads.h
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 

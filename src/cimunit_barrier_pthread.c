@@ -1,7 +1,7 @@
 /**
  * \file cimunit_barrier_unix.c
  *
- * Copyright 2011 Dale Frampton
+ * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
  * This file is part of cimunit.
  * 

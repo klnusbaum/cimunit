@@ -34,6 +34,10 @@ void *bwait(void *value) {
 }
 
 
+// Under high-load conditions this test mail fail due to the timeouts.
+// This failure is not indicative of a failure of the barrier, but of
+// a deterministic method by which this unit test can verify that the
+// threads have or have not passed the barrier.
 static void barrier_test(void) {
   int value1 = 0;
   int value2 = 0;
@@ -46,14 +50,14 @@ static void barrier_test(void) {
   cimunit_thread_create(&thread2, bwait, &value2);
     
 
-  cimunit_thread_sleep(100);
+  cimunit_thread_sleep(500);
 
   CU_ASSERT_FALSE(value1);
   CU_ASSERT_FALSE(value2);
 
   cimunit_barrier_unlock(&my_barrier);
 
-  cimunit_thread_sleep(100);
+  cimunit_thread_sleep(500);
   CU_ASSERT_TRUE(value1);
   CU_ASSERT_TRUE(value2);
     
