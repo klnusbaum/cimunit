@@ -16,13 +16,15 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <stdio.h>
 #include "testMain.h"
+
 #include <assert.h>
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 void print_example_results(void)
 {
   fprintf(stdout, "\n\nExpected Test Results:"

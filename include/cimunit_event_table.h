@@ -20,7 +20,11 @@
  */
 #ifndef CIMUNIT_EVENT_TABLE_H
 #define CIMUNIT_EVENT_TABLE_H
+
 #include "cimunit_event.h"
+#include "cimunit_event_table.h"
+#include "cimunit_mutex.h"
+#include "cimunit_thread.h"
 #include "cimunit_thread_table.h"
 
 /// Structure defining a CIMUnit event table entry.

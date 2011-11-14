@@ -19,13 +19,14 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "testMain.h"
+#include "cimunit_event.h"
+#include "cimunit_event_list.h"
 #include "cimunit_schedule.h"
+#include "testMain.h"
 
 
 static void test_cimunit_schedule_init(void)

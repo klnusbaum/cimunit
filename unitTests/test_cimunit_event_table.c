@@ -19,8 +19,9 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "testMain.h"
+#include "cimunit_event.h"
 #include "cimunit_event_table.h"
+#include "testMain.h"
 
 #define BASIC_EVENT_TABLE_INIT \
   cimunit_event_table_t event_table; \

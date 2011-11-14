@@ -22,6 +22,7 @@
 #define CIMUNIT_THREAD_H
 
 #include "cimunit_platform.h"
+#include "cimunit_thread.h"
 
 #if defined(PLATFORM_Darwin) || \
     defined(PLATFORM_Linux)
@@ -37,7 +38,7 @@ typedef void *(*cimunit_task_entry_t)(void *);
 int cimunit_thread_create(
   cimunit_thread_t *RESTRICT thread, 
   cimunit_task_entry_t function,
-  void * RESTRICT arg);
+  void *RESTRICT arg);
 
 int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr);
 

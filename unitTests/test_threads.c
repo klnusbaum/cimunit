@@ -19,10 +19,10 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "testMain.h"
+#include "cimunit_platform.h"
 #include "cimunit_thread.h"
 #include "cimunit_thread_table.h"
-#include "cimunit_platform.h"
+#include "testMain.h"
 
 static void test_cimunit_thread_setname(void)
 {

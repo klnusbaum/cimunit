@@ -19,11 +19,12 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "cimunit_event_list.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "cimunit_event_list.h"
 #include "cimunit_event.h"
 
 

@@ -22,8 +22,6 @@
 #ifndef CIMUNIT_MUTEX_H
 #define CIMUNIT_MUTEX_H
 
-#include "cimunit_platform.h"
-
 #if defined(PLATFORM_Darwin) || \
     defined(PLATFORM_Linux)
   #include "cimunit_mutex_pthread.h"

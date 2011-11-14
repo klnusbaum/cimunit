@@ -23,8 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "testMain.h"
 #include "cimunit.h"
+#include "cimunit_schedule.h"
+#include "testMain.h"
 
 static void test_parse_event_single(void)
 {

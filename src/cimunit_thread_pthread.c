@@ -19,12 +19,12 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
-#include <unistd.h>
 #include "cimunit_thread.h"
 
+#include <unistd.h>
+
 int cimunit_thread_create(
-  cimunit_thread_t * RESTRICT thread, 
+  cimunit_thread_t *RESTRICT thread, 
   cimunit_task_entry_t function,
   void *RESTRICT arg)
 {

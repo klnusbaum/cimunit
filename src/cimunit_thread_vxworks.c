@@ -17,11 +17,12 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "cimunit_thread.h"
+
 #include <vxWorks.h>
 #include <sysLib.h>
 #include <taskLib.h>
 #include <private/taskLibP.h>
-#include "cimunit_thread.h"
 
 static int vxworks_task_handoff(int function, int arg1) {
   cimunit_task_entry_t func = (cimunit_task_entry_t)function;

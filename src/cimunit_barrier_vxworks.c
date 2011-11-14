@@ -19,8 +19,9 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-#include <stdlib.h>
 #include "cimunit_barrier.h"
+
+#include <stdlib.h>
 
 
 int cimunit_barrier_init(cimunit_barrier_t *barrier)

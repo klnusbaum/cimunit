@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
 #include "cimunit_schedule.h"
-#include "cimunit_thread.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 cimunit_schedule_t *cimunit_schedule_init() {
     cimunit_schedule_t *schedule = malloc(sizeof(cimunit_schedule_t));

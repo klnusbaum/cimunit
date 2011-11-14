@@ -19,11 +19,13 @@
 
 #ifndef CIMUNIT_THREAD_TABLE_H
 #define CIMUNIT_THREAD_TABLE_H
+
 #include "cimunit_thread.h"
+#include "cimunit_thread_table.h"
 
 typedef struct cimunit_thread_table_element{
   cimunit_thread_t thread;
-  const char* name;
+  const char *name;
   struct cimunit_thread_table_element *next;  
 } cimunit_thread_table_element_t;
 

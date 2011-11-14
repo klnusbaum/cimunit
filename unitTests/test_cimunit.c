@@ -24,9 +24,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "testMain.h"
 #include "cimunit.h"
+#include "cimunit_schedule.h"
 #include "cimunit_thread.h"
+#include "testMain.h"
 
 
 struct test_event_args {

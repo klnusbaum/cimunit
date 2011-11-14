@@ -20,10 +20,11 @@
  */
  
 #include <stdio.h>
-#include "testMain.h"
 
 #include "cimunit_barrier.h"
 #include "cimunit_thread.h"
+#include "testMain.h"
+
 
 cimunit_barrier_t my_barrier;
 

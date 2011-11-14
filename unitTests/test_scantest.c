@@ -20,10 +20,10 @@
  */
  
 #include <stdio.h>
-#include "testMain.h"
-#include "cimunit.h"
-#include "cimunit_schedule.h"
+
 #include "cimunit_event_list.h"
+#include "cimunit_schedule.h"
+#include "testMain.h"
 
 
 /// Display all conditions that are associated with the passed action

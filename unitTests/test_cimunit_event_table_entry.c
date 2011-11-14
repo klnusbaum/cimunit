@@ -18,8 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "testMain.h"
+
 #include "cimunit_event_table.h"
+#include "cimunit_event.h"
+#include "testMain.h"
 
 static void test_cimunit_event_table_entry_init(void){
   cimunit_event_t event;

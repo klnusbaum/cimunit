@@ -22,8 +22,6 @@
 #ifndef CIMUNIT_BARRIER_H
 #define CIMUNIT_BARRIER_H
  
-#include <unistd.h>
-
 #if defined(PLATFORM_Darwin) || \
     defined(PLATFORM_Linux)
   #include "cimunit_barrier_pthread.h"

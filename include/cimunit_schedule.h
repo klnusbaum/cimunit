@@ -21,10 +21,12 @@
 #ifndef CIMUNIT_SCHEDULE_H
 #define CIMUNIT_SCHEDULE_H
 
-#include "cimunit_platform.h"
 #include "cimunit_event.h"
 #include "cimunit_event_list.h"
 #include "cimunit_event_table.h"
+#include "cimunit_mutex.h"
+#include "cimunit_platform.h"
+#include "cimunit_thread.h"
 
 typedef size_t cimunit_thread_amount_t;
 
@@ -118,4 +120,4 @@ const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
                                              cimunit_thread_t thread);
 
 
-#endif //CIMUNIT_SCHEDULE_H
+#endif // CIMUNIT_SCHEDULE_H

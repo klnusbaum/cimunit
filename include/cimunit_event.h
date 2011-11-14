@@ -22,10 +22,10 @@
 #ifndef CIMUNIT_EVENT_H
 #define CIMUNIT_EVENT_H
 
-#include "cimunit_platform.h"
-
-#include "cimunit_mutex.h"
 #include "cimunit_barrier.h"
+#include "cimunit_event.h"
+#include "cimunit_mutex.h"
+#include "cimunit_platform.h"
 
 /// Forward declarations
 struct cimunit_event_list;

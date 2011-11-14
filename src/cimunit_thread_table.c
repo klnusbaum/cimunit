@@ -19,8 +19,9 @@
  * along with cimunit.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "cimunit_thread_table.h"
-#include <string.h>
+
 #include <stdlib.h>
+#include <string.h>
 
 int cimunit_thread_table_element_init(
   cimunit_thread_table_element_t *thread_table_element,
