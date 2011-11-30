@@ -1,5 +1,5 @@
 /**
- * \file cimunit_barrier_unix.c
+ * \file cimunit_event_table.c
  *
  * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
@@ -31,7 +31,7 @@ int cimunit_event_table_entry_init(
   entry->event = event;
   entry->thread = cimunit_thread_self();
   entry->next = NULL; 
-  //TODO actually return the correct error code if an error happend.
+  /// \todo actually return the correct error code if an error happend.
   return 0;
 }
 
@@ -47,7 +47,7 @@ int cimunit_event_table_init(
   event_table->tail = NULL;
   event_table->thread_table = thread_table;
   cimunit_mutex_init(&(event_table->lock), NULL);
-  //TODO actually return the correct error code if an error happend.
+  /// \todo actually return the correct error code if an error happend.
   return 0;
 }
 
@@ -60,7 +60,7 @@ int cimunit_event_table_destroy(cimunit_event_table_t *event_table){
     current_entry = event_table->head;
   }
   cimunit_mutex_destroy(&(event_table->lock));
-  //TODO actually return the correct error code if an error happend.
+  /// \todo actually return the correct error code if an error happend.
   return 0;
 }
 
@@ -86,7 +86,7 @@ int cimunit_add_event_to_table(
   if(entry_added != NULL){
     (*entry_added) = new_entry;
   }
-  //TODO actually return the correct error code if an error happend.
+  /// \todo actually return the correct error code if an error happend.
   return 0;
 }
 
@@ -144,7 +144,7 @@ int cimunit_find_event_in_table_on_thread(
     }    
     (*found_event) = (*found_event)->next;
   }
-  //TODO actually return the correct error code if an error happend.
+  /// \todo actually return the correct error code if an error happend.
   return 0;
 }
 

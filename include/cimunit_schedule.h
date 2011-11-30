@@ -30,6 +30,8 @@
 
 typedef size_t cimunit_thread_amount_t;
 
+/// \addtogroup cimunit_schedule cimunit_schedule Module
+/// @{
 
 /// Structure use to define a CIMUnit schedule
 typedef struct cimunit_schedule {
@@ -119,5 +121,6 @@ void cimunit_schedule_set_thread_name(cimunit_schedule_t *schedule,
 const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
                                              cimunit_thread_t thread);
 
+/// @}
 
 #endif // CIMUNIT_SCHEDULE_H

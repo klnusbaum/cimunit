@@ -24,8 +24,11 @@
 
 /// Forward declaration
 struct cimunit_event;
+ 
+/// \addtogroup cimunit_event_list cimunit_event_list Module
+/// @{
 
-/// Structure defining a CIMUnit event.
+/// Structure which maintains a list of events.
 typedef struct cimunit_event_list {
     /// Pointer to event structure
     struct cimunit_event *event;
@@ -65,6 +68,7 @@ void cimunit_event_list_union(cimunit_event_list_t **list,
 ///
 /// \param list - event list being queried
 /// \param name - name of the event being searched for
+/// \param thread - name of the thread associated with the event
 /// \return NULL if the event wasn't found, else a pointer to the event.
 struct cimunit_event *cimunit_event_list_find_with_thread(
   cimunit_event_list_t *list, const char *name, const char *thread);
@@ -76,5 +80,7 @@ struct cimunit_event *cimunit_event_list_find_with_thread(
 /// \return NULL if the event wasn't found, else a pointer to the event.
 struct cimunit_event *cimunit_event_list_find(cimunit_event_list_t *list,
                                               const char *name);
+
+/// @}
 
 #endif // CIMUNIT_EVENT_LIST_H

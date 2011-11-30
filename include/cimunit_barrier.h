@@ -32,6 +32,8 @@
   #error "No PLATFORM_{system name} macro defined!"
 #endif
 
+/// \addtogroup cimunit_barrier cimunit_barrier Module
+/// @{
 
 /// Create a new barrier.
 ///
@@ -72,5 +74,7 @@ void cimunit_barrier_unlock(cimunit_barrier_t *barrier);
 ///
 /// \param barrier - the barrier to be locked
 void cimunit_barrier_lock(cimunit_barrier_t *barrier);
+
+/// @}
 
 #endif // CIMUNIT_BARRIER_H

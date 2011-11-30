@@ -34,7 +34,7 @@ int cimunit_thread_create(
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
   result = pthread_create(thread, &attr, function, arg);
-  //pthread_attr_destory(&attr);
+  pthread_attr_destroy(&attr);
 
   return result;
 }

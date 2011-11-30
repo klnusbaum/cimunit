@@ -1,5 +1,5 @@
 /**
- * \file cimunit_barrier_unix.c
+ * \file cimunit_barrier_pthread.c
  *
  * Copyright 2011 Dale Frampton and Kurtis Nusbaum
  * 
@@ -29,7 +29,7 @@ int cimunit_barrier_init(cimunit_barrier_t *barrier)
     pthread_mutex_init(&barrier->mutex, NULL);
     pthread_cond_init(&barrier->cond, NULL);
     barrier->is_locked = true;
-    //TODO actually return an error code is somethign goes wrong
+    /// \todo actually return an error code is somethign goes wrong
     return 0;
 }
 
@@ -38,7 +38,7 @@ int cimunit_barrier_destroy(cimunit_barrier_t *barrier)
 {
     pthread_cond_destroy(&barrier->cond);
     pthread_mutex_destroy(&barrier->mutex);
-    //TODO actually return an error code is somethign goes wrong
+    /// \todo actually return an error code is somethign goes wrong
    return 0;
 }
 

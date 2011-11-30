@@ -27,6 +27,9 @@
 #include "cimunit_thread.h"
 #include "cimunit_thread_table.h"
 
+/// \addtogroup cimunit_event_table cimunit_event_table Module
+/// @{
+
 /// Structure defining a CIMUnit event table entry.
 typedef struct event_table_entry{
   /// The a pointer to the event that is being represented by this entry.
@@ -41,6 +44,8 @@ typedef struct event_table_entry{
   struct event_table_entry *next;
 } cimunit_event_table_entry_t;
 
+/// \brief Structure containing which events have been fired
+///
 /// A table representing all the events that have been fired in a particular
 /// CIMUnit test.
 typedef struct cimunit_event_table {
@@ -136,5 +141,6 @@ int cimunit_find_event_in_table_on_thread(
   const char *thread_name,
   cimunit_event_table_entry_t **found_event);
 
+/// @}
 
 #endif

@@ -30,6 +30,8 @@
 /// Forward declarations
 struct cimunit_event_list;
 
+/// \addtogroup cimunit_event cimunit_event Module
+/// @{
 
 /// Structure defining a CIMUnit event.
 typedef struct cimunit_event {
@@ -86,9 +88,11 @@ void cimunit_event_add_action(cimunit_event_t *condition,
 
 /// Get the list of actions that depend on this event
 ///
-/// \pram event - event whose action list is being retrieved
+/// \param event - event whose action list is being retrieved
 /// \return the list of action event dependent on this condition event
 const struct cimunit_event_list *cimunit_event_get_action_list(
   cimunit_event_t *event);
+
+/// @}
 
 #endif // CIMUNIT_EVENT_H

@@ -32,14 +32,42 @@
   #error "No PLATFORM_{system name} macro defined!"
 #endif
 
+/// \addtogroup cimunit_mutex cimunit_mutex Module
+/// @{
+
+/// Create a new mutex
+/// \param mutex - pointer to mutex object
+/// \param attr - mutex attributes
 int cimunit_mutex_init(
   cimunit_mutex_t *mutex, 
   const cimunit_mutex_attr_t *attr);
 
+
+/// Destroy a mutex
+/// \param mutex - mutex to destroy
 int cimunit_mutex_destroy(cimunit_mutex_t *mutex);
+
+
+/// Lock a mutex
+///
+/// This method blocks if the mutex is already locked
+/// \param mutex - mutex to lock
 int cimunit_mutex_lock(cimunit_mutex_t *mutex);
+
+
+/// Unlock a mutex
+/// \param mutex - mutex to unlock
 int cimunit_mutex_unlock(cimunit_mutex_t *mutex);
+
+
+/// Attempt to lock a mutex
+///
+/// This method doesn't blocks if the mutex is already locked
+/// \param mutex - mutex to lock
+/// \return 0 if the mutex was locked else non-zero
 int cimunit_mutex_trylock(cimunit_mutex_t *mutex);
+
+/// @}
 
 #endif
 

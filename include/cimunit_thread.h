@@ -33,17 +33,34 @@
   #error "No PLATFORM_{system name} macro defined!"
 #endif
 
+/// \addtogroup cimunit_thread cimunit_thread Module
+/// @{
+
+/// Prototype for a thread entry point
 typedef void *(*cimunit_task_entry_t)(void *);
 
+/// Create a new thread
+/// \param thread - thread identifier of newly created thread
+/// \param function - thread entry point
+/// \param arg - argument to the thread
 int cimunit_thread_create(
   cimunit_thread_t *RESTRICT thread, 
   cimunit_task_entry_t function,
   void *RESTRICT arg);
 
+/// Wait until the specified thread completes execution
+/// \param thread - thread to wait for
+/// \param value_ptr - location to store the return value
 int cimunit_thread_join(cimunit_thread_t thread, void **value_ptr);
 
+/// Return the thread identifier of the currently running thread
+/// \return thread identifier
 cimunit_thread_t cimunit_thread_self();
 
+/// Put a thread to sleep for a fixed period of time
+/// \param time - sleep time in milliseconds
 void cimunit_thread_sleep(int time);
+
+/// @}
 
 #endif // CIMUNIT_THREAD_H

@@ -23,6 +23,7 @@
 
 #include "cimunit_schedule.h"
 
+/// \addtogroup cimunit_user CIMUnit Test Methods 
 
 /// Global CIMUnit variable used by the CIMUnit test macros.
 extern struct cimunit_schedule *g_cimunit_default_schedule;
@@ -30,9 +31,10 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
 
 /// Create a CIMUnit schedule
 ///
-/// This differs from cimunit_schedule_parse by using a global variable that works
-/// with the other CIMUnit macros to simplify test development in an environment where
-/// only one test will be run at a time.
+/// This differs from cimunit_schedule_parse by using a global variable that
+/// works with the other CIMUnit macros to simplify test development in an
+/// environment where only one test will be run at a time.
+/// \ingroup cimunit_user
 #define CIMUNIT_SCHEDULE(schedule) \
     if (g_cimunit_default_schedule) { \
         cimunit_schedule_destroy(g_cimunit_default_schedule); \
@@ -42,13 +44,17 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
 
 /// Fire a CIMUnit event
 ///
-/// This differs from cimunit_event_fire as it uses a global variable to simplify test
-/// development.
+/// This differs from cimunit_event_fire as it uses a global variable to
+/// simplify test development.
+/// \ingroup cimunit_user
 #define CIMUNIT_FIRE(eventName) \
     cimunit_schedule_fire(g_cimunit_default_schedule, eventName)
 
 
-/// Name a thread in the schedule
+/// Name thread in the schedule
+///
+/// This macro gives a name to the currently executing thread
+/// \ingroup cimunit_user
 #define CIMUNIT_THREAD_NAME(threadName) \
     cimunit_schedule_set_thread_name(g_cimunit_default_schedule, \
                                      cimunit_thread_self(), \

@@ -40,7 +40,7 @@ int cimunit_barrier_destroy(cimunit_barrier_t *barrier)
 {
     semDelete(barrier->cond);
     cimunit_mutex_destroy(&barrier->mutex);
-    //TODO actually return an error code is somethign goes wrong
+    /// \todo actually return an error code is somethign goes wrong
    return 0;
 }
 
