@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Kurtis L. Nusbaum
+ * Copyright 2011 Dale Frampton & Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -23,3 +23,4 @@ typedef int cimunit_thread_t;
 typedef void *cimunit_thread_attr_t;
 
 #endif // CIMUNIT_THREAD_VXWORKS_H
+
