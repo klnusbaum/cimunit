@@ -1,0 +1,60 @@
+/**
+\page manual How to Use CIMUnit
+
+CIMUnit isn't a unit test framework, but a multithreaded testing framework.
+It provides the capability to control the order of execution of threads, but
+not the ability to add asserts or other methods to ensure the software under
+test has executed properly.  Users must either write their own code to
+verify the software under test or use testing frameworks such as CUnit or
+CppUnit.
+
+Testers typically interract with three macros defined in cimunit.h.  They are
+ - CIMUNIT_SCHEDULE()
+ - CIMUNIT_FIRE()
+ - CIMUNIT_THREAD_NAME()
+
+\section grammar CIMUnit Schedule Grammar
+
+\verbatim
+        <Schedule> ::= <Ordering>
+                     | <Schedule> "," <Ordering>
+        <Ordering> ::= <Condition> "->" <Action>
+       <Condition> ::= <SingleCondition>
+                     | <LogicalCondition>
+ <SingleCondition> ::= <BasicEvent>
+                     | <BlockEvent>
+<LogicalCondition> ::= "(" <Condition> ")"
+                     | <Condition> "&&" <SingleCondition>
+                     | <Condition> "||" <SingleCondition>
+          <Action> ::= <BasicEvent>
+      <BasicEvent> ::= <EventName> [ "@" <ThreadName> ]
+      <BlockEvent> ::= "[" <BasicEvent> "]"
+       <EventName> ::= <Id>
+      <ThreadName> ::= <Id>
+              <Id> ::= [0-9a-zA-Z_:/]*
+\endverbatim
+
+A CIMUnit schedule defines which events must have fired before another event
+can fire.  Event and thread names are composed of letters, numbers and the ':'
+and '/' symbols.  The basic unit of a schedule is an ordering.  The \<condition>
+event in the ordering is the event that must fire before the \<action> event is
+allowed to proceed.  If the \<action> event is fired before the \<condition>
+event the thread firing the \<action> event is put to sleep until the
+\<condition> event fires.
+
+The \<condition> event may be composed of multiple events connected together
+via the '&&' and '||' logical operators.  Ordering is from left to right and
+may be modified by the use of '()'.  \<BlockEvent> events are not currently
+supported.
+
+The schedule <b>a->b</b> means that event \b a must fire before the firing of
+event \b b is allowed to complete.
+
+The schedule <b>a->b,b->c</b> defines two orderings.  In order for event \b c
+to complete firing both event \b a and event \b b must fire first.
+
+The schedule <b>a&&(b||c)->d</b> defines a schedule where event \b d fires if
+event \b a has fired along with either event \b b or event \b c.
+
+*/
+

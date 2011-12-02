@@ -14,73 +14,11 @@ wakes them up to ensure a specific event sequence is realized.  In its current
 state, if it isn't possible for a specific sequence to be realized, a deadlock
 may result and the test suite will hang.
 
-Testers typically interract with three macros defined in cimunit.h.  They are
- - CIMUNIT_SCHEDULE()
- - CIMUNIT_FIRE()
- - CIMUNIT_THREAD_NAME()
-
-\section grammar CIMUnit Schedule Grammar
-
-\verbatim
-        <Schedule> ::= <Ordering>
-                     | <Schedule> "," <Ordering>
-        <Ordering> ::= <Condition> "->" <Action>
-       <Condition> ::= <SingleCondition>
-                     | <LogicalCondition>
- <SingleCondition> ::= <BasicEvent>
-                     | <BlockEvent>
-<LogicalCondition> ::= "(" <Condition> ")"
-                     | <Condition> "&&" <SingleCondition>
-                     | <Condition> "||" <SingleCondition>
-          <Action> ::= <BasicEvent>
-      <BasicEvent> ::= <EventName> [ "@" <ThreadName> ]
-      <BlockEvent> ::= "[" <BasicEvent> "]"
-       <EventName> ::= <Id>
-      <ThreadName> ::= <Id>
-              <Id> ::= [0-9a-zA-Z_:/]*
-\endverbatim
-
-A CIMUnit schedule defines which events must have fired before another event
-can fire.  Event and thread names are composed of letters, numbers and the ':'
-and '/' symbols.  The basic unit of a schedule is an ordering.  The \<condition>
-event in the ordering is the event that must fire before the \<action> event is
-allowed to proceed.  If the \<action> event is fired before the \<condition>
-event the thread firing the \<action> event is put to sleep until the
-\<condition> event fires.
-
-The \<condition> event may be composed of multiple events connected together
-via the '&&' and '||' logical operators.  Ordering is from left to right and
-may be modified by the use of '()'.  \<BlockEvent> events are not currently
-supported.
-
-The schedule <b>a->b</b> means that event \b a must fire before the firing of
-event \b b is allowed to complete.
-
-The schedule <b>a->b,b->c</b> defines two orderings.  In order for event \b c
-to complete firing both event \b a and event \b b must fire first.
-
-The schedule <b>a&&(b||c)->d</b> defines a schedule where event \b d fires if
-event \b a has fired along with either event \b b or event \b c.
-
-\section build Building & Testing CIMUnit
-
-CIMUnit uses CMake to build and CTest to execute the unit tests.  There are
-a couple different ways to build depending on what the desired outcome is.
-
-- Building the CIMUnit library and unit tests is done by executing:
-  - <tt>cmake</tt>
-  - <tt>make all</tt>
-- Running the unit tests is done by executing:
-  - <tt>ctest</tt>
-- The Doxygen documentation is built by executing:
-  - <tt>cmake</tt>
-  - <tt>make doc</tt>
-- To build and run the sample CIMUnit application execute the following
-  commands:
-  - <tt>cmake -DBUILD_EXAMPLES=ON</tt>
-  - <tt>make all</tt>
-  - <tt>examples/pthread_examples/simple_example/simple_test</tt>.
-
+\section toc Table of Contents
+- \ref build
+- \ref manual
+- \ref comparison
+- \ref test_example.c "test_example.c - Example CIMUnit test"
 
 \example test_example.c
 This example shows a walk through of how CIMUnit operates.

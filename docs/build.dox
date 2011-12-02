@@ -1,0 +1,41 @@
+/**
+\page build How to Build and Test CIMUnit
+
+\section linux_build Linux
+
+CIMUnit uses CMake to build and CTest to execute the unit tests.
+There are a couple different ways to build depending on what the desired
+outcome is.
+
+- Building the CIMUnit library and unit tests is done by executing:
+  - <tt>cmake</tt>
+  - <tt>make all</tt>
+- Running the unit tests is done by executing:
+  - <tt>ctest</tt>
+- The Doxygen documentation is built by executing:
+  - <tt>cmake</tt>
+  - <tt>make doc</tt>
+- To build and run the sample CIMUnit application execute the following
+  commands:
+  - <tt>cmake -DBUILD_EXAMPLES=ON</tt>
+  - <tt>make all</tt>
+  - <tt>examples/pthread_examples/simple_example/simple_test</tt>.
+
+\section vxworks_build VxWorks
+
+No build support is provided for VxWorks.  The same code used to compile under
+linux will also compile under VxWorks.  The one important part to consider is
+that the VxWorks build requires defining the preprocessor macro
+\b PLATFORM_VxWorks .  This is typically done using the -D compiler option.
+
+There is no unit test application under VxWorks and thus each of the tests
+must be executed independantly.  Open each of the files under the unitTest
+subdirectory.  At the end of each file will be the line
+RUN_TEST_SUITES(\<suite name>, \<test name>).
+
+From the VxWorks C shell, execute the function named \<test name>.  For example
+if the test RUN_TEST_SUITES(suites, test_cimunit_barrier) was to be executed,
+run <tt>test_cimunit_barrier</tt> from the VxWorks C shell.
+
+*/
+

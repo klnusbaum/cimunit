@@ -1,5 +1,5 @@
 /**
-\page imunit Comparison of CIMUnit to IMUnit
+\page comparison Comparison of CIMUnit to IMUnit
 
 CIMUnit and IMUnit are frameworks to support multithreaded testing.  The main
 difference between them is that IMUnit is written in Java to support the
@@ -74,7 +74,7 @@ Pthreads has no concept of thread status and therefore there is no platform
 independent method to determine if a thread is blocked or not.  This limits us
 to the capabilities of the host operating system.  There are a few options that
 can be explored to get the status of threads in Linux and BSD systems:
-  - Review the code of the \tt ps command to determine how it gets status.
+  - Review the code of the <tt>ps</tt> command to determine how it gets status.
     - This will likely require different code for different operating systems
       and perhaps different code for different versions of the same operating
       system.
