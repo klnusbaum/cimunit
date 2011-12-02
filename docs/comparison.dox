@@ -1,0 +1,113 @@
+/**
+\page imunit Comparison of CIMUnit to IMUnit
+
+CIMUnit and IMUnit are frameworks to support multithreaded testing.  The main
+difference between them is that IMUnit is written in Java to support the
+testing of Java programs and that CIMUnit is a port of IMUnit to C and C++.   
+There are syntactical differences between them due to the differences between
+Java and C.  Additionally there are limitations in CIMUnit that don't exist
+in IMUnit due to the added features of the Java Virtual Machine that don't
+exist in the threading libraries supported by the current implementation of
+CIMUnit.
+
+Below is a table documenting the differing capabilities between CIMUnit and
+IMUnit.
+
+<table border>
+<tr>
+  <td><b>Feature</b></td>
+  <td><b>IMUnit</b></td>
+  <td><b>CIMUnit<br>pthreads</b></td>
+  <td><b>CIMUnit<br>VxWorks</b></td>
+</tr>
+<tr>
+  <td><b>Basic Events</b></td>
+  <td>Yes</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td><b>Logically Combined Events</b></td>
+  <td>Yes</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td><b>Named Threads</b></td>
+  <td>Yes</td>
+  <td>Parital see \ref named_threads_pthread</td>
+  <td>Parital see \ref named_threads_vxworks</td>
+</tr>
+<tr>
+  <td><b>Block Events</b></td>
+  <td>Yes</td>
+  <td>No see \ref block_pthreads</td>
+  <td>No see \ref block_vxworks</td>
+</tr>
+<tr>
+  <td><b>Deadlock Detection</b></td>
+  <td>Yes</td>
+  <td>No see \ref deadlock_pthreads_vxworks</td>
+  <td>No see \ref deadlock_pthreads_vxworks</td>
+</tr>
+</table>
+
+
+\section named_threads_pthread Named Threads in pthreads
+
+Pthreads doesn't support a standard way to name threads.  There is a collection
+of non-portable calls that allow applications to name threads, but at least one
+modern implementation of Linux (centos) doesn't support those methods.  It is
+possible to autodetect at compile time which pthread capabilities exist,
+however, the test code would need to be written to not rely upon thead names
+being picked up from the operating system.
+
+\section named_threads_vxworks Named Threads in VxWorks
+
+VxWorks supports named threads and thus can fully implement this capability.
+At this time, the exact same code running for ptheads has been ported and the
+full capabilities of VxWorks haven't been leveraged.
+
+\section block_pthreads Block Events in pthreads
+
+Pthreads has no concept of thread status and therefore there is no platform
+independent method to determine if a thread is blocked or not.  This limits us
+to the capabilities of the host operating system.  There are a few options that
+can be explored to get the status of threads in Linux and BSD systems:
+  - Review the code of the \tt ps command to determine how it gets status.
+    - This will likely require different code for different operating systems
+      and perhaps different code for different versions of the same operating
+      system.
+    - Applicable to Linux & BSD
+  - Investigate ptrace or similar libraries such as strace, dtrace, etc...
+    - This may provide a realtivly common way to access thread status.
+    - Applicable to Linux & BSD
+  - Investigate the use of the Pin library to instrument the test code.
+    - This solution can likely be used to approximate if a thread is blocked by
+      checking if we are in a system call that may block.  If so, we would
+      assume that we are blocked.
+    - Pin seems to have a non-trivial learning curve.
+    - Applicable to Intel Linux.  The ARM Linux and OS X port are out of date.
+  - Investigate the use of the /proc filesystem
+    - Text processing of task information may be slow.
+    - Applicable to Linux only.
+
+\section block_vxworks Block Events in VxWorks
+
+VxWorks has the capability to determine if a thread is blocked or not.  This
+capability hasn't been implemented in CIMUnit at this time.
+
+\section deadlock_pthreads_vxworks Deadlock Detection in ptheads / VxWorks
+
+Currently deadlock detection isn't implemented in pthreads or VxWorks due to
+technical limitations.  I suspect that in Java, the JVM is able to identify
+all threads associated with an applications and identify if they are blocked
+or not.  The first challenge is that neither ptheads nor VxWorks has the
+capability of identifying which collection of threads are associated with an
+application.  This may be worked around by configuring the environment with the
+thread identifiers/thread name of relevant tasks, but this seems to be a rather
+significant hinderance to the use of CIMUnit.  The second challenge is that
+there is no way to determine if a pthread task is blocked.
+
+*/
+
