@@ -15,7 +15,7 @@ state, if it isn't possible for a specific sequence to be realized, a deadlock
 may result and the test suite will hang.
 
 \section toc Table of Contents
-- \ref license
+- \ref License
 - \ref build
 - \ref manual
 - \ref comparison
@@ -25,7 +25,7 @@ CIMUnit was written by Dale Frampton and Kurtis Nusbaum based on IMUnit by
 Vilas Jagannath, et al.  IMUnit can be found at
 http://mir.cs.illinois.edu/imunit/
 
-\page license CIMUnit License
+\page License CIMUnit License
 
 \verbinclude LICENSE
 
