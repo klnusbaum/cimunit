@@ -131,6 +131,7 @@ ordering:
         if (!strcmp($3, action_event)) {
             *parse_result = $1;
         }
+        free($3);
     }
     | condition SYMBOL_IMPLIES NAME SYMBOL_AT NAME
     {
@@ -138,6 +139,8 @@ ordering:
             !strcmp($5, thread)) {
             *parse_result = $1;
         }
+        free($3);
+        free($5);
     }
     ;
 
@@ -147,6 +150,7 @@ basicEvent:
         // Lookup event name in the fired event list
         cimunit_event_table_entry_t *event = NULL;
         cimunit_find_event_in_table(fired_event_list, $1, &event);
+        free($1);
         $$ = (NULL != event);
     }
     | NAME SYMBOL_AT NAME{
@@ -154,6 +158,8 @@ basicEvent:
         cimunit_event_table_entry_t *event = NULL;
         cimunit_find_event_in_table_on_thread(
           fired_event_list, $1, $3, &event);
+        free($1);
+        free($3);
         $$ = (NULL != event);
     }
     ;

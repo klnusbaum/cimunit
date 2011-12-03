@@ -23,7 +23,15 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 #define RESTRICT restrict
 #define BOOL bool
 #define FALSE false
 #define TRUE true
+
+#ifdef __cplusplus
+}
+#endif

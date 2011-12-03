@@ -25,8 +25,16 @@
 #include <vxWorks.h>
 #include <semLib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 typedef SEM_ID cimunit_mutex_t;
 typedef int cimunit_mutex_attr_t;
 
+#ifdef __cplusplus
+}
+#endif
+  
 #endif // CIMUNIT_MUTEX_VXWORKS_H
 

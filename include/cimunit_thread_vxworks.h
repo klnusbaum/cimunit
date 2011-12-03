@@ -19,8 +19,15 @@
 #ifndef CIMUNIT_THREAD_VXWORKS_H
 #define CIMUNIT_THREAD_VXWORKS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 typedef int cimunit_thread_t;
 typedef void *cimunit_thread_attr_t;
 
+#ifdef __cplusplus
+}
+#endif
+  
 #endif // CIMUNIT_THREAD_VXWORKS_H
-

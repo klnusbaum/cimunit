@@ -24,8 +24,16 @@
 
 #include <pthread.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 typedef pthread_mutex_t cimunit_mutex_t;
 typedef pthread_mutexattr_t cimunit_mutex_attr_t;
 
+#ifdef __cplusplus
+}
+#endif
+  
 #endif // CIMUNIT_MUTEX_PTHREAD_H
 

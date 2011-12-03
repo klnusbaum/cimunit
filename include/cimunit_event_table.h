@@ -27,6 +27,10 @@
 #include "cimunit_thread.h"
 #include "cimunit_thread_table.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \addtogroup cimunit_event_table cimunit_event_table Module
 /// @{
 
@@ -142,5 +146,9 @@ int cimunit_find_event_in_table_on_thread(
   cimunit_event_table_entry_t **found_event);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

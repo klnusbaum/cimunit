@@ -23,6 +23,9 @@
 
 #include "cimunit_schedule.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /// Global CIMUnit variable used by the CIMUnit test macros.
 extern struct cimunit_schedule *g_cimunit_default_schedule;
@@ -39,6 +42,7 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
     if (g_cimunit_default_schedule) { \
         cimunit_schedule_destroy(g_cimunit_default_schedule); \
     } \
+    printf("CIMUNIT_SCHEDULE(%s)\n", schedule); \
     g_cimunit_default_schedule = cimunit_schedule_parse(schedule)
 
 
@@ -47,10 +51,11 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
 /// This differs from cimunit_event_fire as it uses a global variable to
 /// simplify test development.
 #define CIMUNIT_FIRE(eventName) \
+    printf("CIMUNIT_FIRE(%s)\n", eventName); \
     cimunit_schedule_fire(g_cimunit_default_schedule, eventName)
 
 
-/// Name thread in the schedule
+/// Name a thread in the schedule
 ///
 /// This macro gives a name to the currently executing thread
 #define CIMUNIT_THREAD_NAME(threadName) \
@@ -59,5 +64,9 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
                                      threadName)
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CIMUNIT_H

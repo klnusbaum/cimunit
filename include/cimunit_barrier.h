@@ -32,6 +32,10 @@
   #error "No PLATFORM_{system name} macro defined!"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \addtogroup cimunit_barrier cimunit_barrier Module
 /// @{
 
@@ -76,5 +80,9 @@ void cimunit_barrier_unlock(cimunit_barrier_t *barrier);
 void cimunit_barrier_lock(cimunit_barrier_t *barrier);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CIMUNIT_BARRIER_H

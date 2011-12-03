@@ -20,6 +20,13 @@
  
 #include <pthread.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 #define CIMUNIT_DEFAULT_THREAD_NAME ""
 #define CIMUNIT_MAX_THREAD_NAME_LENGTH 16
  
+#ifdef __cplusplus
+}
+#endif

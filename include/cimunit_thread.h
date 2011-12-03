@@ -24,6 +24,10 @@
 #include "cimunit_platform.h"
 #include "cimunit_thread.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 #if defined(PLATFORM_Darwin) || \
     defined(PLATFORM_Linux)
   #include "cimunit_thread_pthread.h"
@@ -62,5 +66,9 @@ cimunit_thread_t cimunit_thread_self();
 void cimunit_thread_sleep(int time);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CIMUNIT_THREAD_H

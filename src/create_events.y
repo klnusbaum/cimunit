@@ -132,7 +132,8 @@ basicEvent:
     }
     | NAME SYMBOL_AT NAME
     {
-        cimunit_event_t *event = cimunit_event_list_find(*event_list, $1);
+        cimunit_event_t *event = cimunit_event_list_find_with_thread(
+          *event_list, $1, $3);
         
         if (!event) {
             event = (cimunit_event_t*)malloc(sizeof(cimunit_event_t));
@@ -141,6 +142,7 @@ basicEvent:
         }
         
         free($1);
+        free($3);
         $$ = event;
     }
     ;
@@ -162,11 +164,15 @@ basicCondition:
             cimunit_event_list_t *new_condition = cimunit_event_list_init();
             cimunit_event_list_add(&new_condition, condition_event);
             $$ = new_condition;
+        } else {
+            yyerror(event_list, "NULL passed as basicEvent");
+            YYERROR;
         }
     }
     | blockEvent
     {
-        $$ = NULL;
+            yyerror(event_list, "Block events aren't supported");
+            YYERROR;
     }
 
 condition:

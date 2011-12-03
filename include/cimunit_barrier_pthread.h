@@ -26,6 +26,10 @@
 
 #include "cimunit_platform.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// Structure containing the data needed to support the barrier.
 typedef struct cimunit_barrier {
     /// Mutex used to support the mutex/condition construct
@@ -36,4 +40,8 @@ typedef struct cimunit_barrier {
     BOOL is_locked;
 } cimunit_barrier_t;
 
+#ifdef __cplusplus
+}
+#endif
+  
 #endif // CIMUNIT_BARRIER_PTHREAD_H

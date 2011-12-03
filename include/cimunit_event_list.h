@@ -22,6 +22,10 @@
 #ifndef CIMUNIT_EVENT_LIST_H
 #define CIMUNIT_EVENT_LIST_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 /// Forward declaration
 struct cimunit_event;
  
@@ -82,5 +86,9 @@ struct cimunit_event *cimunit_event_list_find(cimunit_event_list_t *list,
                                               const char *name);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CIMUNIT_EVENT_LIST_H

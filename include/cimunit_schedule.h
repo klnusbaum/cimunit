@@ -28,6 +28,10 @@
 #include "cimunit_platform.h"
 #include "cimunit_thread.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 typedef size_t cimunit_thread_amount_t;
 
 /// \addtogroup cimunit_schedule cimunit_schedule Module
@@ -122,5 +126,9 @@ const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
                                              cimunit_thread_t thread);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CIMUNIT_SCHEDULE_H

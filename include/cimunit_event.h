@@ -27,6 +27,10 @@
 #include "cimunit_mutex.h"
 #include "cimunit_platform.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 /// Forward declarations
 struct cimunit_event_list;
 
@@ -95,4 +99,8 @@ const struct cimunit_event_list *cimunit_event_get_action_list(
 
 /// @}
 
+#ifdef __cplusplus
+}
+#endif
+  
 #endif // CIMUNIT_EVENT_H

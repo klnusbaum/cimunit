@@ -59,6 +59,10 @@ BOOL cimunit_schedule_fire(struct cimunit_schedule *schedule,
     cimunit_event_t *event;
     const cimunit_event_list_t *next_action;
 
+    if (!schedule) {
+      return FALSE;
+    }
+    
     thread_name = cimunit_schedule_get_thread_name(schedule,
                                                    cimunit_thread_self());
 
@@ -100,6 +104,9 @@ void cimunit_schedule_set_thread_name(cimunit_schedule_t *schedule,
                                       cimunit_thread_t thread,
                                       const char *threadName)
 {
+    if (!schedule) {
+      return;
+    }
     cimunit_mutex_lock(&schedule->mutex);
     cimunit_set_thread_name(&schedule->thread_table, thread, threadName);                                      
     cimunit_mutex_unlock(&schedule->mutex);
@@ -110,6 +117,11 @@ const char *cimunit_schedule_get_thread_name(cimunit_schedule_t *schedule,
                                              cimunit_thread_t thread)
 {
     const char *thread_name;
+    
+    if (!schedule) {
+      return NULL;
+    }
+    
     cimunit_get_thread_name(&schedule->thread_table, thread, &thread_name);
 
     return thread_name;

@@ -24,6 +24,10 @@
 #include "cimunit_thread.h"
 #include "cimunit_thread_table.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \addtogroup cimunit_thread_table cimunit_thread_table Module
 /// @{
 
@@ -86,5 +90,9 @@ int cimunit_get_thread_name(
   const char **buf);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //CIMUNIT_THREAD_TABLE_H

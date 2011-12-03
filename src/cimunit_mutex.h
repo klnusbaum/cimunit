@@ -32,6 +32,10 @@
   #error "No PLATFORM_{system name} macro defined!"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /// \addtogroup cimunit_mutex cimunit_mutex Module
 /// @{
 
@@ -68,6 +72,10 @@ int cimunit_mutex_unlock(cimunit_mutex_t *mutex);
 int cimunit_mutex_trylock(cimunit_mutex_t *mutex);
 
 /// @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

@@ -21,7 +21,15 @@
 
 #include "pthread.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 typedef pthread_t cimunit_thread_t;
 typedef pthread_attr_t cimunit_thread_attr_t;
 
+#ifdef __cplusplus
+}
+#endif
+  
 #endif // CIMUNIT_THREAD_PTHREAD_H
