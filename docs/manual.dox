@@ -8,6 +8,22 @@ test has executed properly.  Users must either write their own code to
 verify the software under test or use testing frameworks such as CUnit or
 CppUnit.
 
+
+\section Definitions
+- \b Action \b Event - An event that shows up to the right of the -> operator
+                       in an ordering.
+- \b Condition \b Event - An event that that shows up to the left of the ->
+                       operator in an ordering.
+- \b Event - A checkpoint in a running application.  Events are used to
+             control the behavior of an application by suspending and resuming
+             threads.
+- \b Ordering - A rule that specifies which condition events must have fired
+                prior to the thread that fired the action event is allowed to
+                proceed past the firing of the action event.
+- \b Schedule - A schedule is a collection of orderings that define the order
+                in which events are allowed to be fired.  Orderings are
+                seperated by commas and are interpreted independantly.
+
 Testers typically interract with three macros defined in cimunit.h.  They are
  - CIMUNIT_SCHEDULE()
  - CIMUNIT_FIRE()

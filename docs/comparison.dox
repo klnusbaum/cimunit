@@ -28,9 +28,9 @@ IMUnit.
 </tr>
 <tr>
   <td><b>Logically Combined Events</b></td>
-  <td>Yes</td>
-  <td>Yes</td>
-  <td>Yes</td>
+  <td>No</td>
+  <td>Yes see \ref logically_combined_events</td>
+  <td>Yes see \ref logically_combined_events</td>
 </tr>
 <tr>
   <td><b>Named Threads</b></td>
@@ -52,6 +52,19 @@ IMUnit.
 </tr>
 </table>
 
+\section logically_combined_events Logically Combined Events
+
+CIMUnit supports the use of the logical operators || and && to combine
+condition events used to trigger action events.  Ordering is from left to right
+and can be modified by the use of ()'s.  This allows schedules such as the
+following:
+
+- a && b -> c
+  - Event a and event b must have fired before the firing of event c is
+    allowed.
+- a || (b && c) -> d
+  - Event a must fire or both events b and c must have fired before the
+    firing of event d is allowed.
 
 \section named_threads_pthread Named Threads in pthreads
 
