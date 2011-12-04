@@ -38,35 +38,50 @@ extern "C" {
 
 /// \addtogroup cimunit_mutex cimunit_mutex Module
 /// @{
+/// The cimunit_mutex component is used to prevent race conditions by limiting
+/// concurrent access to resources.  It abstracts the operating system's
+/// native mutex capability.
 
-/// Create a new mutex
+/// \brief Create a new mutex
+///
+/// Create a mutex that is initially unlocked.
+///
 /// \param mutex - pointer to mutex object
-/// \param attr - mutex attributes
+/// \param attr - mutex attributes.  This hasn't been used to-date and may
+///               be removed.  Use of it would require the C code creating
+///               the mutex to be platform specific, which violates the
+///               intention of abstracting this capability.
 int cimunit_mutex_init(
   cimunit_mutex_t *mutex, 
   const cimunit_mutex_attr_t *attr);
 
 
-/// Destroy a mutex
+/// \brief Destroy a mutex
+///
+/// Clean-up all resources associated with the mutex
+///
 /// \param mutex - mutex to destroy
 int cimunit_mutex_destroy(cimunit_mutex_t *mutex);
 
 
-/// Lock a mutex
+/// \brief Lock a mutex
 ///
 /// This method blocks if the mutex is already locked
+///
 /// \param mutex - mutex to lock
 int cimunit_mutex_lock(cimunit_mutex_t *mutex);
 
 
-/// Unlock a mutex
+/// \brief Unlock a mutex
+///
 /// \param mutex - mutex to unlock
 int cimunit_mutex_unlock(cimunit_mutex_t *mutex);
 
 
-/// Attempt to lock a mutex
+/// \brief Attempt to lock a mutex
 ///
 /// This method doesn't blocks if the mutex is already locked
+///
 /// \param mutex - mutex to lock
 /// \return 0 if the mutex was locked else non-zero
 int cimunit_mutex_trylock(cimunit_mutex_t *mutex);

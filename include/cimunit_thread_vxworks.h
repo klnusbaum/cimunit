@@ -1,4 +1,6 @@
 /**
+ * \file cimunit_thread_vxworks.h
+ *
  * Copyright 2011 Dale Frampton & Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.
@@ -22,9 +24,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  
+ 
+/// \addtogroup cimunit_thread cimunit_thread Module
+/// @{
+
+/// VxWorks implementation of a thread ID.
 typedef int cimunit_thread_t;
-typedef void *cimunit_thread_attr_t;
+
+/// @}
 
 #ifdef __cplusplus
 }

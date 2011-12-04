@@ -29,8 +29,16 @@
 extern "C" {
 #endif
   
+/// \addtogroup cimunit_mutex cimunit_mutex Module
+/// @{
+
+/// Concrete type for mutex under VxWorks
 typedef SEM_ID cimunit_mutex_t;
+
+/// Concrete type for mutex attribute under VxWorks
 typedef int cimunit_mutex_attr_t;
+
+/// @}
 
 #ifdef __cplusplus
 }

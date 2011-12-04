@@ -28,8 +28,16 @@
 extern "C" {
 #endif
   
+/// \addtogroup cimunit_mutex cimunit_mutex Module
+/// @{
+
+/// Concrete type for mutex under pthread
 typedef pthread_mutex_t cimunit_mutex_t;
+
+/// Concrete type for mutex attribute under pthread
 typedef pthread_mutexattr_t cimunit_mutex_attr_t;
+
+/// @}
 
 #ifdef __cplusplus
 }

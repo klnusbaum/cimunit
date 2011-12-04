@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 Kurtis L. Nusbaum
+ * \file cimunit_thread_pthread.h
+ *
+ * Copyright 2011 Dale Frampton & Kurtis L. Nusbaum
  * 
  * This file is part of cimunit.
  * 
@@ -25,8 +27,13 @@
 extern "C" {
 #endif
   
+/// \addtogroup cimunit_thread cimunit_thread Module
+/// @{
+
+/// Pthread implementation of a thread ID.
 typedef pthread_t cimunit_thread_t;
-typedef pthread_attr_t cimunit_thread_attr_t;
+
+/// @}
 
 #ifdef __cplusplus
 }

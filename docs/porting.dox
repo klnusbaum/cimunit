@@ -1,0 +1,79 @@
+/**
+\page porting Porting CIMUnit to a New Operating System
+
+CIMUnit was designed to be portable between operating systems, and the effort of
+porting CIMUnit is limited to a small amount of code.  Since C/C++ doesn't
+specify a particular threading model it isn't possible to write CIMUnit in
+code that is portable between operating systems.  Pthreads, for instance, is
+supported on many operating Unix-like operating systems and partially or fully
+supported on some embedded operating systems and Windows.  Because of the
+wide availability of pthreads, it could have been considered a standard and
+the project may have been locked into it.  However, pthreads isn't a native
+part of Windows and its use in embedded operating systems may preclude the use
+of native tasking models.  Therefore, the project decided to pursue a route
+where operating system specific concepts were encapsulated.  This simplifies
+the porting of CIMUnit by requiring a developer to reimplement a few well
+defined software components.
+
+\section port_build Build Environment
+The build environment for the CIMUnit library requires the following:
+  - Bison version 2.4.1 or higher
+  - Flex version 2.5.33 or higher
+
+For Windows 2k, XP and Server 2003, Microsoft has ported Bison and Flex and
+has packed them in their Windows Services for UNIX 3.5 download.  Windows 7
+apparently has a Windows Services for UNIX component that is available to
+install on the Enterprise or Ultimate versions.
+
+The CMake build files may need to be updated, or a new build system
+implemented.
+
+An operating system dependant \#define must be created for each operating
+system and named as follows PLATFORM_{operating system}.  This \#define must be
+defined for each file built as part of the CIMUnit library and by all files
+that include \ref cimunit.h.  This is typically passed as a command line
+parameter to the compiler such as -D.
+
+\section port_headers Header File Updates
+
+The following header files must be updated to point to the operating system
+specific varient of the header file.  The variant header file name should be
+cimunit_{module}_{operating system}.h:
+  - \ref cimunit_barrier.h
+  - \ref cimunit_platform.h
+  - \ref cimunit_mutex.h
+  - \ref cimunit_thread.h
+
+Compiler / operating system specific \#defines must be created as specified
+below.  The \#defines must be placed in cimunit_platform_{operating system}.h:
+  -  RESTRICT
+    - C99 keyword, not universally supported.
+    - It may be left blank or defined as __restruct depending on the
+      capabilities of the compiler.
+  - BOOL
+    - May be defined to bool, or int as supported by the compiler.
+  - TRUE
+    - May be defined to true, or 1 or a compiler header file that define TRUE
+      may be included.
+  - FALSE
+    - May be defined to false, or 0 or a compiler header file that define FALSE
+      may be included.
+  - CIMUNIT_DEFAULT_THEAD_NAME
+    - Specifies what the operating system specific default is for a thread
+      that isn't named.
+  - CIMUNIT_MAX_THREAD_NAME_LENGTH
+    - Specifies what the maximum length of a thread name can be.  This is used
+      to allocate sufficent memory to copy the name of the thread.
+
+\section port_code Writing Operating Specific Support Modules
+The operating system capabilities that were abstracted and need to be
+reimplemented for each operating system are defined below.  See the
+documentation under each component to determine how to implement it for the new
+operating system:
+
+  - \ref cimunit_barrier
+  - \ref cimunit_mutex
+  - \ref cimunit_thread
+
+*/
+

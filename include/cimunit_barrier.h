@@ -38,8 +38,15 @@ extern "C" {
 
 /// \addtogroup cimunit_barrier cimunit_barrier Module
 /// @{
+/// The cimunit_barrier object is the key component that allows CIMUnit to
+/// operate.  It provides a mechanism where multiple threads can pend on a
+/// single object and can be unblocked en masse.  A locked barrier causes all
+/// threads that wait on it to be blocked while an unlocked barrier causes
+/// all threads currently waiting on it to be unblocked and any new threads
+/// that wait on it to not be blocked.
+///
 
-/// Create a new barrier.
+/// \brief Create a new barrier.
 ///
 /// Create a new barrier and initialize it in the locked state.
 ///
@@ -47,7 +54,7 @@ extern "C" {
 /// \return 0 if the initialization was succesful, error code otherwise.
 int cimunit_barrier_init(cimunit_barrier_t *barrier);
 
-/// Destroy a barrier
+/// \brief Destroy a barrier
 ///
 /// Destroys a previously created barrier.  The results are undefined
 /// if the barrier was never initialized.
@@ -56,25 +63,25 @@ int cimunit_barrier_init(cimunit_barrier_t *barrier);
 /// \return 0 if successful, error code other wise
 int cimunit_barrier_destroy(cimunit_barrier_t *barrier);
 
-/// Wait at the barrier until it is unlocked
+/// \brief Wait at the barrier until it is unlocked
 ///
-/// Pause the task until the specified barrier is unlocked.
+/// Block the task until the specified barrier is unlocked.
 ///
 /// \param barrier - the barrier to wait at
 void cimunit_barrier_wait(cimunit_barrier_t *barrier);
 
-/// Unlock a barrier
+/// \brief Unlock a barrier
 ///
-/// Unlock the barrier and allow all tasks that are waiting at the barrier
-/// to continue.  New tasks that wait at the barrier will be passed through
+/// Unlock the barrier and unblock all tasks that are blocked at the barrier.
+/// New tasks that wait at the barrier will not be blocked.
 ///
 /// \param barrier - the barrier to be unlocked
 void cimunit_barrier_unlock(cimunit_barrier_t *barrier);
 
-/// Lock a barrier
+/// \brief Lock a barrier
 ///
-/// Lock the barrier and prevent all the tasks currently waiting at the
-/// barrier to pend.  New tasks that wait at the barrier will also pend.
+/// Lock the barrier and cause all new tasks that wait at the barrier to
+/// block.
 ///
 /// \param barrier - the barrier to be locked
 void cimunit_barrier_lock(cimunit_barrier_t *barrier);

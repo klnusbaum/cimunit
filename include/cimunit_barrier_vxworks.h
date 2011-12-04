@@ -32,8 +32,22 @@
 extern "C" {
 #endif
   
-/// Structure containing the data needed to support the barrier.
-typedef struct cimunit_barrier {
+/// \addtogroup cimunit_barrier cimunit_barrier Module
+/// @{
+
+/// \brief VxWorks barrier structure
+///
+/// Structure containing the data needed to support the barrier under VxWorks.
+/// It operates by using a single mutex.
+///
+/// The key component of the barrier is the the counting semaphore, cond.
+/// It is initialized to have no avaialable resources and when the barrier is
+/// locked, all threads that attempt to acquire cond and are blocked.  When
+/// the barrier is unlocked, the unlock action releases the semaphore,
+/// which unblocks one of the tasks.  That unblocked task then releases
+/// the semaphore again which continues until all tasks pending on cond
+/// have been unblocked.
+typedef struct cimunit_barrier_vxworks {
     /// Mutex used to support the mutex/condition construct
     cimunit_mutex_t mutex;
 
@@ -43,6 +57,8 @@ typedef struct cimunit_barrier {
     /// Is the barrier locked.  True if locked, else false.
     BOOL is_locked;
 } cimunit_barrier_t;
+
+/// @}
 
 #ifdef __cplusplus
 }

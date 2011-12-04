@@ -30,8 +30,19 @@
 extern "C" {
 #endif
 
-/// Structure containing the data needed to support the barrier.
-typedef struct cimunit_barrier {
+/// \addtogroup cimunit_barrier cimunit_barrier Module
+/// @{
+
+/// \brief Pthreads barrier structure
+///
+/// The pthreads implementation of the barrier uses a condition variable.
+/// When a thread waits on the barrier, the is_locked attribute is checked to
+/// determine if the barrier is locked or unlocked.  If it's locked it waits
+/// on cond and is blocked.  When the barrier is unlocked, cond is signaled
+/// and one of the waiting threads unblocks.  That thread then signals cond
+/// again which wakes another thread.  This continues until all threads that
+/// were blocked on cond have been unblocked.
+typedef struct cimunit_barrier_pthread {
     /// Mutex used to support the mutex/condition construct
     pthread_mutex_t mutex;
     /// Pthread condition used to support the mutex/condition construct
@@ -39,6 +50,8 @@ typedef struct cimunit_barrier {
     /// Is the barrier locked.  True if locked, else false.
     BOOL is_locked;
 } cimunit_barrier_t;
+
+/// @}
 
 #ifdef __cplusplus
 }

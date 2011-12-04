@@ -19,6 +19,7 @@ may result and the test suite will hang.
 - \ref build
 - \ref manual
 - \ref comparison
+- \ref porting
 - \ref test_example.c "test_example.c - Example CIMUnit test"
 
 CIMUnit was written by Dale Frampton and Kurtis Nusbaum based on IMUnit by
