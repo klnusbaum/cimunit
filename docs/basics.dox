@@ -1,0 +1,49 @@
+/**
+\page basics Basic Operation of CIMUnit
+
+\section basics_structure Structure of CIMUnit
+CIMUnit is composed of roughly three separate pieces:
+  - Operating system specific components
+    - Abstracts operating system concepts to allow CIMUnit to be easily ported
+  - Grammar parsing
+    - Serves two purposes
+    - Parses the CIMUnit schedule to create events and to connect action events
+      to condition events.
+    - Parses the CIMUnit schedule each time a condition event is fired to
+      determine if a barrier should be unlocked.
+  - Common components
+    - Manages bookkeeping operations such as lists of events, and the
+      interaction of events.
+
+\section basics_operation Operation of CIMUnit
+
+The cimunit_schedule object maintains a list of all events associated with the
+schedule, the list of events fired while the schedule is active and a list of
+threads that have been named through CIMUnit.
+
+When the schedule string is parsed, it creates an event object for each event
+found in the schedule.  An event is marked as an action event if it shows up
+on the right side of the -> operator.  Events objects are created for every
+unique event in the schedule.  A unique event is determined by the combination
+of the event name and the thread name, if there is on.  Once the schedule has
+been parsed, the test code can begin firing events.
+
+When events are fired, they are first marked in an internal list as having
+fired.  The schedule is then parsed to see if the event was a condition event
+for any action events, and if so, does that action event's barrier get
+unlocked.  Then, if the event is an action event, it waits on its barrier.
+
+The operation of CIMUnit specifies that action events may pend.  Therefore we
+determined that that best solution was to have a blocking construct that
+allowed multiple threads to block on the same object and all be released at the
+same time.  This lead to the creation of cimunit_barrier, and the instantiation
+of a barrier for each action event.  This decision made it simple to move from
+supporting simple schedules such as a->b,b->c to more complex schedules such
+as (a && b)->d or b->a@x,c->a@y, a->e.  In the latter case, the events a, a@x,
+and a@y are separate events.  The firing of any a event causes event a to be
+marked as having fired, but events a@x and a@y are only fired if event a is
+fired from thread x and y respectivly.  Some complexity exists to manage the
+overlap between named and unnamed events, but this isn't significant.
+
+*/
+

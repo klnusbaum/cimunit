@@ -75,5 +75,12 @@ operating system:
   - \ref cimunit_mutex
   - \ref cimunit_thread
 
+\section port_new New Operating System Specific Files
+When porting CIMUnit to an operating system that natively supports named
+threads, and where the named thread capability is intended to be used, some
+extra modifications will be required.  The changes will be to create operating
+system specific variants of the cimunit_thread_table.c and
+cimunit_thread_table.h files.
+
 */
 

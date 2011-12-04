@@ -16,6 +16,7 @@ may result and the test suite will hang.
 
 \section toc Table of Contents
 - \ref License
+- \ref basics
 - \ref build
 - \ref manual
 - \ref comparison
