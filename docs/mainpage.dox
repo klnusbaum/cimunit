@@ -34,5 +34,12 @@ http://mir.cs.illinois.edu/imunit/
 \example test_example.c
 This example shows a walk through of how CIMUnit operates.
 
+\example vxworks_example.cpp
+This example runs under VxWorks and shows a templatized stack class that is
+intended to be thread safe.  The class is tested in a number of different
+manners, culmanting with a white box test using CIMUnit.  The white box test
+is the only one that consistently detects a race condition in the code if the
+mutexes around the pop() method are not in-place.
+
 */
 

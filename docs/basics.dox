@@ -39,11 +39,11 @@ allowed multiple threads to block on the same object and all be released at the
 same time.  This lead to the creation of cimunit_barrier, and the instantiation
 of a barrier for each action event.  This decision made it simple to move from
 supporting simple schedules such as a->b,b->c to more complex schedules such
-as (a && b)->d or b->a@x,c->a@y, a->e.  In the latter case, the events a, a@x,
-and a@y are separate events.  The firing of any a event causes event a to be
-marked as having fired, but events a@x and a@y are only fired if event a is
-fired from thread x and y respectivly.  Some complexity exists to manage the
-overlap between named and unnamed events, but this isn't significant.
+as (a && b)->d or b->a\@x,c->a\@y, a->e.  In the latter case, the events a,
+a\@x, and a\@y are separate events.  The firing of any a event causes event a
+to be marked as having fired, but events a\@x and a\@y are only fired if event
+a is fired from thread x and y respectivly.  Some complexity exists to manage
+the overlap between named and unnamed events, but this isn't significant.
 
 */
 
