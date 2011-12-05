@@ -38,11 +38,15 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
 /// This differs from cimunit_schedule_parse by using a global variable that
 /// works with the other CIMUnit macros to simplify test development in an
 /// environment where only one test will be run at a time.
+/// \todo Add code to free the previous schedule, while ensuring that any
+///       references to schedule items are not freed until properly released.
+///       The destroy code that was here was removed as there was a race
+///       condition that after firing an event in a low priority thread, the
+///       higher priority thread controlling the testing began a new test
+///       which defined a new schedule.  The fire actions from the previous
+///       test hadn't been completed and accessed memory that was no longer
+///       valid.
 #define CIMUNIT_SCHEDULE(schedule) \
-    if (g_cimunit_default_schedule) { \
-        cimunit_schedule_destroy(g_cimunit_default_schedule); \
-    } \
-    printf("CIMUNIT_SCHEDULE(%s)\n", schedule); \
     g_cimunit_default_schedule = cimunit_schedule_parse(schedule)
 
 
@@ -51,7 +55,6 @@ extern struct cimunit_schedule *g_cimunit_default_schedule;
 /// This differs from cimunit_event_fire as it uses a global variable to
 /// simplify test development.
 #define CIMUNIT_FIRE(eventName) \
-    printf("CIMUNIT_FIRE(%s)\n", eventName); \
     cimunit_schedule_fire(g_cimunit_default_schedule, eventName)
 
 
