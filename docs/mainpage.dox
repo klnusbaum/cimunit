@@ -21,7 +21,8 @@ may result and the test suite will hang.
 - \ref manual
 - \ref comparison
 - \ref porting
-- \ref test_example.c "test_example.c - Example CIMUnit test"
+- \ref pthread_example.c "pthread_example.c - Example CIMUnit test under pthread"
+- \ref vxworks_example.cpp "vxworks_example.cpp - Example CIMUnit test under vxworks"
 
 CIMUnit was written by Dale Frampton and Kurtis Nusbaum based on IMUnit by
 Vilas Jagannath, et al.  IMUnit can be found at
@@ -31,8 +32,9 @@ http://mir.cs.illinois.edu/imunit/
 
 \verbinclude LICENSE
 
-\example test_example.c
-This example shows a walk through of how CIMUnit operates.
+\example pthread_example.c
+This example runs under pthreads and provides a detailed walkthrough of how
+CIMUnit operates to perform the appropriate testing.
 
 \example vxworks_example.cpp
 This example runs under VxWorks and shows a templatized stack class that is
